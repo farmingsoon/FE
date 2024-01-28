@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="ko">
       <body className="flex flex-row">
         <Navbar />
-        <main className="w-full mt-8 px-5">
+        <main className="flex-1 py-8 px-5 h-screen overflow-y-auto">
         {children}
         </main>
         </body>
