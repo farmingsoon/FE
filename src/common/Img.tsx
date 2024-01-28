@@ -1,14 +1,13 @@
 import { StaticImageData } from "next/image";
 import noPhoto from "../../public/img/noPhoto.png";
 interface ImgTypes {
-    width?: number;
-    height?: number;
+    type: "circle" | "normal";
     src: string | undefined | null | StaticImageData;
 }
 
-const Img = ({width, height, src}: ImgTypes) => {
-    const imgStyle = `${width && height ? `w-[${width}px]  h-[${height}px]` : `w-full h-full`} border rounded-lg`;
-
+const Img = ({type, src}: ImgTypes) => {
+    const imgType = type === "circle" ?  "rounded-full" : "rounded-lg"
+    const imgStyle = `w-full h-full border ${imgType}`;
     //src가 StaticImage 인 경우, 객체의 src 속성을 사용
     //그렇지 않은 경우 src가 null 이면 noPhotosrc | src그대로 사용 
     const imageSrc = src instanceof Object ? src.src : (src ?? noPhoto.src);

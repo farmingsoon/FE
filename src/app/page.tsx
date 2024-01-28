@@ -36,6 +36,8 @@ export default function Home() {
           <select className="bg-zinc-200 rounded-md w-24 text-sm py-1 ml-5 outline-none">
             <option className="pl-2">최신순</option>
             <option className="pl-2">인기순</option>
+            <option className="pl-2">고가순</option>
+            <option className="pl-2">저가순</option>
           </select>
         </div>
       </div>
