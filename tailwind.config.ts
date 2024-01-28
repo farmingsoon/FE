@@ -18,6 +18,7 @@ const config: Config = {
         DEEP_MAIN: "#27B58D",
         LINE_BORDER: "#D1D1D1",
         DARK_GRAY: "#4B4B4B",
+        POINT_BLUE: "#7991FF",
       }
     },
   },
