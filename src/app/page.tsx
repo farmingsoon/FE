@@ -1,5 +1,5 @@
 import Search from "@/components/Search";
-// import NoData from "../../public/svg/NoData";
+import NoData from "../../public/svg/NoData";
 import HomeItem from "@/components/HomeItem";
 
 export default function Home() {
@@ -40,11 +40,18 @@ export default function Home() {
         </div>
       </div>
       <div className="py-2 min-h-fit mt-5 flex flex-col justify-center items-center ">
+      { hotItemsData ? 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 relative">
           {hotItemsData.map((item, idx) => (
             <HomeItem key={idx} data={item}/>
           ))}
-        </div>
+        </div> :
+        <>
+          <NoData width={"300px"} height={"300px"}/>
+          <p className="my-3">새로운 중고 상품들을 판매해보세요.</p>
+          <button className="rounded-md bg-MAIN_COLOR text-white px-8 py-1 hover:bg-DEEP_MAIN">판매 하기</button>
+        </>
+      }    
       </div>
     </div>
   )

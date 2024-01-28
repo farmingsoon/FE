@@ -1,5 +1,6 @@
 "use client"; 
 import { useState } from "react";
+import Link from "next/link";
 import BellSVG from "../../public/svg/BellSVG";
 import CategorySVG from "../../public/svg/CategorySVG";
 import ChatSVG from "../../public/svg/ChatSVG";
@@ -19,7 +20,7 @@ const Navbar = () => {
 
     return(
         <nav className="flex flex-col shadow-lg w-52 pt-8 sticky top-0 h-screen ">
-            <h1 className="mb-5">FARMINGSOON</h1>
+            <Link href="/"><h1 className="mb-5">FARMINGSOON</h1></Link>
             <ul className="flex-1 px-3">
                 <li><button className={btnStyle}><HomeSVG width={"12px"} height={"12px"}/><span className="pl-2 hover:text-DEEP_MAIN">홈</span></button></li>
                 <li><button className={btnStyle}><SearchSVG width={"12px"} height={"12px"}/><span className="pl-2 hover:text-DEEP_MAIN">검색</span></button></li>
