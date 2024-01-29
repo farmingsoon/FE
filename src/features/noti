@@ -1,0 +1,8 @@
+* Pages 는 그 자체로 이미 모듈화되어 있다. 페지 안의 로직은 최소한을 유지해두어야 한다. 
+확장성과 유지보수를 위해 대부분의 코드를 " features " 폴더 안에 위치시킨다. 
+
+* 모든 features 폴더는 domain-specific 코드를 포함해야 한다. 
+
+* features 폴더 안의 components, hooks, stores, services등의 모든 것들은 공유 되어서는 안된다. 
+참고 : https://velog.io/@koreanthuglife/%EA%B7%B8%EB%8C%80-Next.js-14-%ED%8F%B4%EB%8D%94-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98%EB%A5%BC-%EC%96%B4%EB%96%BB%EA%B2%8C-%ED%95%A0%EA%B2%83%EC%9D%B8%EA%B0%80-feat.-medium
+
