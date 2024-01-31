@@ -19,7 +19,7 @@ const config: Config = {
         LINE_BORDER: "#D1D1D1",
         DARK_GRAY: "#4B4B4B",
         POINT_BLUE: "#7991FF",
-        POINT_RED: "#E25656",
+        POINT_RED: "#FF7171",
         TEXT_BLACK: "#2B2B2B",
       }
     },

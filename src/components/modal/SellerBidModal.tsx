@@ -1,6 +1,7 @@
 import { ModalTypes } from "@/types/Modal";
 import Close from "../../../public/svg/Close";
 import BidPriceItem from "../BidPriceItem";
+import BidSoldItem from "../BidSoldItem";
 
 const SellerBidModal = ({handleOpen}: ModalTypes) => {
     return(
@@ -20,6 +21,7 @@ const SellerBidModal = ({handleOpen}: ModalTypes) => {
                     <button className={`pl-2`}>저가순</button>
                 </div>
                 <div className="flex flex-col mb-8">
+                    <BidSoldItem />
                     <BidPriceItem />
                 </div>
                 <div className="flex flex-col items-center">
