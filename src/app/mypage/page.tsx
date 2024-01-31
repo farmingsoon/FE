@@ -18,7 +18,7 @@ export default function Login() {
     return(
         <div className="flex min-h-screen flex-col">
             <div className="p-4 border border-LINE_BORDER rounded-lg flex flex-row items-center max-w-[800px]">
-                <div className="w-16 h-16 rounded-full overflow-hidden"><Img src={null} type={"circle"}/></div>
+                <div className="overflow-hidden"><Img src={null} type={"circle"} width={64} height={64}/></div>
                 <div className="text-lg font-semibold  ml-2">사용자1</div>
             </div>
             <div className="mt-5">
