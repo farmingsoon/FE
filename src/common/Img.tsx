@@ -9,15 +9,15 @@ interface ImgTypes {
 }
 
 const Img = ({type, src, width, height, status}: ImgTypes) => {
-    const imgStyle = type === "circle" ?  "border rounded-full" : "border rounded-lg"
+    const imgStyle = type === "circle" ?  "relative border rounded-full bg-black " : "relative border rounded-lg"
     //src가 StaticImage 인 경우, 객체의 src 속성을 사용
     //그렇지 않은 경우 src가 null 이면 noPhotosrc | src그대로 사용 
     const imageSrc = src instanceof Object ? src.src : (src ?? noPhoto);
     // const imageSrc = src ? src : noPhoto;
-
+    // console.log(imgStyle)
 
     return(
-        <div className={`${imgStyle} relative `}>
+        <div className={imgStyle}>
             <Image src={imageSrc} width={width} height={height} alt={src ? "Content" : "No Image"} placeholder="blur" />
             {status && status === "soldout" && (
             <div className="absolute inset-0 w-full h-full bg-gray-500 bg-opacity-75 transition-opacity flex items-center justify-center">

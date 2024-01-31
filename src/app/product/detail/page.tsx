@@ -5,7 +5,8 @@ import BookmarkSVG from "../../../../public/svg/BookmarkSVG";
 import ArrowRight from "../../../../public/svg/ArrowRight";
 import ArrowLeft from "../../../../public/svg/ArrowLeft";
 import { useState } from "react";
-import BiddingModal from "@/components/modal/BiddingModal";
+import SellerBidModal from "@/components/modal/SellerBidModal";
+// import BiddingModal from "@/components/modal/BiddingModal";
 
 export default function ProductDetail() {
     const [biddOpen, setBiddOpen] = useState(false);
@@ -29,7 +30,7 @@ export default function ProductDetail() {
 
             <div className="flex flex-col mt-5 whitespace-nowrap">
                 <div className="flex flex-row justify-between items-center">
-                    <div className="overflow-hidden"><Img src={null} type={"circle"} width={40} height={40}/></div>
+                    <div className="overflow-hidden rounded-full"><Img src={null} type={"circle"} width={40} height={40}/></div>
                     <div className="text-lg ml-2 flex-1">사용자1</div>
                     <PersonSVG width={"16px"} height={"17px"}/>
                     <span className="ml-1 mr-5">3</span>
@@ -51,7 +52,7 @@ export default function ProductDetail() {
                 <div className="text-base  mt-3 mb-8">현재최고가<span className="text-POINT_BLUE"> ₩ {formatPrice}</span> 원</div>
                 <div className="font-light text-sm">제품명 카메라 어쩌구 저쩌구 저쩌구저저꾸 </div>
             </div>
-            {biddOpen && <BiddingModal handleOpen={handleOpen} />}
+            {biddOpen && <SellerBidModal handleOpen={handleOpen} />}
         </div>
     )
 }

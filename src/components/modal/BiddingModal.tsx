@@ -1,16 +1,13 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Close from "../../../public/svg/Close";
+import { ModalTypes } from "@/types/Modal";
 
 interface BidHookFormTypes {
     bid: number;
 }
 
-interface BiddModalTypes {
-    handleOpen: () => void;
-}
-
-const BiddingModal = ({handleOpen}: BiddModalTypes ) => {
+const BiddingModal = ({handleOpen}: ModalTypes ) => {
     const { register, setValue } = useForm<BidHookFormTypes>();
     const [bidValue, setBidValue] = useState("")
 
