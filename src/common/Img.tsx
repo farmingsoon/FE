@@ -1,27 +1,37 @@
-import { StaticImageData } from "next/image";
+import Image, { StaticImageData } from "next/image";
 import noPhoto from "../../public/img/noPhoto.png";
 interface ImgTypes {
     type: "circle" | "normal";
     src: string | undefined | null | StaticImageData;
+    width: number;
+    height: number;
+    status?: "soldout" | "bidding";
 }
 
-const Img = ({type, src}: ImgTypes) => {
-    const imgType = type === "circle" ?  "rounded-full" : "rounded-lg"
-    const imgStyle = `w-full h-full border ${imgType}`;
+const Img = ({type, src, width, height, status}: ImgTypes) => {
+    const imgStyle = type === "circle" ?  "border rounded-full" : "border rounded-lg"
     //src가 StaticImage 인 경우, 객체의 src 속성을 사용
     //그렇지 않은 경우 src가 null 이면 noPhotosrc | src그대로 사용 
-    const imageSrc = src instanceof Object ? src.src : (src ?? noPhoto.src);
+    const imageSrc = src instanceof Object ? src.src : (src ?? noPhoto);
+    // const imageSrc = src ? src : noPhoto;
 
 
     return(
-        <div className={imgStyle}>
-        {
-            src === undefined || src === null 
-            ? <img src={noPhoto.src} className="object-contain w-full h-full" alt="No data" />
-            : <img src={imageSrc} className="object-contain w-full h-full" alt="Content" />
-        }
+        <div className={`${imgStyle} relative `}>
+            <Image src={imageSrc} width={width} height={height} alt={src ? "Content" : "No Image"} placeholder="blur" />
+            {status && status === "soldout" && (
+            <div className="absolute inset-0 w-full h-full bg-gray-500 bg-opacity-75 transition-opacity flex items-center justify-center">
+                <div className="font-semibold text-2xl text-white">판매 완료</div>
+            </div>
+            )}
         </div>
     )
 }
 
 export default Img;
+
+// {
+//     src === undefined || src === null 
+//     ? <Image  src={noPhoto} width={width} height={height} alt="No data" placeholder="blur" />
+//     : <Image  src={imageSrc} width={width} height={height} alt="Content" placeholder="blur"/>
+// }
