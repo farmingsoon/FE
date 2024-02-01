@@ -19,7 +19,7 @@ export default function Home() {
   ]
 
   return (
-    <div className="flex min-h-screen flex-col ">
+    <div className="flex min-h-screen flex-col">
       <div className="flex flex-col text-left ">
         <p className="text-xs pb-2 font-light">다양한 중고 상품들을 <span className="font-semibold text-MAIN_COLOR">파밍순</span>에서 겟!</p>
         <h1 className="pb-2">필요한 물건부터</h1>
@@ -41,19 +41,20 @@ export default function Home() {
           </select>
         </div>
       </div>
-      <div className="py-2 min-h-fit mt-5 flex flex-col justify-center items-center ">
-      { hotItemsData ? 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 relative">
-          {hotItemsData.map((item, idx) => (
-            <HomeItem key={idx} data={item}/>
-          ))}
-        </div> :
-        <>
-          <NoData width={"300px"} height={"300px"}/>
-          <p className="my-3">새로운 중고 상품들을 판매해보세요.</p>
-          <button className="rounded-md bg-MAIN_COLOR text-white px-8 py-1 hover:bg-DEEP_MAIN">판매 하기</button>
-        </>
-      }    
+      {/* <div className="py-2 min-h-fit mt-5 flex flex-col justify-center items-center bg-blue-500 "> */}
+      <div className="w-full">
+        { hotItemsData ? 
+          <div className="w-full grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-10 gap-x-4 mt-10 mb-5">
+            {hotItemsData.map((item, idx) => (
+              <HomeItem key={idx} data={item}/>
+            ))}
+          </div> :
+          <>
+            <NoData width={"300px"} height={"300px"}/>
+            <p className="my-3">새로운 중고 상품들을 판매해보세요.</p>
+            <button className="rounded-md bg-MAIN_COLOR text-white px-8 py-1 hover:bg-DEEP_MAIN">판매 하기</button>
+          </>
+        }    
       </div>
     </div>
   )

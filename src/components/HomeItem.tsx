@@ -16,7 +16,7 @@ export interface HomeItemTypes {
 const HomeItem = ({data}: HomeItemTypes) => {
 
     return(
-        <div className="w-64 h-[340px] p-2 flex flex-col bg-zinc-50 rounded-lg ">
+        <div className="w-64 h-[340px] p-2 flex flex-col bg-zinc-50 rounded-lg duration-500 hover:scale-105 hover:shadow-xl">
             <Img src={data.thumbnail} type={"normal"} width={240} height={240}/>
             <div className="flex flex-row mt-1.5">
                 <div className="flex-1 justify-start text-lg font-semibold">{data.title}</div>
