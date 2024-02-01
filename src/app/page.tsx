@@ -25,9 +25,9 @@ export default function Home() {
         <h1 className="pb-2">필요한 물건부터</h1>
         <h1 className="pb-2">구하지 못했던 한정 상품까지</h1>
       </div>
-      <div className="flex flex-row items-center">
+      <div className="flex flex-row items-center justify-between">
 
-        <div className="flex-1">
+        <div className="w-3/6">
           <Search />
         </div>
         <div className="ml-5 whitespace-nowrap">
