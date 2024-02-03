@@ -34,31 +34,34 @@ export default function Login() {
             setErr("비밀번호는 영문 대 소문자, 숫자, 특수문자를 사용하여 최소 8 글자 ~ 최대 20 글자로 작성해주세요.");
         }
 
-        // try { 
-        //     const res = await axios.post(`${BASER_URL}/api/members/login`, {
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         }, 
-        //         body: JSON.stringify({
-        //             email,
-        //             password
-        //         })
-        //     });
+        try { 
+            const res = await axios.post(`${BASER_URL}/api/members/login`, {
+                headers: {
+                    "Content-Type": "application/json",
+                }, 
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            });
             
-        //     //실패
+            //실패
 
-        //     //성공
-        //     if(res.status === 200){
-        //         setErr("");
-        //         setLogin((prev)=> ({
-        //             ...prev,
-        //             isLogin: true,
-        //         }))
-        //         router.push("/")
-        //     }
-        // } catch(Err) {
-        //     throw new Error(`로그인 실패 ${Err}`)
-        // }
+            //성공
+            if(res.status === 200){
+                console.log(res.data);
+                setErr("");
+                setLogin((prev)=> ({
+                    ...prev,
+                    // ACCESS_TOKEN: res.data.accessToken,
+                    // REFRESH_TOKEN: res.data.refreshToken,
+                    isLogin: true,
+                }))
+                router.push("/")
+            }
+        } catch(Err) {
+            throw new Error(`로그인 실패 ${Err}`)
+        }
     }
 
     return (
