@@ -11,7 +11,7 @@ export default function Login() {
     const [, setLogin] = useRecoilState(loginSelector);
     const [err, setErr] = useState("");
     const router = useRouter();
-    const BASER_URL = process.env.NEXT_BASE_URL;
+    const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
     const isValidEmail = ( email:string ) => {
         const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -39,10 +39,10 @@ export default function Login() {
                 headers: {
                     "Content-Type": "application/json",
                 }, 
-                body: JSON.stringify({
-                    email,
-                    password
-                })
+                body: {
+                    email:email,
+                    password: password,
+                }
             });
             
             //실패
@@ -60,7 +60,7 @@ export default function Login() {
                 router.push("/")
             }
         } catch(Err) {
-            throw new Error(`로그인 실패 ${Err}`)
+            console.log(`로그인 실패 ${Err}`)
         }
     }
 

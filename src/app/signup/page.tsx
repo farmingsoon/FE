@@ -11,7 +11,7 @@ export default function Signup() {
     const [ err, setErr ] = useState("");
     const [imageFile, setImageFile] = useState<string | null>();
     const router = useRouter();
-    const BASER_URL = process.env.NEXT_BASE_URL;
+    const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
     const isValidEmail = (email: string) => {
         const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -39,11 +39,17 @@ export default function Signup() {
 
     const handleSubmit = async (e:any) => {
         e.preventDefault();
+        const formData = new FormData();
+        
         const profile = e.target[0].files[0];
         const email = e.target[1].value;
         const password = e.target[2].value;
         const rePassword = e.target[3].value;
         const nickname = e.target[4].value;
+        formData.append('profileImg', profile); // 파일 추가
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('nickname', nickname);
         console.log(profile);
         console.log(email);
         console.log(password);
@@ -63,37 +69,24 @@ export default function Signup() {
             setErr("닉네임은 영문, 한글, 숫자를 사용해서 작성해주세요.")
         }
 
-        // try {
-        //     const res = await axios.post(`${BASER_URL}/api/memebers/join`, {
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         }, 
-        //         body: JSON.stringify({
-        //             email,
-        //             password,
-        //             nickname,
-        //         })
-        //     });
-        //     console.log(profile);
-        //     console.log(email);
-        //     console.log(password);
-        //     console.log(rePassword);
-        //     console.log(nickname);
+        try {
+            const res = await axios.post(`${BASER_URL}/api/memebers/join`, formData);
+            console.log(formData)
             
-        //     //실패 -> 승용님께 등록 해달라고 요청하기 0203
-        //     if(res.status === 400){
-        //         setErr("이미 등록된 이메일 입니다.")
-        //     }
+            //실패 -> 승용님께 등록 해달라고 요청하기 0203
+            if(res.status === 400){
+                setErr("이미 등록된 이메일 입니다.")
+            }
 
-        //     //성공
-        //     if(res.status === 200){
-        //         setErr("");
-        //         router.push("/login");
-        //     }
+            //성공
+            if(res.status === 200){
+                setErr("");
+                router.push("/login");
+            }
 
-        // } catch(error) {
-        //     throw new Error(`회원가입 에러 ${error}`)
-        // }
+        } catch(error) {
+            console.log(`회원가입 에러 ${error}`)
+        }
 
     }
 
