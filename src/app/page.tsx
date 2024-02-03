@@ -3,7 +3,6 @@ import NoData from "../../public/svg/NoData";
 import HomeItem from "@/components/HomeItem";
 
 export default function Home() {
-
   const hotItemsData = [
     {id: 1, title: "자전거", view: 10, liked: 8, price: 100000, thumbnail: null},
     {id: 2, title: "인형", view: 2, liked: 5, price: 5000, thumbnail: null},

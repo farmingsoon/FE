@@ -2,7 +2,11 @@ import { loginSelector } from "@/stores/loginState";
 import { useRouter } from "next/navigation";
 import { useRecoilState } from "recoil";
 
-const NavDropdown = () => {
+interface DropDownTypes {
+    handleClick: () => void;
+}
+
+const NavDropdown = ( {handleClick}:DropDownTypes ) => {
     const [ , setLogin ] = useRecoilState(loginSelector);
     const router = useRouter();
     const btnStyle = ""
@@ -10,10 +14,12 @@ const NavDropdown = () => {
 
     const handleLoginOut = (e:any) => {
         e.preventDefault();
+        handleClick();
         setLogin((prev) => ({
             ...prev,
             isLogin: false,
         }));
+        localStorage.clear();
         router.push("/");
     };
 

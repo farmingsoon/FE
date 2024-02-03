@@ -70,7 +70,7 @@ export default function Signup() {
         }
 
         try {
-            const res = await axios.post(`${BASER_URL}/api/memebers/join`, formData);
+            const res = await axios.post(`${BASER_URL}/api/members/join`, formData);
             console.log(formData)
             
             //실패 -> 승용님께 등록 해달라고 요청하기 0203

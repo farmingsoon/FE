@@ -8,7 +8,7 @@ import { useRecoilState } from "recoil";
 
 export default function Login() {
     const inputStyle = "border rounded-md border-LINE_BORDER px-3 h-11 my-1 w-full font-light text-sm";
-    const [, setLogin] = useRecoilState(loginSelector);
+    const [login, setLogin] = useRecoilState(loginSelector);
     const [err, setErr] = useState("");
     const router = useRouter();
     const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -35,11 +35,11 @@ export default function Login() {
         }
 
         try { 
-            const res = await axios.post(`${BASER_URL}/api/members/login`, {
-                body: {
-                    email: email,
-                    password: password,
-                }
+            const res = await axios.post(`${BASER_URL}/api/members/login`, 
+            {    
+                email: email,
+                password: password,
+                
             });
             
             //실패
@@ -50,10 +50,15 @@ export default function Login() {
                 setErr("");
                 setLogin((prev)=> ({
                     ...prev,
-                    // ACCESS_TOKEN: res.data.accessToken,
-                    // REFRESH_TOKEN: res.data.refreshToken,
+                    ACCESS_TOKEN: res.data.result.accessToken,
+                    REFRESH_TOKEN: res.data.result.refreshToken,
                     isLogin: true,
-                }))
+                    memberId: res.data.result.memberId,
+                }));
+                localStorage.setItem("loginState", JSON.stringify(login.isLogin));
+                localStorage.setItem("accessToken", JSON.stringify(login.ACCESS_TOKEN));
+                localStorage.setItem("memberId", JSON.stringify(login.memberId));
+
                 router.push("/")
             }
         } catch(Err) {
