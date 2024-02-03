@@ -1,4 +1,4 @@
-import Fileuploader from "@/components/FileUploader"
+import Fileuploader from "@/common/FileUploader"
 
 export default function ProductEdit() {
     const inputStyle = "border-b border-LINE_BORDER placeholder:text-zinc-300 text-sm py-1 mb-12 pl-2 font-light"
