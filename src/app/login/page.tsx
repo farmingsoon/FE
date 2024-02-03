@@ -36,11 +36,8 @@ export default function Login() {
 
         try { 
             const res = await axios.post(`${BASER_URL}/api/members/login`, {
-                headers: {
-                    "Content-Type": "application/json",
-                }, 
                 body: {
-                    email:email,
+                    email: email,
                     password: password,
                 }
             });
