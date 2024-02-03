@@ -80,7 +80,7 @@ const Navbar = () => {
                 : <Link href="/login"><button className="mb-5 ml-5 hover:text-MAIN_COLOR">로그인</button></Link>
 
             }
-            {openDrop && <NavDropdown/>}
+            {openDrop && <NavDropdown handleClick={handleClick}/>}
         </nav>
     )
 }

@@ -4,6 +4,7 @@ interface loginAtomTypes {
     isLogin : boolean;
     ACCESS_TOKEN : string;
     REFRESH_TOKEN: string;
+    memberId: number;
 }
 
 export const loginState = atom<loginAtomTypes>({
@@ -12,6 +13,7 @@ export const loginState = atom<loginAtomTypes>({
         isLogin: false,
         ACCESS_TOKEN: "",
         REFRESH_TOKEN: "",
+        memberId: 0,
     }
 });
 
