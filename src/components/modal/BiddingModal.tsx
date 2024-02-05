@@ -1,13 +1,21 @@
+"use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Close from "../../../public/svg/Close";
 import { ModalTypes } from "@/types/Modal";
+import axios from "axios";
 
 interface BidHookFormTypes {
     bid: number;
 }
 
-const BiddingModal = ({handleOpen}: ModalTypes ) => {
+interface BiddingModalTypes extends ModalTypes {
+    itemId: string;
+}
+
+const BiddingModal = ({handleOpen, itemId}: BiddingModalTypes ) => {
+    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+    const ACCES_TOKEN = localStorage.getItem("accessToken");
     const { register, setValue } = useForm<BidHookFormTypes>();
     const [bidValue, setBidValue] = useState("")
 
@@ -16,10 +24,30 @@ const BiddingModal = ({handleOpen}: ModalTypes ) => {
     }
 
     const handleBidtoWon = (event: React.ChangeEvent<HTMLInputElement>) => {
+
         const { value } = event.target;
         const formattedNum = formatNumber(value);
         setBidValue(formattedNum);
         setValue("bid", Number(value.replace(/,/g, '')))
+    }
+
+    const submitBidPrice = async () => {
+        try { 
+            const res = await axios.post(`${BASE_URL}/api/bids`, {
+                itemId: itemId,
+                price: Number(bidValue)
+            } , {
+                headers: {
+                    Authorization: `Bearer ${ACCES_TOKEN}`
+                }
+            });
+
+            if(res.status === 200){
+                console.log("입찰 성공");
+            }
+        } catch (err) {
+            console.log(`입찰하기 에러 ${err}`)
+        }
     }
 
 

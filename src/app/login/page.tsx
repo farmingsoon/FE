@@ -46,7 +46,8 @@ export default function Login() {
 
             //성공
             if(res.status === 200){
-                console.log(res.data);
+                console.log(res.data.result.accessToken);
+                const token = res.data.result.accessToken;
                 setErr("");
                 setLogin((prev)=> ({
                     ...prev,
@@ -55,8 +56,8 @@ export default function Login() {
                     isLogin: true,
                     memberId: res.data.result.memberId,
                 }));
-                localStorage.setItem("loginState", JSON.stringify(login.isLogin));
-                localStorage.setItem("accessToken", JSON.stringify(login.ACCESS_TOKEN));
+                localStorage.setItem("loginState", JSON.stringify(true));
+                localStorage.setItem("accessToken", token);
                 localStorage.setItem("memberId", JSON.stringify(login.memberId));
 
                 router.push("/")
