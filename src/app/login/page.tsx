@@ -1,5 +1,6 @@
 "use client";
 import { loginSelector } from "@/stores/loginState";
+import LocalStorage from "@/util/localstorage";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -48,6 +49,7 @@ export default function Login() {
             if(res.status === 200){
                 console.log(res.data.result.accessToken);
                 const token = res.data.result.accessToken;
+                const id = res.data.result.memberId;
                 setErr("");
                 setLogin((prev)=> ({
                     ...prev,
@@ -56,9 +58,12 @@ export default function Login() {
                     isLogin: true,
                     memberId: res.data.result.memberId,
                 }));
-                localStorage.setItem("loginState", JSON.stringify(true));
-                localStorage.setItem("accessToken", token);
-                localStorage.setItem("memberId", JSON.stringify(login.memberId));
+                // localStorage.setItem("loginState", JSON.stringify(true));
+                // localStorage.setItem("accessToken", token);
+                // localStorage.setItem("memberId", JSON.stringify(login.memberId));
+                LocalStorage.setItem("loginState", String(true));
+                LocalStorage.setItem("accessToken", token);
+                LocalStorage.setItem("memberId", String(id));
 
                 router.push("/")
             }

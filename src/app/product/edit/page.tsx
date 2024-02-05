@@ -1,28 +1,19 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 // import Fileuploader from "@/common/FileUploader"
 import PlusCircle from "../../../../public/svg/PlusCircle";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import LocalStorage from "@/util/localstorage";
 
 export default function ProductEdit() {
     const inputStyle = "border-b border-LINE_BORDER placeholder:text-zinc-300 text-sm py-1 mb-12 pl-2 font-light";
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const [TOKEN , setTOKEN] = useState("");
-    // const ACCES_TOKEN = localStorage.getItem("accessToken");
     const router = useRouter();
     const [imageFile, setImageFile] = useState<File[]>([]);
     const [contents, setContents] = useState("");
-
-    useEffect(() => {
-        const curToken = localStorage.getItem('accessToken');
-        if(curToken !== null){
-            setTOKEN(curToken);
-        }
-
-    }, [])
-
+    const accessToken = LocalStorage.getItem("accessToken");
 
     const handleImageFile = (e:any) => {
         e.preventDefault();
@@ -60,10 +51,12 @@ export default function ProductEdit() {
         console.log(contents);
         
         try { 
+
+            console.log(accessToken)
             const res = await axios.post(`${BASE_URL}/api/items`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${TOKEN}`
+                    Authorization: `Bearer ${accessToken}`
                 }
             });
 
