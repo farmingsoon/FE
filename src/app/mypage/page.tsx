@@ -1,6 +1,7 @@
 "use client";
 import Img from "@/common/Img";
 import MineItem from "@/components/MineItem";
+import LocalStorage from "@/util/localstorage";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -19,7 +20,7 @@ interface MypageTypes {
 
 export default function Login() {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const ACCES_TOKEN = localStorage.getItem("accessToken");
+    const accessToken = LocalStorage.getItem("accessToken");
     const [ mineData, setMineData  ] = useState<MypageTypes>();
     const mineItemDatas = [
         {id: 1, title: "자전거", view: 10, liked: 8, price: 100000, thumbnail: null},
@@ -33,7 +34,7 @@ export default function Login() {
         try { 
             const res = await axios.get(`${BASE_URL}/api/items/bid/me`, {
                 headers: {
-                    Authorization: `Bearer ${ACCES_TOKEN}`
+                    Authorization: `Bearer ${accessToken}`
                 }
             });
 

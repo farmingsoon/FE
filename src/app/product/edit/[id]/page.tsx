@@ -7,11 +7,12 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useRecoilState } from "recoil";
 import { amendState } from "@/stores/amendData";
+import LocalStorage from "@/util/localstorage";
 
 export default function ProductEdit() {
     const inputStyle = "border-b border-LINE_BORDER placeholder:text-zinc-300 text-sm py-1 mb-12 pl-2 font-light";
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const ACCES_TOKEN = localStorage.getItem("accessToken");
+    const accessToken = LocalStorage.getItem("accessToken");
     const router = useRouter();
     const [originData, setOriginData] = useRecoilState(amendState);
     const [imageFile, setImageFile] = useState<File[] | string[] >(originData.images);
@@ -62,7 +63,7 @@ export default function ProductEdit() {
             const res = await axios.post(`${BASE_URL}/api/items`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${ACCES_TOKEN}`
+                    Authorization: `Bearer ${accessToken}`
                 }
             });
 
