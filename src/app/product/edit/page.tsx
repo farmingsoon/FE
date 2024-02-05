@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 // import Fileuploader from "@/common/FileUploader"
 import PlusCircle from "../../../../public/svg/PlusCircle";
@@ -9,9 +9,20 @@ import { useRouter } from "next/navigation";
 export default function ProductEdit() {
     const inputStyle = "border-b border-LINE_BORDER placeholder:text-zinc-300 text-sm py-1 mb-12 pl-2 font-light";
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const ACCES_TOKEN = localStorage.getItem("accessToken");
+    const [TOKEN , setTOKEN] = useState("");
+    // const ACCES_TOKEN = localStorage.getItem("accessToken");
     const router = useRouter();
     const [imageFile, setImageFile] = useState<File[]>([]);
+    const [contents, setContents] = useState("");
+
+    useEffect(() => {
+        const curToken = localStorage.getItem('accessToken');
+        if(curToken !== null){
+            setTOKEN(curToken);
+        }
+
+    }, [])
+
 
     const handleImageFile = (e:any) => {
         e.preventDefault();
@@ -30,12 +41,12 @@ export default function ProductEdit() {
         const title = e.target[1].value;
         const hopePrice = e.target[2].value;
         const period = e.target[3].value;
-        const description = e.target[4].value;
+        // const description = e.target[4].value;
 
         formData.append("title", title);
         formData.append("hopePrice", hopePrice);
         formData.append("period", period);
-        formData.append("description", description);
+        formData.append("description", contents);
 
         if(imageFile){
             formData.append("thumbnailImage", imageFile[0]);
@@ -46,13 +57,13 @@ export default function ProductEdit() {
         };
 
         console.log(imageFile[0]);
-        console.log(imageFile);
+        console.log(contents);
         
         try { 
             const res = await axios.post(`${BASE_URL}/api/items`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${ACCES_TOKEN}`
+                    Authorization: `Bearer ${TOKEN}`
                 }
             });
 
@@ -118,6 +129,7 @@ export default function ProductEdit() {
                     rows={6}
                     className="form-textarea mt-1 block w-full border rounded-lg border-LINE_BORDER p-2 placeholder:text-zinc-300 text-sm font-light "
                     placeholder="상품을 자세히 설명해주세요."
+                    onChange={(e) => setContents(e.target.value)} 
                 ></textarea>
                 <button type="submit" className="mt-5 bg-black text-white font-semibold text-sm rounded-md w-full h-11">
                     상품 등록

@@ -14,7 +14,7 @@ const HomeItem = ({data}: HomeItemTypes) => {
 
     return(
         <div className="w-64 h-[340px] p-2 flex flex-col bg-zinc-50 rounded-lg duration-500 hover:scale-105 hover:shadow-xl">
-            <div className="h-[240px] flex items-center">
+            <div className="w-[240px] h-[240px] flex items-center overflow-hidden">
                 <Img src={data && data.thumbnailImgUrl} type={"normal"} width={240} height={240}/>
             </div>
             <div className="flex flex-row mt-1.5 ">

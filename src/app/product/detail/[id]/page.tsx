@@ -175,7 +175,7 @@ export default function ProductDetail(  ) {
                 </div>
                 <div className="text-xs font-light my-1">서울 ・ 3일 2시간 남음</div>
                 <div className="text-base  mt-3 mb-8">현재최고가<span className="text-POINT_BLUE"> ₩ {formatPrice}</span> 원</div>
-                <div className="font-light text-sm">{detailData && detailData.description}</div>
+                <div className="font-light text-sm whitespace-pre">{detailData && detailData.description}</div>
             </div>
             <div className="mt-10 flex flex-row justify-end text-sm font-normal border-t border-LINE_BORDER pt-6">
                 {amIuser
