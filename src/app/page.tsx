@@ -9,13 +9,16 @@ import axios from "axios";
 export interface MerchanTypes {
   itemId: number;
   title: string;
+  thumbnailImgUrl: string;
   description: string;
   expiredAt: string;
   highestPrice: number;
   hopePrice: number;
   lowestPrice: number;
-  itemStatus: "bidding" | "finish" | "soldOut";
-  bidSize: number;
+  itemStatus: "경매중" | "경매종료" | "판매완료";
+  bidCount: number;
+  viewCount: number;
+  likeCount: number;
 }
 
 
@@ -37,6 +40,7 @@ export default function Home() {
 
   useEffect(() => {
     getHomeData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

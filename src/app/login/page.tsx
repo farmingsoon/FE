@@ -56,7 +56,7 @@ export default function Login() {
                     isLogin: true,
                     memberId: res.data.result.memberId,
                 }));
-                localStorage.setItem("loginState", JSON.stringify(login.isLogin));
+                localStorage.setItem("loginState", JSON.stringify(true));
                 localStorage.setItem("accessToken", token);
                 localStorage.setItem("memberId", JSON.stringify(login.memberId));
 

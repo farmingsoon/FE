@@ -10,6 +10,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import BiddingModal from "@/components/modal/BiddingModal";
 import { useParams } from 'next/navigation'
+import { useRecoilState } from "recoil";
+import { amendState } from "@/stores/amendData";
 
 // import BiddingModal from "@/components/modal/BiddingModal";
 
@@ -29,11 +31,12 @@ interface DetailPageTypes {
     bidCount: number;
     likeCount: number;
     viewCount: number;
-
 }
+
 
 export default function ProductDetail(  ) {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+    const ACCES_TOKEN = localStorage.getItem("accessToken");
     const [sellerBiddOpen, setSellerBiddOpen] = useState(false);
     const [buyerBidOppen, setBuyerBidOpen] = useState(false);
     const [detailData, setDetailData] = useState<DetailPageTypes>();
@@ -42,6 +45,9 @@ export default function ProductDetail(  ) {
     const router = useRouter();
     const formatPrice = String(tempPrice).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     const params = useParams<{ id: string; }>()
+
+    //페이지 수정 
+    const [ , setModify ] = useRecoilState(amendState);
 
     //이미지 페이지네이션
     const [ curImg, setCurImg ] = useState(0);
@@ -76,7 +82,12 @@ export default function ProductDetail(  ) {
 
     const handleDelete = async () => {
         try {
-            const res = await axios.delete(`${BASE_URL}/api/items/${params.id}`);
+            const res = await axios.delete(`${BASE_URL}/api/items/${params.id}`, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${ACCES_TOKEN}`
+                }
+            });
             if(res.status === 200){
                 console.log("성공적 데이터 삭제 ")
                 router.push("/");
@@ -84,6 +95,27 @@ export default function ProductDetail(  ) {
         } catch (Err){
             console.log(`상품 상세 삭제 ${Err}`)
         }
+    };
+
+    const handleAmend = () => {
+        if(detailData){
+            const endDate = new Date(detailData.expiredAt);
+            const currentDate = new Date();
+
+            const remainingTime = endDate.getTime() - currentDate.getTime();
+            const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
+            
+
+            setModify({
+                title: detailData.title,
+                description: detailData.description,
+                hopePrice: detailData.hopePrice,
+                period: remainingDays,
+                thumbnailImage:  detailData.thumbnailImgUrl,
+                images: [...detailData.itemImgUrl],
+            })
+        }
+        router.push(`/product/edit/${params.id}`)
     }
 
     const handleNextImg = () =>{
@@ -108,7 +140,7 @@ export default function ProductDetail(  ) {
         const userId = localStorage.getItem("memberId"); //recoil
         getDetailData(Number(userId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []);
 
     return(
         <div className="flex min-h-screen flex-col mb-5 max-w-[900px] min-w-[500px]">
@@ -148,7 +180,7 @@ export default function ProductDetail(  ) {
             <div className="mt-10 flex flex-row justify-end text-sm font-normal border-t border-LINE_BORDER pt-6">
                 {amIuser
                  ? <><button className="w-20 h-10 rounded-lg border border-LINE_BORDER hover:bg-zinc-200 " onClick={handleDelete}>삭제</button>
-                    <button className="w-20 h-10 rounded-lg border border-LINE_BORDER  hover:bg-zinc-200 ml-7">수정</button></>
+                    <button className="w-20 h-10 rounded-lg border border-LINE_BORDER  hover:bg-zinc-200 ml-7" onClick={handleAmend}>수정</button></>
                  : null
                 }
                 
