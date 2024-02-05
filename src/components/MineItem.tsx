@@ -1,14 +1,18 @@
 import Img from "@/common/Img";
+import StatusPrice from "./StatusPrice";
 
 interface MineItemTypes {
     type: "bidded" | "sold";
     data: {
-        id: number;
-        title: string;
-        view: number;
-        liked: number;
-        price: number;
-        thumbnail: undefined | null | string;
+    itemId: number;
+    title: string;
+    description: string;
+    expiredAt: string;
+    highestPrice: number;
+    hopePrice: number;
+    lowestPrice: number;
+    itemStatus: string;
+    bidSize: number;
     }
 }
 
@@ -23,7 +27,8 @@ const MineItem = ({type, data}: MineItemTypes) => {
             <div className="overflow-hidden mr-3 "><Img src={null} type={"normal"} width={96} height={96}/></div>
             <div className="flex-1 flex flex-col text-base  py-3 justify-around min-w-64">
                 <div>{data.title}</div>
-                <div className="text-sm font-light">현재최고가<span className="text-POINT_BLUE font-semibold"> ₩ {data && formatPrice(data.price)}</span> 원</div>
+                {/* <div className="text-sm font-light">현재최고가<span className="text-POINT_BLUE font-semibold"> ₩ {data && formatPrice(data.price)}</span> 원</div> */}
+                <StatusPrice bidStatus={data.itemStatus} highestPrice={data.highestPrice} hopePrice={data.hopePrice} />
                 <div className="text-xs font-light ">서울 ・ 3일 2시간 남음</div>
             </div>
             {type === "bidded" 
