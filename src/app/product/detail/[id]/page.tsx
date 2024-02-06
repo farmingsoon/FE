@@ -12,6 +12,8 @@ import BiddingModal from "@/components/modal/BiddingModal";
 import { useParams } from 'next/navigation'
 import { useRecoilState } from "recoil";
 import { amendState } from "@/stores/amendData";
+import LocalStorage from "@/util/localstorage";
+import StatusPrice from "@/components/StatusPrice";
 
 // import BiddingModal from "@/components/modal/BiddingModal";
 
@@ -36,14 +38,15 @@ interface DetailPageTypes {
 
 export default function ProductDetail(  ) {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const ACCES_TOKEN = localStorage.getItem("accessToken");
+    const ACCES_TOKEN = LocalStorage.getItem("accessToken");
+    const userId = LocalStorage.getItem("memberId");
     const [sellerBiddOpen, setSellerBiddOpen] = useState(false);
     const [buyerBidOppen, setBuyerBidOpen] = useState(false);
     const [detailData, setDetailData] = useState<DetailPageTypes>();
     const [ amIuser, setAmIuser ] = useState(false); 
-    const tempPrice = 10000000;
+    // const tempPrice = 10000000;
     const router = useRouter();
-    const formatPrice = String(tempPrice).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    // const formatPrice = String(tempPrice).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     const params = useParams<{ id: string; }>()
 
     //페이지 수정 
@@ -53,13 +56,19 @@ export default function ProductDetail(  ) {
     const [ curImg, setCurImg ] = useState(0);
 
 
-    const handleOpen = (user: string) => {
-        if(user === "seller"){
+    const handleOpen = (sellerId: number) => {
+        if(Number(userId) === sellerId){
+            //판매자 
             setSellerBiddOpen(!sellerBiddOpen);
         }
-        if(user === "buyer"){
+        
+        if(Number(userId) !== sellerId){
+            //구매자
             setBuyerBidOpen(!buyerBidOppen);
         }
+
+        return;
+
     }
 
     const getDetailData = async (userId: number) => {
@@ -168,13 +177,19 @@ export default function ProductDetail(  ) {
                         <button className="bg-white rounded-md px-5 py-1.5 border shadow-lg w-36 hover:bg-zinc-200">채팅하기</button>
                         <button 
                             className="bg-MAIN_COLOR rounded-md px-5 py-1.5 shadow-lg ml-3 w-36 hover:bg-DEEP_MAIN"
-                            onClick={() => handleOpen("seller")}
-                        >입찰하기
+                            onClick={() => handleOpen( detailData?.sellerId as number)}
+                        >
+                        { Number(userId) === detailData?.sellerId
+                            ? "입찰 내역"
+                            : "입찰 하기"
+                        }
                         </button>
                     </div>
                 </div>
                 <div className="text-xs font-light my-1">서울 ・ 3일 2시간 남음</div>
-                <div className="text-base  mt-3 mb-8">현재최고가<span className="text-POINT_BLUE"> ₩ {formatPrice}</span> 원</div>
+                <div className="text-base  mt-3 mb-8">
+                    <StatusPrice bidStatus={detailData && detailData.itemStatus } highestPrice={detailData && detailData.highestPrice} hopePrice={detailData && detailData.hopePrice} />
+                </div>
                 <div className="font-light text-sm whitespace-pre">{detailData && detailData.description}</div>
             </div>
             <div className="mt-10 flex flex-row justify-end text-sm font-normal border-t border-LINE_BORDER pt-6">
@@ -185,8 +200,8 @@ export default function ProductDetail(  ) {
                 }
                 
             </div>
-            {sellerBiddOpen && <SellerBidModal handleOpen={() => handleOpen("seller")} />}
-            {buyerBidOppen && <BiddingModal handleOpen={() => handleOpen("buyer")} itemId={params.id}/>}
+            {sellerBiddOpen && <SellerBidModal handleOpen={ () => handleOpen( detailData?.sellerId as number ) } />}
+            {buyerBidOppen && <BiddingModal handleOpen={ () => handleOpen( detailData?.sellerId as number ) } itemId={params.id}/>}
         </div>
     )
 }

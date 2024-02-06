@@ -11,12 +11,14 @@ import TagSVG from "../../public/svg/TagSVG";
 import NavDropdown from "./NavDropdown";
 import { useRecoilState } from "recoil";
 import { menuState } from "@/stores/NavMenuState";
-import { loginSelector } from "@/stores/loginState";
+import LocalStorage from "@/util/localstorage";
+// import { loginSelector } from "@/stores/loginState";
 
 const Navbar = () => {
     const [openDrop, setOpenDrop] = useState(false);
     const [menusState, setMenusState ] = useRecoilState(menuState);
-    const [ login, setLogin ] = useRecoilState(loginSelector);
+    // const [ login, setLogin ] = useRecoilState(loginSelector);
+    const isLogin = LocalStorage.getItem("accessToken") ? true : false;
     const btnStyle = "flex flex-row items-center w-fit whitespace-nowrap mb-6"
 
     const handleClick = () => {
@@ -75,7 +77,7 @@ const Navbar = () => {
                     </Link>
                 </li>
             </ul>
-            {login.isLogin 
+            {isLogin 
                 ? <button className="px-3 mb-5 " onClick={handleClick}><Hamburger width={"25px"} height={"25px"}/></button>
                 : <Link href="/login"><button className="mb-5 ml-5 hover:text-MAIN_COLOR">로그인</button></Link>
 

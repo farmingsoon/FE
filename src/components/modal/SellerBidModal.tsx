@@ -2,8 +2,21 @@ import { ModalTypes } from "@/types/Modal";
 import Close from "../../../public/svg/Close";
 import BidPriceItem from "../BidPriceItem";
 import BidSoldItem from "../BidSoldItem";
+// import LocalStorage from "@/util/localstorage";
+// import axios from "axios";
 
 const SellerBidModal = ({handleOpen}: ModalTypes) => {
+    // const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+    // const ACCES_TOKEN = LocalStorage.getItem("accessToken");
+    
+    // const getBidRecord = async ( ) => {
+    //     try { 
+    //         const res = await axios.get(`${BASE_URL}/api/`)
+    //     } catch (err){
+    //         console.log(`구매자 입찰내역 보기 에러 ${err}`)
+    //     }
+    // }
+
     return(
         <div className="fixed inset-0 ml-52 z-10 flex items-end justify-center w-screen min-h-full p-4 overflow-y-auto text-center transition-opacity bg-gray-500 bg-opacity-75 sm:items-center sm:p-0">
             <div className="relative px-8 pb-10 pt-5 overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl w-fit" style={{ marginLeft: '-12rem' }} >

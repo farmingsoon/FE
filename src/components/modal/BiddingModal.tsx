@@ -1,13 +1,13 @@
 "use client";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import Close from "../../../public/svg/Close";
 import { ModalTypes } from "@/types/Modal";
 import axios from "axios";
+import LocalStorage from "@/util/localstorage";
 
-interface BidHookFormTypes {
-    bid: number;
-}
+// interface BidHookFormTypes {
+//     bid: number;
+// }
 
 interface BiddingModalTypes extends ModalTypes {
     itemId: string;
@@ -15,8 +15,8 @@ interface BiddingModalTypes extends ModalTypes {
 
 const BiddingModal = ({handleOpen, itemId}: BiddingModalTypes ) => {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const ACCES_TOKEN = localStorage.getItem("accessToken");
-    const { register, setValue } = useForm<BidHookFormTypes>();
+    const ACCES_TOKEN = LocalStorage.getItem("accessToken");
+    // const { register, setValue } = useForm<BidHookFormTypes>();
     const [bidValue, setBidValue] = useState("")
 
     const formatNumber = (value: string) => {
@@ -24,18 +24,20 @@ const BiddingModal = ({handleOpen, itemId}: BiddingModalTypes ) => {
     }
 
     const handleBidtoWon = (event: React.ChangeEvent<HTMLInputElement>) => {
-
         const { value } = event.target;
         const formattedNum = formatNumber(value);
         setBidValue(formattedNum);
-        setValue("bid", Number(value.replace(/,/g, '')))
+        // setValue("bid", Number(value.replace(/,/g, '')))
     }
 
-    const submitBidPrice = async () => {
-        try { 
+    const submitBidPrice = async (e:any) => {
+        e.preventDefault();
+        const numbidValue = Number(bidValue.replace(/,/g, ''));
+
+        try {    
             const res = await axios.post(`${BASE_URL}/api/bids`, {
                 itemId: itemId,
-                price: Number(bidValue)
+                price: numbidValue
             } , {
                 headers: {
                     Authorization: `Bearer ${ACCES_TOKEN}`
@@ -44,6 +46,7 @@ const BiddingModal = ({handleOpen, itemId}: BiddingModalTypes ) => {
 
             if(res.status === 200){
                 console.log("입찰 성공");
+                handleOpen();
             }
         } catch (err) {
             console.log(`입찰하기 에러 ${err}`)
@@ -57,10 +60,10 @@ const BiddingModal = ({handleOpen, itemId}: BiddingModalTypes ) => {
                 <div className="p-1 rounded-md float-end hover:bg-zinc-100" onClick={handleOpen}><Close width={"25px"} height={"25px"}/></div>
                 <div className="text-xl mb-2 font-semibold mt-8">입찰하기 </div>
                 <div className="">입찰가를 입력 해주세요.</div>
-                <form className="mt-8 flex flex-col items-center">
-                    <div className="flex flex-row items-end">
+                <form className="mt-8 flex flex-col items-center" onSubmit={submitBidPrice}>
+                    <div className="flex flex-row items-end" >
                         <input 
-                            {...register("bid")}
+                            // {...register("bid")}
                             value={bidValue}
                             onChange={handleBidtoWon}
                             type="text" 
