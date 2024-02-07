@@ -10,8 +10,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import BiddingModal from "@/components/modal/BiddingModal";
 import { useParams } from 'next/navigation'
-import { useRecoilState } from "recoil";
-import { amendState } from "@/stores/amendData";
+// import { useRecoilState } from "recoil";
+// import { amendState } from "@/stores/amendData";
 import LocalStorage from "@/util/localstorage";
 import StatusPrice from "@/components/StatusPrice";
 
@@ -50,7 +50,7 @@ export default function ProductDetail(  ) {
     const params = useParams<{ id: string; }>()
 
     //페이지 수정 
-    const [ , setModify ] = useRecoilState(amendState);
+    // const [ , setModify ] = useRecoilState(amendState);
 
     //이미지 페이지네이션
     const [ curImg, setCurImg ] = useState(0);
@@ -106,26 +106,27 @@ export default function ProductDetail(  ) {
         }
     };
 
-    const handleAmend = () => {
-        if(detailData){
-            const endDate = new Date(detailData.expiredAt);
-            const currentDate = new Date();
+    //수정 기능 제거 및 보류 
+    // const handleAmend = () => {
+    //     if(detailData){
+    //         const endDate = new Date(detailData.expiredAt);
+    //         const currentDate = new Date();
 
-            const remainingTime = endDate.getTime() - currentDate.getTime();
-            const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
+    //         const remainingTime = endDate.getTime() - currentDate.getTime();
+    //         const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
             
 
-            setModify({
-                title: detailData.title,
-                description: detailData.description,
-                hopePrice: detailData.hopePrice,
-                period: remainingDays,
-                thumbnailImage:  detailData.thumbnailImgUrl,
-                images: [...detailData.itemImgUrl],
-            })
-        }
-        router.push(`/product/edit/${params.id}`)
-    }
+    //         setModify({
+    //             title: detailData.title,
+    //             description: detailData.description,
+    //             hopePrice: detailData.hopePrice,
+    //             period: remainingDays,
+    //             thumbnailImage:  detailData.thumbnailImgUrl,
+    //             images: [...detailData.itemImgUrl],
+    //         })
+    //     }
+    //     router.push(`/product/edit/${params.id}`)
+    // }
 
     const handleNextImg = () =>{
         if(detailData && curImg < detailData.itemImgUrl.length - 1){
@@ -194,8 +195,10 @@ export default function ProductDetail(  ) {
             </div>
             <div className="mt-10 flex flex-row justify-end text-sm font-normal border-t border-LINE_BORDER pt-6">
                 {amIuser
-                 ? <><button className="w-20 h-10 rounded-lg border border-LINE_BORDER hover:bg-zinc-200 " onClick={handleDelete}>삭제</button>
-                    <button className="w-20 h-10 rounded-lg border border-LINE_BORDER  hover:bg-zinc-200 ml-7" onClick={handleAmend}>수정</button></>
+                 ? <>
+                    <button className="w-20 h-10 rounded-lg border border-LINE_BORDER hover:bg-zinc-200 " onClick={handleDelete}>삭제</button>
+                    {/* <button className="w-20 h-10 rounded-lg border border-LINE_BORDER  hover:bg-zinc-200 ml-7" onClick={handleAmend}>수정</button> */}
+                    </>
                  : null
                 }
                 
