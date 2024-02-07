@@ -1,29 +1,22 @@
 import Img from "@/common/Img";
 import StatusPrice from "./StatusPrice";
+import { MypageTypes } from "@/app/mypage/page";
+import { useRouter } from "next/navigation";
 
 interface MineItemTypes {
     type: "bidded" | "sold";
-    data: {
-    itemId: number;
-    title: string;
-    description: string;
-    expiredAt: string;
-    highestPrice: number;
-    hopePrice: number;
-    lowestPrice: number;
-    itemStatus: string;
-    bidSize: number;
-    }
+    data: MypageTypes;
 }
 
 const MineItem = ({type, data}: MineItemTypes) => {
-
+    const router = useRouter();
     const formatPrice = (price: number) => {
         return String(price).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     }
 
     return(
-        <div className="my-2 flex flex-row whitespace-nowrap">
+        <div className="my-2 flex flex-row whitespace-nowrap" 
+            onClick={(e) => {e.preventDefault(); router.push(`/product/detail/${data && data.itemId}`)}} >
             <div className="overflow-hidden mr-3 "><Img src={null} type={"normal"} width={96} height={96}/></div>
             <div className="flex-1 flex flex-col text-base  py-3 justify-around min-w-64">
                 <div>{data.title}</div>
