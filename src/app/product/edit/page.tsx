@@ -90,7 +90,7 @@ export default function ProductEdit() {
         <div className="flex min-h-screen flex-col mb-5">
             <h1>상품 등록</h1>
             <form  onSubmit={handleSubmit} className="flex flex-col">
-                <div className="bg-pink-300 my-5 flex flex-row overflow-x-scroll">
+                <div className="my-5 flex flex-row overflow-x-scroll">
                     <label
                         htmlFor="editImg_file" 
                         className="flex border h-32 w-44  rounded-lg border-LINE_BORDER bg-zinc-500 justify-center items-center"

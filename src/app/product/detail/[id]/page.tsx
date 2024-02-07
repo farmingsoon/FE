@@ -14,6 +14,8 @@ import { useParams } from 'next/navigation'
 // import { amendState } from "@/stores/amendData";
 import LocalStorage from "@/util/localstorage";
 import StatusPrice from "@/components/StatusPrice";
+import { useRecoilState } from "recoil";
+import { tokenState } from "@/stores/tokenModal";
 
 // import BiddingModal from "@/components/modal/BiddingModal";
 
@@ -44,6 +46,7 @@ export default function ProductDetail(  ) {
     const [buyerBidOppen, setBuyerBidOpen] = useState(false);
     const [detailData, setDetailData] = useState<DetailPageTypes>();
     const [ amIuser, setAmIuser ] = useState(false); 
+    const [, setIsToken] = useRecoilState(tokenState);
     // const tempPrice = 10000000;
     const router = useRouter();
     // const formatPrice = String(tempPrice).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -101,8 +104,14 @@ export default function ProductDetail(  ) {
                 console.log("성공적 데이터 삭제 ")
                 router.push("/");
             }
-        } catch (Err){
-            console.log(`상품 상세 삭제 ${Err}`)
+        } catch (err){
+            console.log(`상품 상세 삭제 ${err}`);
+            if(axios.isAxiosError(err) && err.response){
+                if(err.response.status === 404){
+                    setIsToken({tokenExpired: true})
+                }
+                
+            }
         }
     };
 
