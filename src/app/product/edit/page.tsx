@@ -8,16 +8,25 @@ import { useRouter } from "next/navigation";
 import LocalStorage from "@/util/localstorage";
 import { useRecoilState } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
+import { categoryState } from "@/stores/categoryState";
 
 export default function ProductEdit() {
-    const inputStyle = "border-b border-LINE_BORDER placeholder:text-zinc-300 text-sm py-1 mb-12 pl-2 font-light";
+    const inputStyle = "border-b border-LINE_BORDER placeholder:text-zinc-300 text-sm py-1 mb-12 pl-2 font-light ";
+    const btnStyle = `rounded-full w-20 h-10 text-sm font-normal mx-3 mt-2 text-TEXT_BLACK border border-indigo-500 rounded-lg shadow-sm cursor-pointer  `
+    const checkBtnStyle = `bg-gradient-to-br from-purple-500 via-indigo-500 to-indigo-500  font-semibold text-white`;
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
     const router = useRouter();
     const [imageFile, setImageFile] = useState<File[]>([]);
     const [contents, setContents] = useState("");
     const accessToken = LocalStorage.getItem("accessToken");
     const [, setIsToken] = useRecoilState(tokenState);
+    const [ selectCategory, setSelectCategory ] = useRecoilState(categoryState);
+
     const [err, setErr] = useState("");
+
+    const handleCategoryClick = ( category: string ) => {
+        setSelectCategory({ category: category });
+    }
 
     const handleImageFile = (e:any) => {
         e.preventDefault();
@@ -42,6 +51,7 @@ export default function ProductEdit() {
         formData.append("hopePrice", hopePrice);
         formData.append("period", period);
         formData.append("description", contents);
+        formData.append("category", selectCategory.category)
 
         if(imageFile){
             formData.append("thumbnailImage", imageFile[0]);
@@ -50,13 +60,8 @@ export default function ProductEdit() {
                 formData.append('images', el)
             })
         };
-
-        console.log(imageFile[0]);
-        console.log(contents);
         
         try { 
-
-            console.log(accessToken)
             const res = await axios.post(`${BASE_URL}/api/items`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -123,9 +128,40 @@ export default function ProductEdit() {
                     <input type="text" className={`${inputStyle} w-full`} placeholder="경매 기간을 입력해주세요 (기본 최대 7일)"/>
                 </div>
 
-                <div className="flex flex-row ">
-                    <label className="mr-10 whitespace-nowrap">거래 지역</label>
-                    <input type="text" className={`${inputStyle} w-full`}  placeholder="거래 가능 지역을 입력해주세요."/>
+                <div className="flex flex-row mb-10">
+                    <label className="mr-10 whitespace-nowrap mt-2">카테고리</label>
+                    <input type="text" className="hidden"  placeholder="거래 가능 지역을 입력해주세요." />
+                    <ul className="flex flew-row flex-wrap">
+                        <li > <button type="button"
+                                className={`${btnStyle} ${selectCategory.category === "의류" ?  checkBtnStyle : ""}`} 
+                                onClick={(e) => {e.preventDefault(); handleCategoryClick("의류")}}
+                                >의류
+                        </button></li>
+                        <li> <button type="button"
+                                className={`${btnStyle} ${selectCategory.category === "신발" ?  checkBtnStyle : " "}`} 
+                                onClick={(e) => {e.stopPropagation();  handleCategoryClick("신발");}} >신발
+                            </button></li>
+                        <li><button type="button" 
+                                className={`${btnStyle} ${selectCategory.category === "악세사리" ? checkBtnStyle : ""}`} 
+                                onClick={(e) => {e.stopPropagation();  setSelectCategory({ category: "악세사리" });}}  >악세사리
+                        </button></li>
+                        <li><button type="button" 
+                                className={`${btnStyle} ${selectCategory.category === "가구" ? checkBtnStyle : ""}`} 
+                                onClick={(e) => {e.stopPropagation();  setSelectCategory({ category: "가구" });}} >가구
+                        </button></li>
+                        <li><button  type="button"
+                                className={`${btnStyle} ${selectCategory.category === "앨범" ? checkBtnStyle : ""}`}  
+                                onClick={(e) => {e.stopPropagation(); handleCategoryClick("앨범")}} >앨범
+                        </button></li>
+                        <li><button type="button"
+                                className={`${btnStyle} ${selectCategory.category === "펫용품" ? checkBtnStyle : ""}`} 
+                                onClick={(e) => {e.stopPropagation();  setSelectCategory({ category: "펫용품" });}} >펫용품
+                        </button></li>
+                        <li><button type="button" 
+                                className={`${btnStyle} ${selectCategory.category === "기타" ? checkBtnStyle : ""}`}  
+                                onClick={(e) => {e.stopPropagation();  setSelectCategory({ category: "기타" });}} >기타
+                        </button></li>
+                    </ul>
                 </div>
 
 

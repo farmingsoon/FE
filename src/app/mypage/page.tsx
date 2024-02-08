@@ -79,7 +79,7 @@ export default function Login() {
                     { saleData  && saleData.length > 0
                         ? saleData.map((item, idx) => (<MineItem key={idx} data={item} type={"bidded"}/>)) 
                         : <div className="h-32 border bg-zinc-50 rounded-lg border-LINE_BORDER my-5">
-                             <div className="text-sm font-normal">등록한 상품이 없습니다.</div>
+                             <div className="text-sm font-normal p-2">등록한 상품이 없습니다.</div>
                         </div>
                     }
                 </div>
@@ -90,7 +90,7 @@ export default function Login() {
                     { biddingData && biddingData.length > 0 
                         ? biddingData.map((item:MypageTypes, idx:number) => (<MineItem key={idx} data={item} type={"sold"}/>)) 
                         : <div className="h-32 bg-zinc-100 border rounded-lg border-LINE_BORDER my-5 flex justify-center items-center">
-                            <div className="text-sm font-normal">입찰한 상품이 없습니다.</div>
+                            <div className="text-sm font-normal p-2">입찰한 상품이 없습니다.</div>
                         </div>
                     }
                 </div>

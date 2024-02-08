@@ -19,6 +19,7 @@ const LikeItem = ({bidCount, likeCount, likeStatus, itemId}: LikeItemTypes) => {
     const accessToken = LocalStorage.getItem("accessToken");
     const [, setIsToken] = useRecoilState(tokenState);
     const [ likeItemColor , setLikeItemColor ] = useRecoilState(likeState);
+    const [ isBooked, setIsBooked ] = useState(false);
     const [ svgColor, setSvgColor ] = useState<string | null>();
     //이부분 즉각적 변경을 위해 Recoil로 관리해야 할 지도 모름 0207
     // const BookmarkStatus = likeItemColor.isLike === true ? "#FF7171" : "#000000";
@@ -88,6 +89,7 @@ const LikeItem = ({bidCount, likeCount, likeStatus, itemId}: LikeItemTypes) => {
     }
 
     const handleClick = ( originState: boolean | null ) => {
+        setIsBooked(!isBooked)
         console.log("버튼 클릭 ")
         if(originState === true){
             //이미 기존에 좋아요 설정된 상태라면 
@@ -100,14 +102,14 @@ const LikeItem = ({bidCount, likeCount, likeStatus, itemId}: LikeItemTypes) => {
         //좋아요 취소 이벤트 
         storeLikeItem();
     };
-
+//fillColor={svgColor ? svgColor : (likeItemColor.isLike === true ? "#FF7171" : "#000000") } 
 //(e) => { e.preventDefault(); if(likeStatus){handleClick(likeStatus) }} 
     return(
         <div className="flex flex-row">
             <PersonSVG width={"16px"} height={"17px"}/>
             <span className="ml-1 mr-5">{bidCount}</span>
             <button onClick={() =>  handleClick(likeStatus ?? null)} className="bg-pink-300 p-2 hover:bg-purple-300 z-10">
-                <BookmarkSVG width={"12px"} height={"12px"} fillColor={svgColor ? svgColor : (likeItemColor.isLike === true ? "#FF7171" : "#000000") } />
+                <BookmarkSVG width={"12px"} height={"12px"} fillColor={isBooked ? "#FF7171" : "#000000"} />
             </button>
             <span className="ml-1">{likeCount}</span>
         </div>

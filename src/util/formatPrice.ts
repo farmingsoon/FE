@@ -1,0 +1,1 @@
+    // const formatPrice = String(tempPrice).replace(/\B(?=(\d{3})+(?!\d))/g, ",");

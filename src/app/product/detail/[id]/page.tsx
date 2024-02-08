@@ -50,9 +50,7 @@ export default function ProductDetail(  ) {
     const [detailData, setDetailData] = useState<DetailPageTypes>();
     const [ amIuser, setAmIuser ] = useState(false); 
     const [, setIsToken] = useRecoilState(tokenState);
-    // const tempPrice = 10000000;
     const router = useRouter();
-    // const formatPrice = String(tempPrice).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     const params = useParams<{ id: string; }>()
 
     //페이지 수정 
@@ -220,10 +218,6 @@ export default function ProductDetail(  ) {
                         likeCount={detailData && detailData.likeCount} 
                         likeStatus={detailData && detailData.likeStatus} 
                     />
-                    {/* <PersonSVG width={"16px"} height={"17px"}/>
-                    <span className="ml-1 mr-5">{detailData && detailData.bidCount}</span>
-                    <BookmarkSVG width={"12px"} height={"12px"}/>
-                    <span className="ml-1">{detailData && detailData.likeCount}</span> */}
                 </div>
                 <div className="flex flex-row justify-between text-xl mt-2">
                     <h1>{detailData && detailData.title}</h1>
@@ -256,7 +250,13 @@ export default function ProductDetail(  ) {
                 }
                 
             </div>
-            {sellerBiddOpen && <SellerBidModal handleOpen={ () => handleOpen( detailData?.sellerId as number ) } />}
+            {sellerBiddOpen 
+                && <SellerBidModal 
+                        handleOpen={ () => handleOpen( detailData?.sellerId as number ) } 
+                        itemId={params.id} 
+                        priceData={[detailData?.highestPrice, detailData?.lowestPrice]}
+                    />
+            }
             {buyerBidOppen && <BiddingModal handleOpen={ () => handleOpen( detailData?.sellerId as number ) } itemId={params.id}/>}
         </div>
     )
