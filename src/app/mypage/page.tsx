@@ -27,21 +27,6 @@ export default function Login() {
     const accessToken = LocalStorage.getItem("accessToken");
     const [ biddingData, setBiddingData ] = useState<MypageTypes[]>([]);
     const [ saleData, setSaleData ] = useState<MypageTypes[]>([]);
-    const [ likeData, setLikeData ] = useState<MypageTypes[]>([]);
-    // const mineItemDatas = [
-    //     // {id: 1, title: "자전거", view: 10, liked: 8, price: 100000, thumbnail: null},
-    //     // {id: 2, title: "인형", view: 2, liked: 5, price: 5000, thumbnail: null},
-    //     {    itemId: 0,
-    //         title: "자전거",
-    //         description: "자전거 판매하는 중이다. ",
-    //         expiredAt: "13",
-    //         highestPrice: 3000,
-    //         hopePrice: 50,
-    //         lowestPrice: 400,
-    //         itemStatus: "경매중",
-    //         bidSize: 3,
-    //     }
-    // ]
 
     const handleGetMine = async () => {
         try { 
@@ -71,19 +56,6 @@ export default function Login() {
                 console.log(data);
             }
 
-
-            //내가 좋아요한 상품 
-            const likeRes = await axios.get(`${BASE_URL}/api/items/me`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })
-
-            if(likeRes.status === 200){
-                const data = likeRes.data.result;
-                setLikeData(data.items)
-                console.log(data);
-            }
 
         } catch (Err){
             console.log(`마이페이지 에러 ${Err}`)
@@ -123,7 +95,7 @@ export default function Login() {
                     }
                 </div>
             </div>
-            <div className="mt-5">
+            {/* <div className="mt-5">
                 <h1>보관한 상품</h1>
                 <div className="border-b border-t border-LINE_BORDER h-fit max-w-[800px]">
                     { likeData && likeData.length > 0 
@@ -133,7 +105,7 @@ export default function Login() {
                         </div>
                     }
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

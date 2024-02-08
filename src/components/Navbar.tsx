@@ -18,9 +18,9 @@ const Navbar = () => {
     const [openDrop, setOpenDrop] = useState(false);
     const [menusState, setMenusState ] = useRecoilState(menuState);
     // const [ login, setLogin ] = useRecoilState(loginSelector);
-    const isLogin = LocalStorage.getItem("accessToken") ? true : false;
+    const isLogin = LocalStorage.getItem("loginState");
     const btnStyle = "flex flex-row items-center w-fit whitespace-nowrap mb-6"
-
+    // console.log(login.isLogin)
     const handleClick = () => {
         setOpenDrop(!openDrop)
     };
@@ -77,7 +77,7 @@ const Navbar = () => {
                     </Link>
                 </li>
             </ul>
-            {isLogin 
+            { isLogin
                 ? <button className="px-3 mb-5 " onClick={handleClick}><Hamburger width={"25px"} height={"25px"}/></button>
                 : <Link href="/login"><button className="mb-5 ml-5 hover:text-MAIN_COLOR">로그인</button></Link>
 
