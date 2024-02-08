@@ -1,7 +1,5 @@
 "use client"; 
 import Img from "@/common/Img";
-import PersonSVG from "../../../../../public/svg/PersonSVG";
-import BookmarkSVG from "../../../../../public/svg/BookmarkSVG";
 import ArrowRight from "../../../../../public/svg/ArrowRight";
 import ArrowLeft from "../../../../../public/svg/ArrowLeft";
 import { useEffect, useState } from "react";
@@ -16,6 +14,7 @@ import LocalStorage from "@/util/localstorage";
 import StatusPrice from "@/components/StatusPrice";
 import { useRecoilState } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
+import LikeItem from "@/common/LikeItem";
 
 // import BiddingModal from "@/components/modal/BiddingModal";
 
@@ -35,8 +34,12 @@ interface DetailPageTypes {
     bidCount: number;
     likeCount: number;
     viewCount: number;
+    likeStatus: boolean;
 }
 
+// interface Headers {
+//     Authorization?: string; // 'Authorization' 키는 선택적이며, 값은 문자열입니다.
+//   }
 
 export default function ProductDetail(  ) {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -58,6 +61,34 @@ export default function ProductDetail(  ) {
     //이미지 페이지네이션
     const [ curImg, setCurImg ] = useState(0);
 
+    //토큰 여부 상세 페이지
+    const headers: Record<string, string> = {
+        // 예시: Authorization 헤더
+        'Authorization': `Bearer ${ACCES_TOKEN}`
+      };
+    // 토큰이 있는 경우에만 Authorization 헤더 추가
+    if (ACCES_TOKEN) {
+        headers.Authorization = `Bearer ${ACCES_TOKEN}`;
+    }
+
+    const fetchData = async (url: string, options = {}) => {
+        try { 
+            const response = await axios.get(url, options);
+            return response;
+        } catch (err){
+            console.log(err);
+            if(axios.isAxiosError(err) && err.response){
+                if(err.response.status === 401){
+                    //헤더 없이 다시 요청 
+                    const retryRes = await axios.get(url);
+                    return retryRes;
+                }
+                
+            }
+            console.log(err);
+        }
+    }
+
 
     const handleOpen = (sellerId: number) => {
         if(Number(userId) === sellerId){
@@ -75,11 +106,17 @@ export default function ProductDetail(  ) {
     }
 
     const getDetailData = async (userId: number) => {
+        const headers = {
+            Authorization : `Bearer ${ACCES_TOKEN}`
+        };
 
         try { 
-            const res = await axios.get(`${BASE_URL}/api/items/${params.id}`);
+            const url = `${BASE_URL}/api/items/${params.id}`;
+            const res = await fetchData(url, {headers})
+            // const tokenRes = await axios.get(`${BASE_URL}/api/items/${params.id}`, { headers });
+            // const res = await axios.get(`${BASE_URL}/api/items/${params.id}`);
 
-            if(res.status === 200){
+            if(res?.status === 200){
                 setDetailData(res.data.result);
 
                 if(userId === res.data.result.sellerId) {
@@ -89,6 +126,7 @@ export default function ProductDetail(  ) {
             }
         } catch (err){
             console.log(`디테일 페이지 ${err}`)
+            
         }
     };
 
@@ -176,10 +214,16 @@ export default function ProductDetail(  ) {
                 <div className="flex flex-row justify-between items-center">
                     <div className="overflow-hidden rounded-full"><Img src={detailData && detailData.sellerProfileImgUrl} type={"circle"} width={40} height={40}/></div>
                     <div className="text-lg ml-2 flex-1">{detailData && detailData.sellerNickname}</div>
-                    <PersonSVG width={"16px"} height={"17px"}/>
+                    <LikeItem 
+                        itemId={Number(params.id)} 
+                        bidCount={detailData && detailData.bidCount} 
+                        likeCount={detailData && detailData.likeCount} 
+                        likeStatus={detailData && detailData.likeStatus} 
+                    />
+                    {/* <PersonSVG width={"16px"} height={"17px"}/>
                     <span className="ml-1 mr-5">{detailData && detailData.bidCount}</span>
                     <BookmarkSVG width={"12px"} height={"12px"}/>
-                    <span className="ml-1">{detailData && detailData.likeCount}</span>
+                    <span className="ml-1">{detailData && detailData.likeCount}</span> */}
                 </div>
                 <div className="flex flex-row justify-between text-xl mt-2">
                     <h1>{detailData && detailData.title}</h1>
