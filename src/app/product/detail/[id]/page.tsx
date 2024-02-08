@@ -10,8 +10,12 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import BiddingModal from "@/components/modal/BiddingModal";
 import { useParams } from 'next/navigation'
+// import { useRecoilState } from "recoil";
+// import { amendState } from "@/stores/amendData";
+import LocalStorage from "@/util/localstorage";
+import StatusPrice from "@/components/StatusPrice";
 import { useRecoilState } from "recoil";
-import { amendState } from "@/stores/amendData";
+import { tokenState } from "@/stores/tokenModal";
 
 // import BiddingModal from "@/components/modal/BiddingModal";
 
@@ -36,30 +40,38 @@ interface DetailPageTypes {
 
 export default function ProductDetail(  ) {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const ACCES_TOKEN = localStorage.getItem("accessToken");
+    const ACCES_TOKEN = LocalStorage.getItem("accessToken");
+    const userId = LocalStorage.getItem("memberId");
     const [sellerBiddOpen, setSellerBiddOpen] = useState(false);
     const [buyerBidOppen, setBuyerBidOpen] = useState(false);
     const [detailData, setDetailData] = useState<DetailPageTypes>();
     const [ amIuser, setAmIuser ] = useState(false); 
-    const tempPrice = 10000000;
+    const [, setIsToken] = useRecoilState(tokenState);
+    // const tempPrice = 10000000;
     const router = useRouter();
-    const formatPrice = String(tempPrice).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    // const formatPrice = String(tempPrice).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     const params = useParams<{ id: string; }>()
 
     //페이지 수정 
-    const [ , setModify ] = useRecoilState(amendState);
+    // const [ , setModify ] = useRecoilState(amendState);
 
     //이미지 페이지네이션
     const [ curImg, setCurImg ] = useState(0);
 
 
-    const handleOpen = (user: string) => {
-        if(user === "seller"){
+    const handleOpen = (sellerId: number) => {
+        if(Number(userId) === sellerId){
+            //판매자 
             setSellerBiddOpen(!sellerBiddOpen);
         }
-        if(user === "buyer"){
+        
+        if(Number(userId) !== sellerId){
+            //구매자
             setBuyerBidOpen(!buyerBidOppen);
         }
+
+        return;
+
     }
 
     const getDetailData = async (userId: number) => {
@@ -92,31 +104,38 @@ export default function ProductDetail(  ) {
                 console.log("성공적 데이터 삭제 ")
                 router.push("/");
             }
-        } catch (Err){
-            console.log(`상품 상세 삭제 ${Err}`)
+        } catch (err){
+            console.log(`상품 상세 삭제 ${err}`);
+            if(axios.isAxiosError(err) && err.response){
+                if(err.response.status === 404){
+                    setIsToken({tokenExpired: true})
+                }
+                
+            }
         }
     };
 
-    const handleAmend = () => {
-        if(detailData){
-            const endDate = new Date(detailData.expiredAt);
-            const currentDate = new Date();
+    //수정 기능 제거 및 보류 
+    // const handleAmend = () => {
+    //     if(detailData){
+    //         const endDate = new Date(detailData.expiredAt);
+    //         const currentDate = new Date();
 
-            const remainingTime = endDate.getTime() - currentDate.getTime();
-            const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
+    //         const remainingTime = endDate.getTime() - currentDate.getTime();
+    //         const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
             
 
-            setModify({
-                title: detailData.title,
-                description: detailData.description,
-                hopePrice: detailData.hopePrice,
-                period: remainingDays,
-                thumbnailImage:  detailData.thumbnailImgUrl,
-                images: [...detailData.itemImgUrl],
-            })
-        }
-        router.push(`/product/edit/${params.id}`)
-    }
+    //         setModify({
+    //             title: detailData.title,
+    //             description: detailData.description,
+    //             hopePrice: detailData.hopePrice,
+    //             period: remainingDays,
+    //             thumbnailImage:  detailData.thumbnailImgUrl,
+    //             images: [...detailData.itemImgUrl],
+    //         })
+    //     }
+    //     router.push(`/product/edit/${params.id}`)
+    // }
 
     const handleNextImg = () =>{
         if(detailData && curImg < detailData.itemImgUrl.length - 1){
@@ -168,25 +187,33 @@ export default function ProductDetail(  ) {
                         <button className="bg-white rounded-md px-5 py-1.5 border shadow-lg w-36 hover:bg-zinc-200">채팅하기</button>
                         <button 
                             className="bg-MAIN_COLOR rounded-md px-5 py-1.5 shadow-lg ml-3 w-36 hover:bg-DEEP_MAIN"
-                            onClick={() => handleOpen("seller")}
-                        >입찰하기
+                            onClick={() => handleOpen( detailData?.sellerId as number)}
+                        >
+                        { Number(userId) === detailData?.sellerId
+                            ? "입찰 내역"
+                            : "입찰 하기"
+                        }
                         </button>
                     </div>
                 </div>
                 <div className="text-xs font-light my-1">서울 ・ 3일 2시간 남음</div>
-                <div className="text-base  mt-3 mb-8">현재최고가<span className="text-POINT_BLUE"> ₩ {formatPrice}</span> 원</div>
+                <div className="text-base  mt-3 mb-8">
+                    <StatusPrice bidStatus={detailData && detailData.itemStatus } highestPrice={detailData && detailData.highestPrice} hopePrice={detailData && detailData.hopePrice} />
+                </div>
                 <div className="font-light text-sm whitespace-pre">{detailData && detailData.description}</div>
             </div>
             <div className="mt-10 flex flex-row justify-end text-sm font-normal border-t border-LINE_BORDER pt-6">
                 {amIuser
-                 ? <><button className="w-20 h-10 rounded-lg border border-LINE_BORDER hover:bg-zinc-200 " onClick={handleDelete}>삭제</button>
-                    <button className="w-20 h-10 rounded-lg border border-LINE_BORDER  hover:bg-zinc-200 ml-7" onClick={handleAmend}>수정</button></>
+                 ? <>
+                    <button className="w-20 h-10 rounded-lg border border-LINE_BORDER hover:bg-zinc-200 " onClick={handleDelete}>삭제</button>
+                    {/* <button className="w-20 h-10 rounded-lg border border-LINE_BORDER  hover:bg-zinc-200 ml-7" onClick={handleAmend}>수정</button> */}
+                    </>
                  : null
                 }
                 
             </div>
-            {sellerBiddOpen && <SellerBidModal handleOpen={() => handleOpen("seller")} />}
-            {buyerBidOppen && <BiddingModal handleOpen={() => handleOpen("buyer")} itemId={params.id}/>}
+            {sellerBiddOpen && <SellerBidModal handleOpen={ () => handleOpen( detailData?.sellerId as number ) } />}
+            {buyerBidOppen && <BiddingModal handleOpen={ () => handleOpen( detailData?.sellerId as number ) } itemId={params.id}/>}
         </div>
     )
 }

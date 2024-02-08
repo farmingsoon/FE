@@ -6,6 +6,8 @@ import PlusCircle from "../../../../public/svg/PlusCircle";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import LocalStorage from "@/util/localstorage";
+import { useRecoilState } from "recoil";
+import { tokenState } from "@/stores/tokenModal";
 
 export default function ProductEdit() {
     const inputStyle = "border-b border-LINE_BORDER placeholder:text-zinc-300 text-sm py-1 mb-12 pl-2 font-light";
@@ -14,6 +16,8 @@ export default function ProductEdit() {
     const [imageFile, setImageFile] = useState<File[]>([]);
     const [contents, setContents] = useState("");
     const accessToken = LocalStorage.getItem("accessToken");
+    const [, setIsToken] = useRecoilState(tokenState);
+    const [err, setErr] = useState("");
 
     const handleImageFile = (e:any) => {
         e.preventDefault();
@@ -71,6 +75,13 @@ export default function ProductEdit() {
 
         } catch (err){
             console.log(`상품 등록 수정 실패 ${err}`)
+            if(axios.isAxiosError(err) && err.response){
+                if(err.response.status === 404){
+                    setErr("로그인이 만료 되었습니다. 로그인을 다시 진행해주세요. ");
+                    setIsToken({tokenExpired: true})
+                }
+                
+            }
         }
 
     }
@@ -79,14 +90,14 @@ export default function ProductEdit() {
         <div className="flex min-h-screen flex-col mb-5">
             <h1>상품 등록</h1>
             <form  onSubmit={handleSubmit} className="flex flex-col">
-                <div className="bg-pink-300 my-5 flex flex-row overflow-x-scroll">
+                <div className="my-5 flex flex-row overflow-x-scroll">
                     <label
                         htmlFor="editImg_file" 
                         className="flex border h-32 w-44  rounded-lg border-LINE_BORDER bg-zinc-500 justify-center items-center"
                     >  <PlusCircle width={"35px"} height={"35px"}/> </label>
                     { imageFile && imageFile.map((el, idx) => (
-                        <div key={idx} className="rounded-lg mx-3 overflow-hidden object-fill">
-                            <Image src={URL.createObjectURL(el)} alt={"select product image"} height={128} width={176}/> 
+                        <div key={idx} className="relative h-32 w-44 rounded-lg mx-3 overflow-hidden border border-LINE_BORDER">
+                            <Image src={URL.createObjectURL(el)} alt={"select product image"} layout="fill" objectFit="cover" /> 
                         </div>
                     ))}
                   
@@ -98,6 +109,7 @@ export default function ProductEdit() {
                         onChange={handleImageFile}
                     />
                 </div>
+                <p className="text-xs text-POINT_RED ">{err && err}</p>
                 <label className="">제목</label>
                 <input type="text" className={`${inputStyle} mt-5`} placeholder="제목을 입력해주세요."/>
 

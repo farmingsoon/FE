@@ -1,12 +1,14 @@
 interface StatusPriceTypes {
-    bidStatus: string;
-    highestPrice: number;
-    hopePrice: number;
+    bidStatus?: string ;
+    highestPrice?: number | null ;
+    hopePrice?: number;
 }
 
 const StatusPrice = ( {bidStatus, highestPrice, hopePrice}: StatusPriceTypes ) => {
 
-    const formatPrice = (price: number) => {
+    const formatPrice = (price: number | null | undefined) => {
+        if (price === null) return "0";
+        if (price === undefined) return "0";
         return String(price).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
@@ -16,7 +18,7 @@ const StatusPrice = ( {bidStatus, highestPrice, hopePrice}: StatusPriceTypes ) =
         return (
             <div className="text-sm">
                  <span>
-                    {highestPrice !== null ? "현재 최고가" : "희망 판매가"}<span className="text-POINT_BLUE"> ₩ {highestPrice !== null ? formatPrice(highestPrice) : formatPrice(hopePrice)}</span> 원
+                 {highestPrice !== null ? "현재 최고가" : "희망 판매가"}<span className="text-POINT_BLUE"> ₩ {highestPrice !== null ? formatPrice(highestPrice) : formatPrice(hopePrice)}</span> 원
                 </span>
             </div>
         )
@@ -27,7 +29,7 @@ const StatusPrice = ( {bidStatus, highestPrice, hopePrice}: StatusPriceTypes ) =
     return(
         <div className="text-sm">
             <span>
-                현재 최고가<span className="text-POINT_BLUE"> ₩ {formatPrice(highestPrice)}</span> 원
+                현재 최고가<span className="text-POINT_BLUE"> ₩ {formatPrice(highestPrice !== null ? highestPrice : hopePrice)}</span> 원
             </span>
         </div>
 

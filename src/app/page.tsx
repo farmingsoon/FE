@@ -77,7 +77,7 @@ export default function Home() {
           <div className="flex justify-center flex-col items-center mt-20">
             <NoData width={"300px"} height={"300px"}/>
             <p className="my-3">새로운 중고 상품들을 판매해보세요.</p>
-            <button className="rounded-md bg-MAIN_COLOR text-white px-8 py-1 hover:bg-DEEP_MAIN">판매 하기</button>
+            <Link href={"/product/edit"}><button className="rounded-md bg-MAIN_COLOR text-white px-8 py-1 hover:bg-DEEP_MAIN">판매 하기</button></Link>
           </div>
         }    
       </div>

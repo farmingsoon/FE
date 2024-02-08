@@ -24,8 +24,6 @@ export default function Login() {
         e.preventDefault();
         const email = e.target[0].value;
         const password = e.target[1].value;
-        console.log(email);
-        console.log(password);
 
         if(!isValidEmail(email)){
             setErr("잘못된 이메일 형식입니다. ")
@@ -45,9 +43,10 @@ export default function Login() {
             
             //실패
 
+
             //성공
             if(res.status === 200){
-                console.log(res.data.result.accessToken);
+                // console.log(res.data.result.accessToken);
                 const token = res.data.result.accessToken;
                 const id = res.data.result.memberId;
                 setErr("");
@@ -68,6 +67,13 @@ export default function Login() {
                 router.push("/")
             }
         } catch(Err) {
+            console.log(Err);
+            if(axios.isAxiosError(Err) && Err.response){
+                if(Err.response.status === 404){
+                    setErr("존재하지 않는 회원입니다. 회원가입을 진행해주세요.");
+                }
+                
+            }
             console.log(`로그인 실패 ${Err}`)
         }
     }
