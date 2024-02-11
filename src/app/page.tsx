@@ -27,16 +27,15 @@ export interface MerchanTypes {
 export default function Home() {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
   const [ homeData, setHomeData ] = useState<MerchanTypes[]>([]);
-  const [ searchOption, setSearchOption ] = useRecoilState(searchState)
+  const [ searchOption,  ] = useRecoilState(searchState)
   const [ sortCode, setSortCode ] = useState("recent");
 
   // console.log(searchOption)
-  // console.log(sortCode)
+  console.log(sortCode)
 
-  const handleSortCode = (filter: string) => {
-    if(filter){
-      setSortCode(filter);
-    }
+  const handleSortCode = (e:any) => {
+    setSortCode(e.target.value);
+
   }
 
   const getHomeData = async () => {
@@ -55,10 +54,10 @@ export default function Home() {
         if(res.status === 200){
           console.log(res.data.result);
           setHomeData(res.data.result.items);
-          setSearchOption((prev) => ({
-            ...prev,
-            keyword: "",
-          }));
+          // setSearchOption((prev) => ({
+          //   ...prev,
+          //   keyword: "",
+          // }));
         };
 
       } else if( searchOption.keyword !== "" &&  searchOption.option === "") {
@@ -68,10 +67,11 @@ export default function Home() {
         if(res.status === 200){
           console.log(res.data.result);
           setHomeData(res.data.result.items);
-          setSearchOption((prev) => ({
-            ...prev,
-            keyword: "",
-          }));
+          //키워드 초기화 에러 2번 요청 0211
+          // setSearchOption((prev) => ({
+          //   ...prev,
+          //   keyword: "",
+          // }));
         };
         
       } else {
@@ -81,10 +81,10 @@ export default function Home() {
         if(res.status === 200){
           console.log(res.data.result);
           setHomeData(res.data.result.items);
-          setSearchOption((prev) => ({
-            ...prev,
-            keyword: "",
-          }));
+          // setSearchOption((prev) => ({
+          //   ...prev,
+          //   keyword: "",
+          // }));
         };
       }
 
@@ -117,11 +117,15 @@ export default function Home() {
         <div className="ml-5 whitespace-nowrap pt-5">
           <input type="checkbox" />
           <label className="px-2 outline-none">판매 중인 상품</label>
-          <select className="bg-zinc-200 rounded-md w-24 text-sm py-1 ml-5 outline-none">
-            <option className="pl-2" onClick={() => handleSortCode("recent")}>최신순</option>
-            <option className="pl-2" onClick={() => handleSortCode("hot")}>인기순</option>
-            <option className="pl-2" onClick={() => handleSortCode("highest")}>고가순</option>
-            <option className="pl-2" onClick={() => handleSortCode("lowest")}>저가순</option>
+          <select 
+            className="bg-zinc-200 rounded-md w-24 text-sm py-1 ml-5 outline-none"
+            value={sortCode}
+            onChange={handleSortCode}
+            >
+            <option className="pl-2" value="recent" >최신순</option>
+            <option className="pl-2" value="hot" >인기순</option>
+            <option className="pl-2" value="highest" >고가순</option>
+            <option className="pl-2" value="lowest" >저가순</option>
           </select>
         </div>
       </div>

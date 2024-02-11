@@ -8,7 +8,7 @@ import { menuState } from "@/stores/NavMenuState";
 const Search = () => {
     const [ openOption, setOpenOption ] = useState(false);
     const [ selectOption, setSelectOption ] = useRecoilState(searchState);
-    const [ navMenuState,  ] = useRecoilState(menuState)
+    const [ navMenuState, setNavMenuState ] = useRecoilState(menuState)
 //w-[430px]
     // console.log(selectOption);
 
@@ -37,9 +37,9 @@ const Search = () => {
                 keyword: target.value
             }));
 
-            // const newMenuState = [{menu: "search", onOff: false}, {menu: "alarm", onOff: false}]
+            const newMenuState = [{menu: "search", onOff: false}, {menu: "alarm", onOff: false}]
 
-            // setNavMenuState(newMenuState);
+            setNavMenuState(newMenuState);
         }
     }
 
