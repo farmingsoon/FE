@@ -5,6 +5,8 @@ import HomeItem from "@/components/HomeItem";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import { searchState } from "@/stores/searchOptionState";
 
 export interface MerchanTypes {
   itemId: number;
@@ -25,14 +27,69 @@ export interface MerchanTypes {
 export default function Home() {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
   const [ homeData, setHomeData ] = useState<MerchanTypes[]>([]);
+  const [ searchOption, setSearchOption ] = useRecoilState(searchState)
+  const [ sortCode, setSortCode ] = useState("recent");
+
+  // console.log(searchOption)
+  // console.log(sortCode)
+
+  const handleSortCode = (filter: string) => {
+    if(filter){
+      setSortCode(filter);
+    }
+  }
 
   const getHomeData = async () => {
     try { 
-      const res = await axios.get(`${BASE_URL}/api/items`);
-      if(res.status === 200){
-        console.log(res.data.result);
-        setHomeData(res.data.result.items);
+      //검색 
+      const categoryRes = `${BASE_URL}/api/items?sortCode=${sortCode}&category=${searchOption.option}&keyword=${searchOption.keyword}`;
+      const normalRes = `${BASE_URL}/api/items?sortCode=${sortCode}&keyword=${searchOption.keyword}`;
+
+      //일반 조회 
+      const originRes = `${BASE_URL}/api/items?sortCode=${sortCode}`;
+
+      if( searchOption.keyword !== "" &&  searchOption.option === "category"){
+        const res = await axios.get(categoryRes);
+
+        //성공           
+        if(res.status === 200){
+          console.log(res.data.result);
+          setHomeData(res.data.result.items);
+          setSearchOption((prev) => ({
+            ...prev,
+            keyword: "",
+          }));
+        };
+
+      } else if( searchOption.keyword !== "" &&  searchOption.option === "") {
+        const res = await axios.get(normalRes);
+
+        //성공
+        if(res.status === 200){
+          console.log(res.data.result);
+          setHomeData(res.data.result.items);
+          setSearchOption((prev) => ({
+            ...prev,
+            keyword: "",
+          }));
+        };
+        
+      } else {
+        const res = await axios.get(originRes);
+
+        //성공
+        if(res.status === 200){
+          console.log(res.data.result);
+          setHomeData(res.data.result.items);
+          setSearchOption((prev) => ({
+            ...prev,
+            keyword: "",
+          }));
+        };
       }
+
+      // const res = await axios.get(`${BASE_URL}/api/items`);
+
     } catch(err){
       console.log(`홈 상품 아이템 조회 ${err}`)
     }
@@ -40,8 +97,10 @@ export default function Home() {
 
   useEffect(() => {
     getHomeData();
+    // console.log("리렌더링")
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [searchOption.keyword, sortCode])
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -50,19 +109,19 @@ export default function Home() {
         <h1 className="pb-2">필요한 물건부터</h1>
         <h1 className="pb-2">구하지 못했던 한정 상품까지</h1>
       </div>
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-row items-center justify-between pb-10">
 
-        <div className="w-3/6">
+        <div className="w-3/6 relative">
           <Search />
         </div>
-        <div className="ml-5 whitespace-nowrap">
+        <div className="ml-5 whitespace-nowrap pt-5">
           <input type="checkbox" />
           <label className="px-2 outline-none">판매 중인 상품</label>
           <select className="bg-zinc-200 rounded-md w-24 text-sm py-1 ml-5 outline-none">
-            <option className="pl-2">최신순</option>
-            <option className="pl-2">인기순</option>
-            <option className="pl-2">고가순</option>
-            <option className="pl-2">저가순</option>
+            <option className="pl-2" onClick={() => handleSortCode("recent")}>최신순</option>
+            <option className="pl-2" onClick={() => handleSortCode("hot")}>인기순</option>
+            <option className="pl-2" onClick={() => handleSortCode("highest")}>고가순</option>
+            <option className="pl-2" onClick={() => handleSortCode("lowest")}>저가순</option>
           </select>
         </div>
       </div>
