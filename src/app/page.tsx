@@ -29,13 +29,20 @@ export default function Home() {
   const [ homeData, setHomeData ] = useState<MerchanTypes[]>([]);
   const [ searchOption,  ] = useRecoilState(searchState)
   const [ sortCode, setSortCode ] = useState("recent");
+  const [ isCheckBox, setIsCheckBox ] = useState(false);
 
   // console.log(searchOption)
-  console.log(sortCode)
+  // console.log(sortCode)
 
   const handleSortCode = (e:any) => {
     setSortCode(e.target.value);
 
+  }
+
+  const handleCheckBox = (e:any) => {
+    const isCheck = e.target.checked;
+    console.log(isCheck)
+    setIsCheckBox(isCheck);
   }
 
   const getHomeData = async () => {
@@ -98,9 +105,17 @@ export default function Home() {
   useEffect(() => {
     getHomeData();
     // console.log("리렌더링")
+    
+    if(isCheckBox){
+      const parsedData = homeData.filter((el)=> {
+        el.itemStatus !== "판매완료"
+      });
+
+      setHomeData(parsedData);
+    }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchOption.keyword, sortCode])
+  }, [searchOption.keyword, sortCode, isCheckBox])
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -115,7 +130,7 @@ export default function Home() {
           <Search />
         </div>
         <div className="ml-5 whitespace-nowrap pt-5">
-          <input type="checkbox" />
+          <input type="checkbox" onChange={handleCheckBox}/>
           <label className="px-2 outline-none">판매 중인 상품</label>
           <select 
             className="bg-zinc-200 rounded-md w-24 text-sm py-1 ml-5 outline-none"
@@ -133,8 +148,15 @@ export default function Home() {
       <div className="w-full">
         { homeData.length > 0 ? 
           <div className="w-full grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-10 gap-x-4 mt-10 mb-5">
-            {homeData.map((item, idx) => (
-              <Link href={`/product/detail/${item.itemId}`} key={`link ${idx}`}><HomeItem key={idx} data={item}/></Link>
+            {/* {homeData.map((item, idx) => (
+              <Link href={`/product/detail/${item.itemId}`} key={`link ${idx}`}>
+                <HomeItem key={idx} data={item} />
+              </Link>
+            ))} */}
+             {homeData.map((item, idx) => (
+              <Link href={`/product/detail/${item.itemId}`} key={`link ${idx}`}>
+                <HomeItem key={idx} data={item} />
+              </Link>
             ))}
           </div> :
           <div className="flex justify-center flex-col items-center mt-20">
