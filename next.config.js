@@ -2,13 +2,14 @@
 
 const nextConfig = {
     async rewrites(){
-        return[
-            {
-                source:"/ws/:path",
-                destination: "https://server.farmingsoon.site/ws/:path",
-                ws: true
-            }
-        ]
+        return {
+            beforeFiles: [
+                {
+                    source:"/ws/:path",
+                    destination: "https://server.farmingsoon.site/ws/:path",
+                }
+            ]
+        }
     },
     images : {
         remotePatterns: [
