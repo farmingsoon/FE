@@ -64,7 +64,7 @@ export default function Chat() {
 
         const client = new Stomp.Client({
             //webSocketFactory: () => socket,
-            brokerURL: "https://server.farmingsoon.site/ws",
+            brokerURL: "wss://server.farmingsoon.site/ws",
             debug: (str) => {
                 console.log(`debg: ${str}`)
             },
