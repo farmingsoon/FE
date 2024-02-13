@@ -60,7 +60,7 @@ export default function Chat() {
     // })    
 
     useEffect(() => {
-        const socket = new SockJS('/ws', null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
+        const socket = new SockJS('/ws');
         const client = new Stomp.Client({
             webSocketFactory: () => socket,
             debug: (str) => {
