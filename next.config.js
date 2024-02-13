@@ -1,16 +1,16 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
-    async rewrites(){
-        return {
-            beforeFiles: [
-                {
-                    source:"/ws/:path",
-                    destination: "https://server.farmingsoon.site/ws/:path",
-                }
-            ]
-        }
-    },
+    // async rewrites(){
+    //     return {
+    //         beforeFiles: [
+    //             {
+    //                 source:"/ws/:path",
+    //                 destination: "https://server.farmingsoon.site/ws/:path",
+    //             }
+    //         ]
+    //     }
+    // },
     images : {
         remotePatterns: [
             {

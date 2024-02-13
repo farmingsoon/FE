@@ -60,7 +60,8 @@ export default function Chat() {
     // })    
 
     useEffect(() => {
-        const socket = new SockJS('/ws');
+        const socket = new SockJS('https://server.farmingsoon.site/ws', null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
+
         const client = new Stomp.Client({
             webSocketFactory: () => socket,
             debug: (str) => {
