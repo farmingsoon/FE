@@ -46,7 +46,7 @@ const Navbar = () => {
             setMenusState(newMenu)
         }
 
-        setMenusState(newMenu);
+        // setMenusState(newMenu);
     };
 
     const handleNavCategory = ( selectMenu: string ) => {
