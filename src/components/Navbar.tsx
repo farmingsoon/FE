@@ -11,26 +11,54 @@ import TagSVG from "../../public/svg/TagSVG";
 import NavDropdown from "./NavDropdown";
 import { useRecoilState } from "recoil";
 import { menuState } from "@/stores/NavMenuState";
+import LocalStorage from "@/util/localstorage";
+import { searchState } from "@/stores/searchOptionState";
+// import { loginSelector } from "@/stores/loginState";
 
 const Navbar = () => {
     const [openDrop, setOpenDrop] = useState(false);
-    const [menusState, setMenusState ] = useRecoilState(menuState)
+    const [menusState, setMenusState ] = useRecoilState(menuState);
+    const [ ,setSearchOption ] = useRecoilState(searchState)
+    const isLogin = LocalStorage.getItem("loginState");
     const btnStyle = "flex flex-row items-center w-fit whitespace-nowrap mb-6"
-
+    // console.log(login.isLogin)
     const handleClick = () => {
         setOpenDrop(!openDrop)
     };
 
     const handleOpenModal = ( menuTab: string ) => {
 
-        const newMenu = menusState.map((el) => {
-            if(el.menu === menuTab){
-                return {...el, onOff: !el.onOff};
-            }
-            return el;
-        });
+        // const newMenu = menusState.map((el) => {
+        //     if(el.menu === menuTab){
+        //         return {...el, onOff: !el.onOff};
+        //     }
+        //     return el;
+        // });
         
+
+        if(menuTab === "search"){
+            const newMenu = [{menu: "search", onOff: !menusState[0].onOff }, {menu: "alarm", onOff: false}];
+            setMenusState(newMenu)
+        }
+
+        if(menuTab === "alarm"){
+            const newMenu = [{menu: "search", onOff: false }, {menu: "alarm", onOff: !menusState[1].onOff}];
+            setMenusState(newMenu)
+        }
+
         setMenusState(newMenu);
+    };
+
+    const handleNavCategory = ( selectMenu: string ) => {
+
+        if(selectMenu){
+            setSearchOption({
+                option: "category",
+                keyword: selectMenu,
+            }) 
+        };
+
+
     }
 
     return(
@@ -48,13 +76,18 @@ const Navbar = () => {
                     </button>
                 </li>
                 <li>
-                    <button className={btnStyle}><CategorySVG width={"12px"} height={"12px"}/><span className="pl-2 hover:text-DEEP_MAIN">카테고리</span>
+                    <button className="flex flex-row items-center w-fit whitespace-nowrap mb-2"><CategorySVG width={"12px"} height={"12px"}/><span className="pl-2 ">카테고리</span>
                     </button>
                 </li>
                 <ul className="px-8 grid gap-y-3 whitespace-nowrap mb-6">               
-                    <li><button>카테고리01</button></li>
-                    <li><button>카테고리02</button></li>
-                    <li><button>카테고리03</button></li>
+                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("의류")} >- 의류</button></li>
+                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("신발")} >- 신발</button></li>
+                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("악세사리")} >- 악세사리</button></li>
+                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("가구")} >- 가구</button></li>
+                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("앨범")} >- 앨범</button></li>
+                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("악기")} >- 악기</button></li>
+                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("펫용품")} >- 펫용품</button></li>
+                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("기타")} >- 기타</button></li>
                 </ul>                
                 <li>
                     <Link href="/chat">
@@ -73,8 +106,12 @@ const Navbar = () => {
                     </Link>
                 </li>
             </ul>
-            <button className="px-3 mb-5 " onClick={handleClick}><Hamburger width={"25px"} height={"25px"}/></button>
-            {openDrop && <NavDropdown/>}
+            { isLogin
+                ? <button className="px-3 mb-5 " onClick={handleClick}><Hamburger width={"25px"} height={"25px"}/></button>
+                : <Link href="/login"><button className="mb-5 ml-5 hover:text-MAIN_COLOR">로그인</button></Link>
+
+            }
+            {openDrop && <NavDropdown handleClick={handleClick}/>}
         </nav>
     )
 }

@@ -10,3 +10,5 @@ const ArrowDown = ({fillColor, width, height}: SVG) => {
 </svg>
 	)
 }
+
+export default ArrowDown;

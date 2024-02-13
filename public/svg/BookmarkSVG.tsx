@@ -2,6 +2,7 @@ import { SVG } from "@/types/SVG";
 
 const BookmarkSVG = ({width, height, fillColor}: SVG) => {
     const fillC = fillColor ? fillColor : "#000000";
+    console.log(`SVG - ${fillC}`)
     return(
         <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path 
