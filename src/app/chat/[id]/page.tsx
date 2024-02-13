@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import ChatSection from "@/components/chat/ChatSection";
 
 import * as Stomp from "@stomp/stompjs";
-import SockJS from "sockjs-client";
+// import SockJS from "sockjs-client";
 // import SockJS from 'sockjs-client';
 // import { WebSocket } from 'ws';
 // Object.assign(global, { WebSocket });
@@ -64,16 +64,18 @@ export default function Chat() {
 
         const client = new Stomp.Client({
             //webSocketFactory: () => socket,
-            brokerURL: "wss://server.farmingsoon.site/ws",
+            brokerURL: "https://server.farmingsoon.site/ws",
             debug: (str) => {
                 console.log(`debg: ${str}`)
             },
             onConnect: () => {
                 console.log("=== connect Success === ");
+                setIsConnected(true);
             },
             onStompError: (frame) => {
                 console.error('Broker reported error: ' + frame.headers['message']);
                 console.error('Additional details: ' + frame.body);
+                setIsConnected(false);
             },
         });
 
