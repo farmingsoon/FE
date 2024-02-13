@@ -28,13 +28,24 @@ const Navbar = () => {
 
     const handleOpenModal = ( menuTab: string ) => {
 
-        const newMenu = menusState.map((el) => {
-            if(el.menu === menuTab){
-                return {...el, onOff: !el.onOff};
-            }
-            return el;
-        });
+        // const newMenu = menusState.map((el) => {
+        //     if(el.menu === menuTab){
+        //         return {...el, onOff: !el.onOff};
+        //     }
+        //     return el;
+        // });
         
+
+        if(menuTab === "search"){
+            const newMenu = [{menu: "search", onOff: !menusState[0].onOff }, {menu: "alarm", onOff: false}];
+            setMenusState(newMenu)
+        }
+
+        if(menuTab === "alarm"){
+            const newMenu = [{menu: "search", onOff: false }, {menu: "alarm", onOff: !menusState[1].onOff}];
+            setMenusState(newMenu)
+        }
+
         setMenusState(newMenu);
     };
 
@@ -46,6 +57,7 @@ const Navbar = () => {
                 keyword: selectMenu,
             }) 
         };
+
 
     }
 
