@@ -14,7 +14,7 @@ import SockJS from "sockjs-client";
 // import SockJS from 'sockjs-client';
 // import { WebSocket } from 'ws';
 // Object.assign(global, { WebSocket });
-import LocalStorage from "@/util/localstorage";
+// import LocalStorage from "@/util/localstorage";
 // import SendButton from "../../../public/svg/SendButton";
 
 export interface message {
@@ -42,7 +42,7 @@ export interface chatListTypes {
 
 export default function Chat() {
     // const [ messages, setMessages ] = useState<message[]>([]);
-    const accessToken = LocalStorage.getItem("accessToken");
+    // const accessToken = LocalStorage.getItem("accessToken");
     const [isConnected, setIsConnected] = useState(false);
     // const [ socket, setSocket ] = useState<any | null>(null);
     // const client = useRef({});
@@ -60,12 +60,9 @@ export default function Chat() {
     // })    
 
     useEffect(() => {
-        const socket = new SockJS('http://server.farmingsoon.site/ws', null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
+        const socket = new SockJS('/ws', null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
         const client = new Stomp.Client({
             webSocketFactory: () => socket,
-            connectHeaders: {
-                Authorization: `Bearer ${accessToken}`,
-            },
             debug: (str) => {
                 console.log(`debg: ${str}`)
             },
@@ -81,34 +78,6 @@ export default function Chat() {
         client.activate();
 
         return () => {client.deactivate();}
-
-        // const client = new Stomp.Client({
-        //     brokerURL: `ws://server.farmingsoon.site/ws`,
-        //     beforeConnect: () => {console.log("before connection")},
-        //     connectHeaders: {
-        //         Authorization: `Bearer ${accessToken}`,
-        //     },
-        //     debug: (str) => {
-        //         console.log(`debug: `, str);
-        //     }, 
-        //     onConnect: () => {
-        //         setIsConnected(true);
-        //         console.log("==== connect ====")
-        //         client.subscribe(`/sub/chat-room/1`, (message) => { 
-        //             console.log(message.body);
-        //         })
-        //     },
-        //     onStompError: (frame) => {
-        //         console.error('Broker reported error: ' + frame.headers['message']);
-        //         console.error('Additional details: ' + frame.body);
-        //     },
-        // });
-
-        // client.activate();
-
-        // return () => {
-        //     client.deactivate();
-        // };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
