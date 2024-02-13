@@ -6,7 +6,7 @@ const nextConfig = {
             beforeFiles: [
                 {
                     source:"/ws/:path",
-                    destination: "https://server.farmingsoon.site/ws/:path",
+                    destination: "http://server.farmingsoon.site/ws/:path",
                 }
             ]
         }
