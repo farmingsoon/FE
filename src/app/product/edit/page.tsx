@@ -154,6 +154,10 @@ export default function ProductEdit() {
                                 onClick={(e) => {e.stopPropagation(); handleCategoryClick("앨범")}} >앨범
                         </button></li>
                         <li><button type="button"
+                                className={`${btnStyle} ${selectCategory.category === "악기" ? checkBtnStyle : ""}`} 
+                                onClick={(e) => {e.stopPropagation();  setSelectCategory({ category: "악기" });}} >악기
+                        </button></li>
+                        <li><button type="button"
                                 className={`${btnStyle} ${selectCategory.category === "펫용품" ? checkBtnStyle : ""}`} 
                                 onClick={(e) => {e.stopPropagation();  setSelectCategory({ category: "펫용품" });}} >펫용품
                         </button></li>
