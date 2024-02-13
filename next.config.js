@@ -1,6 +1,15 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+    async rewrites(){
+        return[
+            {
+                source:"/ws/:path",
+                destination: "https://server.farmingsoon.site/ws/:path",
+                ws: true
+            }
+        ]
+    },
     images : {
         remotePatterns: [
             {
