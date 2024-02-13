@@ -11,8 +11,8 @@ export default function Signup() {
     const [ err, setErr ] = useState("");
     const [imageFile, setImageFile] = useState<string | null>();
     const router = useRouter();
-    const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
-
+    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+    console.log(BASE_URL);
     const isValidEmail = (email: string) => {
         const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
         return emailRegex.test(email);
@@ -70,7 +70,7 @@ export default function Signup() {
         }
 
         try {
-            const res = await axios.post(`${BASER_URL}/api/members/join`, formData);
+            const res = await axios.post(`${BASE_URL}/api/members/join`, formData);
             console.log(formData)
             
             //실패 -> 승용님께 등록 해달라고 요청하기 0203
