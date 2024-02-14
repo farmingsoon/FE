@@ -8,14 +8,13 @@ import SendButton from "../../../../public/svg/SendButton";
 import NewWrite from "../../../../public/svg/NewWrite";
 import { useEffect, useState } from "react";
 import ChatSection from "@/components/chat/ChatSection";
-
-import * as Stomp from "@stomp/stompjs";
-// import SockJS from "sockjs-client";
-// import SockJS from 'sockjs-client';
-// import { WebSocket } from 'ws';
-// Object.assign(global, { WebSocket });
 // import LocalStorage from "@/util/localstorage";
 // import SendButton from "../../../public/svg/SendButton";
+
+import * as Stomp from "@stomp/stompjs";
+import SockJS from "sockjs-client";
+
+
 
 export interface message {
     message: string;
@@ -44,41 +43,29 @@ export default function Chat() {
     // const [ messages, setMessages ] = useState<message[]>([]);
     // const accessToken = LocalStorage.getItem("accessToken");
     const [isConnected, setIsConnected] = useState(false);
-    // const [ socket, setSocket ] = useState<any | null>(null);
-    // const client = useRef({});
-    // console.log(socket);
 
-    // useEffect(() => {
-    //     if(!socket){
-    //         return;
-    //     }
-
-    //     socket.deactivate("disconnect", async () => {
-    //         console.log("==== disconnect ==== ");
-    //         setIsConnected(false);
-    //     });
-    // })    
+    const socket = new SockJS('https://server.farmingsoon.site/ws', null, {
+        transports: ["websocket", "xhr-streaming", "xhr-polling"],
+      });
+    const client = new Stomp.Client({
+        webSocketFactory: () => socket,
+        // brokerURL: "wss://server.farmingsoon.site/ws",
+        debug: (str) => {
+            console.log(`debg: ${str}`)
+        },
+        onConnect: () => {
+            console.log("=== connect Success === ");
+            setIsConnected(true);
+        },
+        onStompError: (frame) => {
+            console.error('Broker reported error: ' + frame.headers['message']);
+            console.error('Additional details: ' + frame.body);
+            setIsConnected(false);
+        },
+    });
 
     useEffect(() => {
-        // const socket = new SockJS('https://server.farmingsoon.site/ws', null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
-
-        const client = new Stomp.Client({
-            //webSocketFactory: () => socket,
-            brokerURL: "wss://server.farmingsoon.site/ws",
-            debug: (str) => {
-                console.log(`debg: ${str}`)
-            },
-            onConnect: () => {
-                console.log("=== connect Success === ");
-                setIsConnected(true);
-            },
-            onStompError: (frame) => {
-                console.error('Broker reported error: ' + frame.headers['message']);
-                console.error('Additional details: ' + frame.body);
-                setIsConnected(false);
-            },
-        });
-
+        console.log("웹소켓 useEffect")
         client.activate();
 
         return () => {client.deactivate();}
