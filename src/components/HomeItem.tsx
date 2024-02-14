@@ -11,6 +11,19 @@ export interface HomeItemTypes {
 
 const HomeItem = ({data}: HomeItemTypes) => {
     // const [ bidStatus, setBidStatus ] = useState("경매중");
+    const formatDate = (date: string | undefined) => {
+        if(date){
+            const expiredAtDate = new Date(date);
+            const curDate = new Date();
+            const timeLeft = expiredAtDate.getTime() - curDate.getTime();
+    
+            const dayLeft = Math.floor(timeLeft /  (1000 * 60 * 60 * 24));
+            const hourLeft =  Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+    
+            return (`${dayLeft}일  ${hourLeft}시간`);
+        }
+        return;
+    }
 
     return(
         <div className="w-64 h-[340px] p-2 flex flex-col bg-zinc-50 rounded-lg duration-500 hover:scale-105 hover:shadow-xl">
@@ -38,7 +51,7 @@ const HomeItem = ({data}: HomeItemTypes) => {
             <div className="text-sm">
                 <StatusPrice bidStatus={data.itemStatus} highestPrice={data.highestPrice} hopePrice={data.hopePrice}/>
             </div>
-            <div className="text-sm font-light mt-2">서울 ・ 3일 2시간 남음</div>
+            <div className="text-sm font-light mt-2">{formatDate(data.expiredAt)}남음</div>
         </div>
     )
 }
