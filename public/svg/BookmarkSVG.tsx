@@ -1,8 +1,12 @@
-import { SVG } from "@/types/SVG";
 
-const BookmarkSVG = ({width, height, fillColor}: SVG) => {
-    const fillC = fillColor ? fillColor : "#000000";
-    console.log(`SVG - ${fillC}`)
+import { likeState } from "@/stores/likeItemState";
+import { SVG } from "@/types/SVG";
+import { useRecoilValue } from "recoil";
+
+const BookmarkSVG = ({width, height}: SVG) => {
+    const likeStatus = useRecoilValue(likeState);
+    const fillC = likeStatus ? "#FF7171" : "#000000";
+
     return(
         <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path 

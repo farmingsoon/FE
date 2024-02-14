@@ -151,27 +151,41 @@ export default function ProductDetail(  ) {
         }
     };
 
-    //수정 기능 제거 및 보류 
-    // const handleAmend = () => {
-    //     if(detailData){
-    //         const endDate = new Date(detailData.expiredAt);
-    //         const currentDate = new Date();
+    const handleChatClick = async () => {
+        console.log("채팅하기 버튼 클릭 ")
+        try { 
+            const res = await axios.post(`${BASE_URL}/api/chat-rooms`, {
+                buyerId: userId,
+                itemId: params.id,
+            }, {
+                headers: {
+                    Authorization : `Bearer ${ACCES_TOKEN}`
+                }
+            });
 
-    //         const remainingTime = endDate.getTime() - currentDate.getTime();
-    //         const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
-            
+            if(res.status === 200){
+                console.log("채팅방 생성 성공 ", res.data.result);
+                router.push(`/chat/${res.data.result}`)
 
-    //         setModify({
-    //             title: detailData.title,
-    //             description: detailData.description,
-    //             hopePrice: detailData.hopePrice,
-    //             period: remainingDays,
-    //             thumbnailImage:  detailData.thumbnailImgUrl,
-    //             images: [...detailData.itemImgUrl],
-    //         })
-    //     }
-    //     router.push(`/product/edit/${params.id}`)
-    // }
+            }
+        } catch (err){
+            console.log(`채팅 연결 ${err}`);
+        }
+    }
+
+    const formatDate = (date: string | undefined) => {
+        if(date){
+            const expiredAtDate = new Date(date);
+            const curDate = new Date();
+            const timeLeft = expiredAtDate.getTime() - curDate.getTime();
+    
+            const dayLeft = Math.floor(timeLeft /  (1000 * 60 * 60 * 24));
+            const hourLeft =  Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+    
+            return (`${dayLeft}일  ${hourLeft}시간`);
+        }
+        return;
+    }
 
     const handleNextImg = () =>{
         if(detailData && curImg < detailData.itemImgUrl.length - 1){
@@ -222,7 +236,11 @@ export default function ProductDetail(  ) {
                 <div className="flex flex-row justify-between text-xl mt-2">
                     <h1>{detailData && detailData.title}</h1>
                     <div className="text-sm ">
-                        <button className="bg-white rounded-md px-5 py-1.5 border shadow-lg w-36 hover:bg-zinc-200">채팅하기</button>
+                        <button 
+                            className="bg-white rounded-md px-5 py-1.5 border shadow-lg w-36 hover:bg-zinc-200"
+                            onClick={handleChatClick}
+                            > 채팅하기
+                        </button>
                         <button 
                             className="bg-MAIN_COLOR rounded-md px-5 py-1.5 shadow-lg ml-3 w-36 hover:bg-DEEP_MAIN"
                             onClick={() => handleOpen( detailData?.sellerId as number)}
@@ -234,7 +252,7 @@ export default function ProductDetail(  ) {
                         </button>
                     </div>
                 </div>
-                <div className="text-xs font-light my-1">서울 ・ 3일 2시간 남음</div>
+                <div className="text-xs font-light my-1">{formatDate(detailData && detailData?.expiredAt)}남음</div>
                 <div className="text-base  mt-3 mb-8">
                     <StatusPrice bidStatus={detailData && detailData.itemStatus } highestPrice={detailData && detailData.highestPrice} hopePrice={detailData && detailData.hopePrice} />
                 </div>
