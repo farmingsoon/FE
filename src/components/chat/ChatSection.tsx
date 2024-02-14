@@ -1,12 +1,12 @@
 "use client";
 import LocalStorage from "@/util/localstorage";
 import { message } from "@/app/chat/[id]/page";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import SendButton from "../../../public/svg/SendButton";
 
 interface ChatTypes {
-    chatRoomId: number;
+    chatRoomId: string;
     isConnected: boolean;
 }
 
@@ -15,11 +15,32 @@ const ChatSection = ( { chatRoomId, isConnected }:ChatTypes ) => {
     const accessToken = LocalStorage.getItem("accessToken");
     const userId = Number(LocalStorage.getItem("memberId"));
 
-    const [ messages,  ] = useState<message[]>([]);
+    const [ messages, setMessages ] = useState<message[]>([]);
     const [ currentMessage, setCurrentMessage ] = useState("");
 
+   const getHistoryChat = async () => {
+        try { 
+            const res = await axios.get(`${BASE_URL}/api/chats/${chatRoomId}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+
+            if(res.status === 200){
+                setMessages(res.data.result.chats);
+            }
+        } catch (err){
+            console.log(`이전 채팅 내역 ${err}`)
+        }
+    };
+
+    useEffect(() => {
+        getHistoryChat();
+
+    }, []);
 
     console.log(messages);
+    console.log(currentMessage);
 
     //메세지 보내기 
     const sendMessage = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -45,7 +66,7 @@ const ChatSection = ( { chatRoomId, isConnected }:ChatTypes ) => {
         <>
             <div className="h-full pt-5 px-2 flex flex-col justify-end flex-grow ">
                 <p className="text-POINT_RED font-semibold text-center">{isConnected ? "연결" : "연결중"} </p>
-                {messages.map((message, idx) => (
+                {messages.length > 0 && messages.map((message, idx) => (
                     <div className={"px-2 py-3 rounded-lg border" + (message.senderId === userId ? "bg-indigo-400 text-white" : "bg-zinc-100")} key={idx}>
                         {message.message}
                     </div>

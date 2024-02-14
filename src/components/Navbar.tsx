@@ -4,22 +4,25 @@ import Link from "next/link";
 import BellSVG from "../../public/svg/BellSVG";
 import CategorySVG from "../../public/svg/CategorySVG";
 import ChatSVG from "../../public/svg/ChatSVG";
-import Hamburger from "../../public/svg/Hamburger";
+// import Hamburger from "../../public/svg/Hamburger";
 import HomeSVG from "../../public/svg/HomeSVG";
 import SearchSVG from "../../public/svg/SearchSVG";
 import TagSVG from "../../public/svg/TagSVG";
-import NavDropdown from "./NavDropdown";
+// import NavDropdown from "./NavDropdown";
 import { useRecoilState } from "recoil";
 import { menuState } from "@/stores/NavMenuState";
 import LocalStorage from "@/util/localstorage";
 import { searchState } from "@/stores/searchOptionState";
-// import { loginSelector } from "@/stores/loginState";
+
+//임시
+import { useRouter } from "next/navigation";
+import { loginSelector } from "@/stores/loginState";
 
 const Navbar = () => {
     const [openDrop, setOpenDrop] = useState(false);
     const [menusState, setMenusState ] = useRecoilState(menuState);
     const [ ,setSearchOption ] = useRecoilState(searchState)
-    const isLogin = LocalStorage.getItem("loginState");
+    //const isLogin = LocalStorage.getItem("loginState");
     const btnStyle = "flex flex-row items-center w-fit whitespace-nowrap mb-6"
     // console.log(login.isLogin)
     const handleClick = () => {
@@ -59,7 +62,21 @@ const Navbar = () => {
         };
 
 
-    }
+    };
+
+    //임시
+    const [ , setLogin ] = useRecoilState(loginSelector);
+    const router = useRouter();
+    const handleLoginOut = (e:any) => {
+        e.preventDefault();
+        handleClick();
+        setLogin((prev) => ({
+            ...prev,
+            isLogin: false,
+        }));
+        localStorage.clear();
+        router.push("/");
+    };
 
     return(
         <nav className="flex flex-col shadow-lg w-52 pt-8 sticky top-0 h-screen ">
@@ -106,12 +123,17 @@ const Navbar = () => {
                     </Link>
                 </li>
             </ul>
+            <div className="flex flex-row ">
+                <Link href="/login"><button className=" mr-5 hover:text-MAIN_COLOR">로그인</button></Link>
+                <button className="hover:text-MAIN_COLOR ml-5" onClick={handleLoginOut}>로그아웃</button>
+            </div>
+{/* 
             { isLogin
                 ? <button className="px-3 mb-5 " onClick={handleClick}><Hamburger width={"25px"} height={"25px"}/></button>
                 : <Link href="/login"><button className="mb-5 ml-5 hover:text-MAIN_COLOR">로그인</button></Link>
 
             }
-            {openDrop && <NavDropdown handleClick={handleClick}/>}
+            {openDrop && <NavDropdown handleClick={handleClick}/>} */}
         </nav>
     )
 }
