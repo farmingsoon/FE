@@ -44,7 +44,9 @@ export default function Chat() {
     // const accessToken = LocalStorage.getItem("accessToken");
     const [isConnected, setIsConnected] = useState(false);
 
-    const socket = new SockJS('https://server.farmingsoon.site/ws');
+    const socket = new SockJS('https://server.farmingsoon.site/ws', null, {
+        transports: ["websocket", "xhr-streaming", "xhr-polling"],
+      });
     const client = new Stomp.Client({
         webSocketFactory: () => socket,
         // brokerURL: "wss://server.farmingsoon.site/ws",
