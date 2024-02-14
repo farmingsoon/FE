@@ -10,8 +10,8 @@ import { useEffect, useState } from "react";
 import ChatSection from "@/components/chat/ChatSection";
 
 import * as Stomp from "@stomp/stompjs";
-// import SockJS from "sockjs-client";
-// import SockJS from 'sockjs-client';
+import SockJS from "sockjs-client";
+
 // import { WebSocket } from 'ws';
 // Object.assign(global, { WebSocket });
 // import LocalStorage from "@/util/localstorage";
@@ -60,11 +60,11 @@ export default function Chat() {
     // })    
 
     useEffect(() => {
-        // const socket = new SockJS('https://server.farmingsoon.site/ws', null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
+        const socket = new SockJS('https://server.farmingsoon.site/ws', null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
 
         const client = new Stomp.Client({
-            //webSocketFactory: () => socket,
-            brokerURL: "wss://server.farmingsoon.site/ws",
+            webSocketFactory: () => socket,
+            // brokerURL: "wss://server.farmingsoon.site/ws",
             debug: (str) => {
                 console.log(`debg: ${str}`)
             },
