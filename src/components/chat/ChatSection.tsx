@@ -1,6 +1,6 @@
 "use client";
 import LocalStorage from "@/util/localstorage";
-import { message } from "@/app/chat/[id]/page";
+import { message } from "@/app/chat/page";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import SendButton from "../../../public/svg/SendButton";

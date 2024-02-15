@@ -23,7 +23,7 @@ export default function DesignLayout({
   console.log(isToken);
 
   return (
-    <main className="flex-1 py-8 px-5 h-screen overflow-y-auto">
+    <main className="flex-1 py-8 px-5 h-screen ">
       {children}
       {activeMenus.map((el, idx) => {
       if(el.menu === "search") {

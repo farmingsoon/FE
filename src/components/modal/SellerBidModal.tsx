@@ -16,7 +16,10 @@ interface SellerBidModalTypes extends ModalTypes {
 }
 
 export interface BidRecordItemTypes {
+    bidderName: string;
+    bidderProfileUrl: string;
     bidderId: number;
+    bidId: number;
     itemId: number;
     itemName: string;
     price: number;
@@ -104,7 +107,7 @@ const SellerBidModal = ({handleOpen, itemId, priceData}: SellerBidModalTypes) =>
                 </div>
                 <div className="flex flex-col mb-8">
                     {bidRecord && bidRecord.map((item:BidRecordItemTypes , idx) => (
-                        <BidPriceItem key={idx} data={item} type={"seller"}/>
+                        <BidPriceItem key={idx} data={item} type={"seller"} itemId={Number(itemId)}/>
                     ))
 
                     }

@@ -1,18 +1,13 @@
 "use client";
 import ChatListItem from "@/components/chat/ChatListItem";
-// import NewWrite from "../../../public/svg/NewWrite";
-import ChatProductItem from "@/components/chat/ChatProductItem";
-// import ReadChat from "@/components/chat/ReadChat";
-// import SendChat from "@/components/chat/SendChat";
-import SendButton from "../../../../public/svg/SendButton";
-import NewWrite from "../../../../public/svg/NewWrite";
-import { useEffect, useState } from "react";
-// import ChatSection from "@/components/chat/ChatSection";
-// import SendButton from "../../../public/svg/SendButton";
+import ChatProductItem, { itemChatInfoTypes } from "@/components/chat/ChatProductItem";
+import Img from "@/common/Img";
+import SendButton from "@/../public/svg/SendButton";
+import { useEffect, useState } from "react"; 
 
 import * as Stomp from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import LocalStorage from "@/util/localstorage";
 import { refreshToken } from "@/util/refreshToken";
@@ -35,19 +30,18 @@ export default function Chat() {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
   const ACCES_TOKEN = LocalStorage.getItem("accessToken");
   const [chatList, setChatList] = useState<chatListTypes[]>([]);
-  // const accessToken = LocalStorage.getItem("accessToken");
+  const [curDetailChatInfo, setDetailChatInfo ] = useState<itemChatInfoTypes>();
   const [isConnected, setIsConnected] = useState(false);
   const [chatSocket, setChatSocket] = useState<any | null>();
   const params = useParams<{ id: string }>();
+  const router = useRouter();
 
   //임시
-  const [messages, setMessages] = useState<message[]>([
-    { message: "채팅 시작", senderId: 2, createdAt: "2014" },
-  ]);
+  const [messages, setMessages] = useState<message[]>([ ]);
   const [currentMessage, setCurrentMessage] = useState("");
   const userId = Number(LocalStorage.getItem("memberId"));
 
-  const socket = new SockJS("http://localhost:8080/ws", null, {
+  const socket = new SockJS("http://server.farmingsoon.site/ws", null, {
     transports: ["websocket", "xhr-streaming", "xhr-polling"],
   });
 
@@ -69,10 +63,10 @@ export default function Chat() {
         console.log("=== connect Success === ");
         setIsConnected(true);
         client.subscribe(`/sub/chat-room/${params.id}`, (message) => {
-          console.log("[ 구독  ]: ", message);
+          // console.log("[ 구독  ]: ", message);
           if (message.body) {
             const msg = message.body;
-            console.log("00 : ", JSON.parse(msg).message);
+            // console.log("00 : ", JSON.parse(msg).message);
             setMessages((chats) => [...chats, JSON.parse(msg)]);
           }
         });
@@ -123,6 +117,12 @@ export default function Chat() {
       }
     } catch (err) {
       console.log(`채팅방 목록 리스트 에러 ${err}`);
+      if (axios.isAxiosError(err) && err.response) {
+        if (err.response.status === 401) {
+          refreshToken();
+          router.refresh();
+        }
+      }
     }
   };
 
@@ -136,23 +136,46 @@ export default function Chat() {
 
       if (res.status === 200) {
         const history = res.data.result.chats;
-        setMessages((prev) => [...prev, ...history]);
+        // console.log(history)
+        setMessages([...history]);
       }
     } catch (err) {
       console.log(`이전 채팅 내역 ${err}`);
       if (axios.isAxiosError(err) && err.response) {
         if (err.response.status === 401) {
-          // refreshToken(ACCES_TOKEN, BASE_URL);
+          refreshToken();
+          router.refresh();
+          
         }
       }
     }
   };
 
+  //디테일정보
+  const getChatRoomInfo = async () => {
+    try { 
+        const res = await axios.get(`${BASE_URL}/api/chat-rooms/${params.id}`, {
+            headers: {
+                Authorization: `Bearer ${ACCES_TOKEN}`
+            }
+        });
+
+        if(res.status === 200){
+          setDetailChatInfo(res.data.result);
+        }
+    } catch (err){
+        console.log(`채팅 관련 상품 정보 에러 ${err}`)
+    }
+};
+
   useEffect(() => {
     getList();
     getHistoryChat();
+    getChatRoomInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
+
+
 
   //메세지 보내기
   const sendMessage = async (e: any) => {
@@ -180,13 +203,13 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex min-h-screen">
-      <div className="w-[371px] border-r border-LINE_BORDER whitespace-nowrap">
+    <div className="flex h-screen">
+      <div className="w-[371px] border-r border-LINE_BORDER whitespace-nowrap ">
         <div className="flex flex-row justify-between px-3 items-cneter">
           <h1 className="font-semibold ">채팅</h1>
-          <NewWrite width={"20px"} height={"20px"} />
+          {/* <NewWrite width={"20px"} height={"20px"} /> */}
         </div>
-        <div className="mt-12 border-t border-LINE_BORDER overflow-y-scroll">
+        <div className="overflow-y-auto max-h-full h-fit mt-12 border-t border-LINE_BORDER  ">
           {chatList && chatList.length > 0 ? (
             chatList.map((list, idx) => <ChatListItem key={idx} list={list} />)
           ) : (
@@ -196,33 +219,40 @@ export default function Chat() {
           )}
         </div>
       </div>
-      {/* 임시 */}
-      {/* 구분자 색상 적용 예시 -  */}
-      <div className="flex-grow flex flex-col h-screen">
-        <ChatProductItem chatRoomId={params.id} />
-        {/* <ChatSection chatRoomId={params.id} isConnected={isConnected} /> */}
-        <div className="h-full pt-5 px-2 flex flex-col justify-end flex-grow ">
-          <p className="text-POINT_RED font-semibold text-center">
-            {isConnected ? "연결" : "연결중"}{" "}
+
+      {/* 채팅 방 섹션 fles-grow*/}
+      <div className="flex flex-col h-screen flex-grow ">
+        <ChatProductItem curDetailChatInfo={curDetailChatInfo} />
+        <div className="flex flex-col  justif-end overflow-y-auto px-2">
+          <p className="text-POINT_RED font-normal text-center pt-1 text-sm">
+            {isConnected ? "채팅 방이 연결 되었습니다. " : "채팅 방이 연결 중입니다."}
           </p>
-          {messages.length > 0 ? (
-            messages.map((message, idx) => (
-              <div
-                className={`px-2 my-2 py-3 rounded-lg w-fit ${message.senderId === userId ? "big-indigo-400 text-white flex justify-end " : "bg-lime-500 flex justify-start"} bg-indigo-400 text-white`}
-                key={idx}
-              >
-                {message.message}
-              </div>
-            ))
-          ) : (
-            <p className="my-3 text-indigo-400 text-center">
-              채팅 내역이 없습니다.{" "}
-            </p>
-          )}
-          {/* <ReadChat />
-                <SendChat /> */}
+          <div className="flex flex-col mb-12 h-screen justify-end">
+            {messages.length > 0 ? (
+              messages.map((message, idx) => (
+                <div
+                className={`flex flex-row items-center ${message.senderId === userId ? "self-end" : "self-start"}`}
+                  key={idx}
+                >
+                  {message.senderId === userId 
+                    ? null 
+                    : <div className="flex flex-col items-center mr-3">
+                        <p className="text-xs pb-1">{curDetailChatInfo?.toUsername}</p>
+                        <div className=""><Img type={"circle"} src={curDetailChatInfo?.toUserProfileImage} width={35} height={35} /></div>
+                      </div>
+                  }
+                  <p className={`px-2 my-2 py-3 rounded-lg w-fit ${message.senderId === userId ? "bg-indigo-400 text-white " : "bg-[#87dac2] text-white "}`}>{message.message}</p>
+                </div>
+              ))
+            ) : (
+              <p className="my-3 text-indigo-400 text-center">
+                채팅 내역이 없습니다.{" "}
+              </p>
+            )}
+          </div>
         </div>
-        <form className="relative mt-2 px-2">
+        {/* relative mt-2 px-2 */}
+        <form className="sticky bottom-3 px-2 ">
           <input
             type="text"
             className="border rounded-lg w-full h-11 px-3 py-1 text-sm font-normal text-TEXT_BLACK"
@@ -243,11 +273,8 @@ export default function Chat() {
             <SendButton width={"30px"} height={"30px"} />
           </button>
         </form>
-        {/* <form className="relative mt-2 px-2">
-                    <input type="text" className="border rounded-lg w-full h-11 px-3 py-1 text-sm font-normal text-TEXT_BLACK" placeholder="메세지를 입력하세요."/>
-                    <span className="absolute right-3 top-2"><SendButton width={"30px"} height={"30px"} /></span>
-        </form> */}
       </div>
+
     </div>
   );
 }
