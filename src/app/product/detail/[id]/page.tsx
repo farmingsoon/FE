@@ -53,8 +53,11 @@ export default function ProductDetail(  ) {
     const router = useRouter();
     const params = useParams<{ id: string; }>()
 
-    //페이지 수정 
-    // const [ , setModify ] = useRecoilState(amendState);
+    //뒤로가기 History
+    const handleNavigationBack = (e:any) => {
+        e.preventDefault();
+        router.back();
+    };
 
     //이미지 페이지네이션
     const [ curImg, setCurImg ] = useState(0);
@@ -213,7 +216,7 @@ export default function ProductDetail(  ) {
 
     return(
         <div className="flex min-h-screen flex-col mb-5 max-w-[900px] min-w-[500px]">
-            <div className="text-sm hover:text-DARK_GRAY cursor-pointer mb-3">목록으로</div>
+            <div className="text-sm hover:text-DARK_GRAY cursor-pointer mb-3" onClick={handleNavigationBack}>목록으로</div>
             <div className="flex flex-row justify-center items-center">
                 <ArrowLeft width={"25px"} height={"25px"} onClick={handlePrevImg}/>
                 <div className="overflow-hidden mx-5">
@@ -236,11 +239,11 @@ export default function ProductDetail(  ) {
                 <div className="flex flex-row justify-between text-xl mt-2">
                     <h1>{detailData && detailData.title}</h1>
                     <div className="text-sm ">
-                        <button 
-                            className="bg-white rounded-md px-5 py-1.5 border shadow-lg w-36 hover:bg-zinc-200"
-                            onClick={handleChatClick}
-                            > 채팅하기
-                        </button>
+                        {!amIuser && 
+                            <button className="bg-white rounded-md px-5 py-1.5 border shadow-lg w-36 hover:bg-zinc-200"
+                                onClick={handleChatClick}>채팅하기
+                            </button>
+                        }
                         <button 
                             className="bg-MAIN_COLOR rounded-md px-5 py-1.5 shadow-lg ml-3 w-36 hover:bg-DEEP_MAIN"
                             onClick={() => handleOpen( detailData?.sellerId as number)}

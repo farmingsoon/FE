@@ -123,7 +123,7 @@ const Navbar = () => {
                     </Link>
                 </li>
             </ul>
-            <div className="flex flex-row ">
+            <div className="flex flex-row ml-5 mb-5">
                 <Link href="/login"><button className=" mr-5 hover:text-MAIN_COLOR">로그인</button></Link>
                 <button className="hover:text-MAIN_COLOR ml-5" onClick={handleLoginOut}>로그아웃</button>
             </div>

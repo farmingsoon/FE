@@ -1,13 +1,19 @@
-export const refreshToken = async (token: string, url: string) => {
+import axios from "axios";
+import LocalStorage from "./localstorage";
+
+export const refreshToken = async () => {
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+  const ACCES_TOKEN = LocalStorage.getItem("accessToken");
+
   try {
-    const res = await axios.get(`${url}/api/members/rotate`, {
+    const res = await axios.get(`${BASE_URL}/api/members/rotate`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${ACCES_TOKEN}`,
       },
     });
 
     if (res.status === 200) {
-      console.log("token REFRESH");
+      console.log("token 만료");
       const data = res.data.result;
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
@@ -16,3 +22,4 @@ export const refreshToken = async (token: string, url: string) => {
     console.log(err);
   }
 };
+

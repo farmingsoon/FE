@@ -115,10 +115,10 @@ export default function Signup() {
                             onChange={handleImageFile}
                         ></input>
                     </div>
-                    <input className={inputStyle} type="text" placeholder="아이디(이메일)"></input>
-                    <input className={inputStyle} type="password" placeholder="비밀번호"></input>
-                    <input className={inputStyle} type="password" placeholder="비밀번호 확인"></input>
-                    <input className={inputStyle} type="text" placeholder="닉네임"></input>
+                    <input className={inputStyle} type="text" placeholder="아이디(이메일)" ></input>
+                    <input className={inputStyle} type="password" placeholder="비밀번호" ></input>
+                    <input className={inputStyle} type="password" placeholder="비밀번호 확인" ></input>
+                    <input className={inputStyle} type="text" placeholder="닉네임" ></input>
                     <p className="text-xs text-POINT_RED">{err && err}</p>
                     <button type="submit" className="bg-black mt-3 text-white font-semibold text-sm rounded-md w-full h-11">회원가입 하기</button>
                 </form>
