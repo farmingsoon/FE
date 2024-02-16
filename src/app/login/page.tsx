@@ -9,7 +9,7 @@ import { useRecoilState } from "recoil";
 
 export default function Login() {
     const inputStyle = "border rounded-md border-LINE_BORDER px-3 h-11 my-1 w-full font-light text-sm";
-    const [login, setLogin] = useRecoilState(loginSelector);
+    const [, setLogin] = useRecoilState(loginSelector);
     const [err, setErr] = useState("");
     const router = useRouter();
     const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
