@@ -12,7 +12,12 @@ export default function Signup() {
     const [imageFile, setImageFile] = useState<string | null>();
     const router = useRouter();
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    console.log(BASE_URL);
+    
+    //유효성 검증 
+    const isValidImg = (img:File) => {
+        return img ? true : false
+    };
+
     const isValidEmail = (email: string) => {
         const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
         return emailRegex.test(email);
@@ -20,7 +25,7 @@ export default function Signup() {
 
     const isValidPasswrord = (pwd:string, rePwd:string) => {
         return pwd === rePwd;
-    }
+    };
 
     const isValidNickname = (name:string) => {
         const nameRegex = /^[\w가-힣]{2,20}$/;
@@ -50,11 +55,11 @@ export default function Signup() {
         formData.append('email', email);
         formData.append('password', password);
         formData.append('nickname', nickname);
-        console.log(profile);
-        console.log(email);
-        console.log(password);
-        console.log(rePassword);
-        console.log(nickname);
+
+        if(!isValidImg(profile)){
+            setErr("프로필 이미지를 등록해주세요!");
+            return;
+        };
 
         if(!isValidEmail(email)) {
             setErr("이메일 형식에 맞게 입력해주세요.");
@@ -62,31 +67,37 @@ export default function Signup() {
         };
 
         if(!isValidPasswrord(password, rePassword) || password.length < 8 || password.length > 20  ){
-           setErr("비밀번호는 영문 대 소문자, 숫자, 특수문자를 사용하여 최소 8 글자 ~ 최대 20 글자로 작성해주세요.")
+           setErr("비밀번호는 영문 대 소문자, 숫자, 특수문자를 사용하여 최소 8 글자 ~ 최대 20 글자로 작성해주세요.");
+           return;
         };
 
         if(!isValidNickname(nickname)){
-            setErr("닉네임은 영문, 한글, 숫자를 사용해서 작성해주세요.")
+            setErr("닉네임은 영문, 한글, 숫자를 사용해서 작성해주세요.");
+            return;
         }
 
-        try {
-            const res = await axios.post(`${BASE_URL}/api/members/join`, formData);
-            console.log(formData)
-            
-            //실패 -> 승용님께 등록 해달라고 요청하기 0203
-            if(res.status === 400){
-                setErr("이미 등록된 이메일 입니다.")
+        if(isValidEmail(email) && isValidImg(profile) && isValidPasswrord (password, rePassword) && isValidNickname(nickname)){ 
+            console.log("회원가입 유효성 검증 통과 ")
+            try {
+                const res = await axios.post(`${BASE_URL}/api/members/join`, formData);
+                console.log(formData)
+                
+                //실패 -> 승용님께 등록 해달라고 요청하기 0203
+                if(res.status === 400){
+                    setErr("이미 등록된 이메일 입니다.")
+                }
+    
+                //성공
+                if(res.status === 200){
+                    setErr("");
+                    router.push("/login");
+                }
+    
+            } catch(error) {
+                console.log(`회원가입 에러 ${error}`)
             }
-
-            //성공
-            if(res.status === 200){
-                setErr("");
-                router.push("/login");
-            }
-
-        } catch(error) {
-            console.log(`회원가입 에러 ${error}`)
         }
+
 
     }
 
