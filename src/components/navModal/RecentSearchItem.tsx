@@ -1,12 +1,16 @@
-import Close from "../../../public/svg/Close";
+// import Close from "../../../public/svg/Close";
 import SearchIcon from "../../../public/svg/SearchIcon";
 
-const RecentSearchItem = () => {
+type RecentKeywordTypes = {
+    keyword: string;
+}
+
+const RecentSearchItem = ({keyword}: RecentKeywordTypes) => {
     return(
-        <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row justify-between items-center my-3 text-sm">
             <SearchIcon width={"20px"} height={"20px"} />
-            <div className="font-normal flex-1 mx-3">신발230</div>
-            <Close width={"20px"} height={"20px"} />
+            <div className="font-light flex-1 mx-3">{keyword}</div>
+            {/* <Close width={"20px"} height={"20px"} /> */}
         </div>
     )
 }
