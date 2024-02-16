@@ -21,6 +21,7 @@ export default function ProductEdit() {
     const accessToken = LocalStorage.getItem("accessToken");
     const [, setIsToken] = useRecoilState(tokenState);
     const [ selectCategory, setSelectCategory ] = useRecoilState(categoryState);
+    const [priceValue, setPriceValue] = useState("");
 
     const [err, setErr] = useState(""); //img, title, price, period, content
 
@@ -33,6 +34,16 @@ export default function ProductEdit() {
         const selectedFile = e.target.files;
         setImageFile([...imageFile, ...selectedFile])
     };
+
+    const formatNumber = (value: string) => {
+        return new Intl.NumberFormat().format(Number(value.replace(/,/g, '')));
+    }
+
+    const handlePriceWon = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { value } = event.target;
+        const formattedNum = formatNumber(value);
+        setPriceValue(formattedNum)
+    }
 
     //유효성 검증 
     const isValidImg = (img: File) => {
@@ -170,7 +181,9 @@ export default function ProductEdit() {
 
                 <div className="flex flex-row ">
                     <label className="mr-3 whitespace-nowrap">희망 판매가격</label>
-                    <input type="text" className={`${inputStyle} w-full`} placeholder="최소 희망판매가격을 입력해주세요 (100원단위)"/>
+                    <input type="text" className={`${inputStyle} w-full`} placeholder="최소 희망판매가격을 입력해주세요 (100원단위)"
+                        value={priceValue}
+                        onChange={handlePriceWon}/>
                 </div>
 
                 <div className="flex flex-row ">
