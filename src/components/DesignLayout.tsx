@@ -23,7 +23,7 @@ export default function DesignLayout({
   console.log(isToken);
 
   return (
-    <main className="flex-1 py-8 px-5 h-screen ">
+    <main className="flex-1 py-8 px-5 min-h-screen overflow-y-auto">
       {children}
       {activeMenus.map((el, idx) => {
       if(el.menu === "search") {
@@ -37,16 +37,3 @@ export default function DesignLayout({
     </main>
   )
 }
-
-
-   
-{/* <html lang="ko">
-  <body className="flex flex-row">
-    <RecoilRootProvider >
-      <Navbar />
-      <main className="flex-1 py-8 px-5 h-screen overflow-y-auto">
-      {children}
-      </main>  
-    </RecoilRootProvider>
-    </body>
-</html> */}
