@@ -16,7 +16,7 @@ export interface itemChatInfoTypes {
 
 const ChatProductItem = ({curDetailChatInfo}:ChatProducItemTypes ) => {
     const router = useRouter();
-    console.log(curDetailChatInfo)
+    //console.log(curDetailChatInfo)
     const formatPrice = (price: number | null | undefined) => {
         if (price === null) return "0";
         if (price === undefined) return "0";

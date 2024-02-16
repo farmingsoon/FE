@@ -57,6 +57,9 @@ export default function Chat() {
         reconnectDelay: 5000, //자동 재 연결
         heartbeatIncoming: 0,
         heartbeatOutgoing: 0,
+        // connectHeaders: {
+        //   Authorization: `Bearer ${ACCES_TOKEN}`
+        // }
       });
 
       client.onConnect = () => {
@@ -82,19 +85,23 @@ export default function Chat() {
   };
 
   const disconnect = () => {
-    if (chatSocket === undefined) {
-      return;
+    // if (chatSocket === undefined) {
+    //   return;
+    // }
+    // console.log("==== Disconnect ==== ");
+    // console.log(">> ", chatSocket);
+    // chatSocket.deactivate();
+    if(chatSocket){
+      chatSocket.deactivate
     }
-    console.log("==== Disconnect ==== ");
-    console.log(">> ", chatSocket);
-    chatSocket.deactivate();
   };
 
-  console.log(messages);
+  // console.log(messages);
 
   useEffect(() => {
-    connect();
-
+    if(!chatSocket) {
+      connect();
+    }
     // 컴포넌트 언마운트 시 연결 해제
     return () => {
       disconnect();
