@@ -57,9 +57,9 @@ export default function Chat() {
         reconnectDelay: 5000, //자동 재 연결
         heartbeatIncoming: 0,
         heartbeatOutgoing: 0,
-        // connectHeaders: {
-        //   Authorization: `Bearer ${ACCES_TOKEN}`
-        // }
+        connectHeaders: {
+          Authorization: `Bearer ${ACCES_TOKEN}`
+        }
       });
 
       client.onConnect = () => {
