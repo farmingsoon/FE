@@ -51,15 +51,16 @@ export default function ProductEdit() {
     };
 
     const isValidTitle = (title: string) => {
-        return title.length < 30 || title.length > 0
+        return title.length < 30 && title.length > 0
     };
 
-    const isValidPrice = (price: number) => {
+    const isValidPrice = (formattedPrice: string) => {
+        const price = Number(formattedPrice.replace(/,/g, ''));
         return price >= 100 && price % 100 === 0;
     }
 
     const isValidPeriod = (period: number) => {
-        const isInteger = Number.isInteger(period);
+        const isInteger = Number.isInteger(Number(period));
         return isInteger && period <= 7 &&  period > 0;
     };
 
@@ -70,10 +71,10 @@ export default function ProductEdit() {
 
     const handleSubmit = async (e:any) => {
         e.preventDefault();
-
+        setErr("");
         const formData = new FormData();
         const title = e.target[1].value;
-        const hopePrice = e.target[2].value;
+        const hopePrice = (e.target[2].value).replace(/,/g, '');
         const period = e.target[3].value;
 
         formData.append("title", title);
@@ -89,8 +90,15 @@ export default function ProductEdit() {
                 formData.append('images', el)
             })
         };
-        console.log(isValidPrice(hopePrice))
-        console.log(isValidContent(contents))
+
+
+        console.log("img >> ",isValidImg(imageFile[0]))
+        console.log("제목 >> ",isValidTitle(title))
+        console.log("가격 >> ",isValidPrice(hopePrice))
+        console.log("기간 >> ",isValidPeriod(period))
+        console.log("contents >> ",isValidContent(contents))
+
+        
 
         if(!isValidImg(imageFile[0])){
             //setErr(err.map((value, index) => index === 0 ? false : value));
@@ -215,6 +223,10 @@ export default function ProductEdit() {
                         <li><button  type="button"
                                 className={`${btnStyle} ${selectCategory.category === "앨범" ? checkBtnStyle : ""}`}  
                                 onClick={(e) => {e.stopPropagation(); handleCategoryClick("앨범")}} >앨범
+                        </button></li>
+                        <li><button  type="button"
+                                className={`${btnStyle} ${selectCategory.category === "전자제품" ? checkBtnStyle : ""}`}  
+                                onClick={(e) => {e.stopPropagation(); handleCategoryClick("전자제품")}} >전자제품
                         </button></li>
                         <li><button type="button"
                                 className={`${btnStyle} ${selectCategory.category === "악기" ? checkBtnStyle : ""}`} 
