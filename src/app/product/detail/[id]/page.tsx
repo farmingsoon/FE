@@ -52,7 +52,7 @@ export default function ProductDetail(  ) {
     const [, setIsToken] = useRecoilState(tokenState);
     const router = useRouter();
     const params = useParams<{ id: string; }>()
-
+    // console.log(detailData)
     //뒤로가기 History
     const handleNavigationBack = (e:any) => {
         e.preventDefault();

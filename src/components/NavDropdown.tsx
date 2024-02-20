@@ -20,7 +20,9 @@ const NavDropdown = ( {handleClick}:DropDownTypes ) => {
             ...prev,
             isLogin: false,
         }));
-        localStorage.clear();
+        localStorage.removeItem("memberId");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("loginState");
         router.push("/");
     };
 
