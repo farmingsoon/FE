@@ -52,7 +52,7 @@ export default function ProductDetail(  ) {
     const [, setIsToken] = useRecoilState(tokenState);
     const router = useRouter();
     const params = useParams<{ id: string; }>()
-
+    // console.log(detailData)
     //뒤로가기 History
     const handleNavigationBack = (e:any) => {
         e.preventDefault();
@@ -114,8 +114,6 @@ export default function ProductDetail(  ) {
         try { 
             const url = `${BASE_URL}/api/items/${params.id}`;
             const res = await fetchData(url, {headers})
-            // const tokenRes = await axios.get(`${BASE_URL}/api/items/${params.id}`, { headers });
-            // const res = await axios.get(`${BASE_URL}/api/items/${params.id}`);
 
             if(res?.status === 200){
                 setDetailData(res.data.result);
@@ -219,8 +217,13 @@ export default function ProductDetail(  ) {
             <div className="text-sm hover:text-DARK_GRAY cursor-pointer mb-3" onClick={handleNavigationBack}>목록으로</div>
             <div className="flex flex-row justify-center items-center">
                 <ArrowLeft width={"25px"} height={"25px"} onClick={handlePrevImg}/>
-                <div className="overflow-hidden mx-5">
+                <div className="overflow-hidden mx-5 relative">
                     <Img src={detailData && detailData?.itemImgUrl?.[curImg]} type={"normal"} width={500} height={384} status={"bidding"}/>
+                    { detailData?.itemStatus === "판매완료" && 
+                        <div className="absolute inset-0 w-full h-full bg-gray-500 bg-opacity-75 transition-opacity flex items-center justify-center">
+                            <div className="font-semibold text-2xl text-white">판매 완료</div>
+                        </div>
+                    }
                 </div>
                 <ArrowRight width={"25px"} height={"25px"} onClick={handleNextImg}/>
             </div>
@@ -233,7 +236,7 @@ export default function ProductDetail(  ) {
                         itemId={Number(params.id)} 
                         bidCount={detailData && detailData.bidCount} 
                         likeCount={detailData && detailData.likeCount} 
-                        likeStatus={detailData && detailData.likeStatus} 
+                        // likeStatus={detailData && detailData.likeStatus} 
                     />
                 </div>
                 <div className="flex flex-row justify-between text-xl mt-2">
@@ -276,9 +279,15 @@ export default function ProductDetail(  ) {
                         handleOpen={ () => handleOpen( detailData?.sellerId as number ) } 
                         itemId={params.id} 
                         priceData={[detailData?.highestPrice, detailData?.lowestPrice]}
+                        itemStatus = {detailData?.itemStatus}
                     />
             }
-            {buyerBidOppen && <BiddingModal handleOpen={ () => handleOpen( detailData?.sellerId as number ) } itemId={params.id}/>}
+            {buyerBidOppen 
+                && <BiddingModal 
+                    handleOpen={ () => handleOpen( detailData?.sellerId as number ) } 
+                    itemId={params.id} 
+                    itemStatus = {detailData?.itemStatus}
+                    />}
         </div>
     )
 }

@@ -1,12 +1,10 @@
 import { atom, selector } from "recoil";
+import LocalStorage from "@/util/localstorage";
 
-interface LikeItemStateTypes {
-    isLike: boolean;
-}
-
-export const likeState = atom<LikeItemStateTypes>({
+export const likeState = atom<string[]>({
     key: "likeState",
-    default: {isLike : false}
+    default: LocalStorage.getItem("likeItems") ? JSON.parse(LocalStorage.getItem("likeItems")!)  : [],
+
 });
 
 export const likeSelector = selector({
@@ -17,5 +15,6 @@ export const likeSelector = selector({
     },
     set: ({set}, newValue) => {
         set(likeState, newValue);
+        LocalStorage.setItem("likeItems", JSON.stringify(newValue))
     }
 })

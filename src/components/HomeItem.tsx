@@ -27,7 +27,7 @@ const HomeItem = ({data}: HomeItemTypes) => {
 
     return(
         <div className="w-64 h-[340px] p-2 flex flex-col bg-zinc-50 rounded-lg duration-500 hover:scale-105 hover:shadow-xl">
-            <div className="w-[240px] h-[240px] flex items-center overflow-hidden">
+            <div className="w-[240px] h-[240px] flex items-center overflow-hidden relative">
                 <Img src={data && data.thumbnailImgUrl} type={"normal"} width={240} height={240}/>
                 { data.itemStatus === "판매완료" && 
                     <div className="absolute inset-0 w-full h-full bg-gray-500 bg-opacity-75 transition-opacity flex items-center justify-center">
@@ -43,7 +43,7 @@ const HomeItem = ({data}: HomeItemTypes) => {
                         <span className="ml-1">{data.bidCount}</span>
                     </div>
                     <div className="flex flex-row items-center ml-2">
-                        <BookmarkSVG width={"12px"} height={"12px"}/>
+                        <BookmarkSVG width={"12px"} height={"12px"} itemId={data.itemId}/>
                         <span className="ml-1">{data.likeCount}</span>
                     </div>
                 </div>

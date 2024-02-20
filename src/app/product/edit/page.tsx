@@ -9,6 +9,7 @@ import LocalStorage from "@/util/localstorage";
 import { useRecoilState } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
 import { categoryState } from "@/stores/categoryState";
+import Close from "../../../../public/svg/Close";
 
 export default function ProductEdit() {
     const inputStyle = "border-b border-LINE_BORDER placeholder:text-zinc-300 text-sm py-1 mb-12 pl-2 font-light ";
@@ -34,6 +35,13 @@ export default function ProductEdit() {
         const selectedFile = e.target.files;
         setImageFile([...imageFile, ...selectedFile])
     };
+
+    //이미지 배열 삭제 
+    const deleteImgArr = (imgIdx: number) => {
+        const newArr = [...imageFile]
+        newArr.splice(imgIdx, 1);
+        setImageFile(newArr)
+    }
 
     const formatNumber = (value: string) => {
         return new Intl.NumberFormat().format(Number(value.replace(/,/g, '')));
@@ -89,16 +97,7 @@ export default function ProductEdit() {
             imageFile.forEach((el) => {
                 formData.append('images', el)
             })
-        };
-
-
-        console.log("img >> ",isValidImg(imageFile[0]))
-        console.log("제목 >> ",isValidTitle(title))
-        console.log("가격 >> ",isValidPrice(hopePrice))
-        console.log("기간 >> ",isValidPeriod(period))
-        console.log("contents >> ",isValidContent(contents))
-
-        
+        };        
 
         if(!isValidImg(imageFile[0])){
             //setErr(err.map((value, index) => index === 0 ? false : value));
@@ -158,7 +157,8 @@ export default function ProductEdit() {
             }
     
         }
-    }
+    };
+
 
     return(
         <div className="flex min-h-screen flex-col mb-5 ">
@@ -167,12 +167,23 @@ export default function ProductEdit() {
                 <div className="my-5 flex flex-row overflow-x-scroll">
                     <label
                         htmlFor="editImg_file" 
-                        className="flex border h-32 w-44  rounded-lg border-LINE_BORDER bg-zinc-500 justify-center items-center"
+                        className="flex border min-h-32 min-w-44  rounded-lg border-LINE_BORDER bg-zinc-500 justify-center items-center"
                     >  <PlusCircle width={"35px"} height={"35px"}/> </label>
                     { imageFile && imageFile.map((el, idx) => (
-                        <div key={idx} className="relative h-32 w-44 rounded-lg mx-3 overflow-hidden border border-LINE_BORDER">
-                            <Image src={URL.createObjectURL(el)} alt={"select product image"} layout="fill" objectFit="cover" /> 
+
+                        
+                        <div key={idx} className="relative">
+                            <span 
+                                className="rounded-lg w-6 h-6 bg-POINT_RED absolute top-0 right-2 z-10 flex justify-center items-center"
+                                onClick={() => deleteImgArr(idx)}
+                            >
+                                <Close width={"13px"} height={"13px"} fillColor="#Fefefefe"/>
+                            </span>
+                            <div className="relative h-32 w-44 rounded-lg mx-3 overflow-hidden border border-LINE_BORDER">
+                                <Image src={URL.createObjectURL(el)} alt={"select product image"} layout="fill" objectFit="cover" /> 
+                            </div>                           
                         </div>
+
                     ))}
                   
                     <input 
