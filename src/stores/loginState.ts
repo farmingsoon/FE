@@ -1,4 +1,5 @@
 import { atom, selector } from "recoil";
+import LocalStorage from "@/util/localstorage";
 
 interface loginAtomTypes {
     isLogin : boolean;
@@ -10,7 +11,7 @@ interface loginAtomTypes {
 export const loginState = atom<loginAtomTypes>({
     key: "loginState",
     default : {
-        isLogin: false,
+        isLogin: LocalStorage.getItem("accessToken") ? true : false,
         ACCESS_TOKEN: "",
         REFRESH_TOKEN: "",
         memberId: 0,

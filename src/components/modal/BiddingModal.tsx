@@ -6,23 +6,19 @@ import axios from "axios";
 import LocalStorage from "@/util/localstorage";
 import { BidRecordItemTypes } from "./SellerBidModal";
 import { tokenSelector } from "@/stores/tokenModal";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import BidPriceItem from "../BidPriceItem";
-import { bidCheckState } from "@/stores/bidCheckState";
-
-// interface BidHookFormTypes {
-//     bid: number;
-// }
 
 interface BiddingModalTypes extends ModalTypes {
     itemId: string;
+    itemStatus : string | undefined;
 }
 
-const BiddingModal = ({handleOpen, itemId}: BiddingModalTypes ) => {
+const BiddingModal = ({handleOpen, itemId, itemStatus}: BiddingModalTypes ) => {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
     const ACCES_TOKEN = LocalStorage.getItem("accessToken");
     const [ , setOpenTokenModal ] = useRecoilState(tokenSelector);
-    const checkState = useRecoilValue(bidCheckState);
+
     const [ bidRecord, setBidRecord ] = useState<BidRecordItemTypes[]>([])
     const [bidValue, setBidValue] = useState("");
 
@@ -95,23 +91,6 @@ const BiddingModal = ({handleOpen, itemId}: BiddingModalTypes ) => {
         }
     };
 
-    const handleSoldOut = async (itemId: number, buyerId: number) => {
-        try { 
-            const res = await axios.post(`${BASE_URL}/api/items/${itemId}/sold-out?buyerId=${buyerId}`, {}, {
-                headers: {
-                    Authorization: `Bearer ${ACCES_TOKEN}`
-                }
-            });
-
-            if(res.status === 200){
-                handleOpen();
-            };
-
-        } catch (err){
-            console.log(err);
-        }
-    }
-
 
     return(
         <div className="fixed inset-0 ml-52 z-10 flex items-end justify-center w-screen min-h-full p-4 overflow-y-auto text-center transition-opacity bg-gray-500 bg-opacity-75 sm:items-center sm:p-0">
@@ -122,7 +101,6 @@ const BiddingModal = ({handleOpen, itemId}: BiddingModalTypes ) => {
                 <form className="mt-3 flex flex-row items-center border rounded-lg border-LINE py-10 px-5" onSubmit={submitBidPrice}>
                     <div className="flex flex-row items-center" >
                         <input 
-                            // {...register("bid")}
                             value={bidValue}
                             onChange={handleBidtoWon}
                             type="text" 
@@ -134,7 +112,6 @@ const BiddingModal = ({handleOpen, itemId}: BiddingModalTypes ) => {
                     <button 
                         type="submit" 
                         className=" bg-MAIN_COLOR hover:bg-DEEP_MAIN text-white px-8 py-2 rounded-md text-sm  ml-5"
-                        onClick={(e) => {e.preventDefault(); handleSoldOut(Number(itemId), checkState.buyerId)}}
                     >
                         입찰하기
                     </button>
@@ -142,7 +119,7 @@ const BiddingModal = ({handleOpen, itemId}: BiddingModalTypes ) => {
                 <div className="mt-5">입찰 내역</div>
                 <div className="mb-5 overflow-y-scroll max-h-60 py-5 ">
                     {bidRecord && bidRecord.map((item:BidRecordItemTypes , idx) => (
-                        <BidPriceItem key={idx} data={item} type={"buyer"} itemId={Number(itemId)} />
+                        <BidPriceItem key={idx} data={item} type={"buyer"} itemId={Number(itemId)} itemStatus={itemStatus}/>
                     ))
 
                     }
