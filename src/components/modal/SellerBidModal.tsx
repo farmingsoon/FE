@@ -2,7 +2,7 @@
 import { ModalTypes } from "@/types/Modal";
 import Close from "../../../public/svg/Close";
 import BidPriceItem from "../BidPriceItem";
-// import BidSoldItem from "../BidSoldItem";
+//import BidSoldItem from "../BidSoldItem";
 import LocalStorage from "@/util/localstorage";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -10,9 +10,11 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { tokenSelector } from "@/stores/tokenModal";
 import { bidCheckState } from "@/stores/bidCheckState";
 
+
 interface SellerBidModalTypes extends ModalTypes {
     itemId: string;
     priceData: (number | undefined)[];
+    itemStatus: string | undefined;
 }
 
 export interface BidRecordItemTypes {
@@ -25,14 +27,15 @@ export interface BidRecordItemTypes {
     price: number;
 }
 
-const SellerBidModal = ({handleOpen, itemId, priceData}: SellerBidModalTypes) => {
+const SellerBidModal = ({handleOpen, itemId, priceData, itemStatus}: SellerBidModalTypes) => {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
     const ACCES_TOKEN = LocalStorage.getItem("accessToken");
     const [ bidRecord, setBidRecord ] = useState<BidRecordItemTypes[]>([])
     const [ , setOpenTokenModal ] = useRecoilState(tokenSelector);
+    // console.log("비드모달", itemId);
     const checkState = useRecoilValue(bidCheckState);
     //priceData[0] : 최고가 , priceData[1] : 최저가 
-    console.log(checkState);
+
 
     const formatPrice = (price: number | undefined) => {
         if(price === undefined){
@@ -62,7 +65,7 @@ const SellerBidModal = ({handleOpen, itemId, priceData}: SellerBidModalTypes) =>
             if(res.status === 200){
                 const data = res.data.result;
                 setBidRecord(data.bids);
-                console.log(data);
+                // console.log(data);
             };
 
 
@@ -75,6 +78,23 @@ const SellerBidModal = ({handleOpen, itemId, priceData}: SellerBidModalTypes) =>
                 }
                 
             }
+        }
+    };
+
+    const handleSoldOut = async (itemId: number, buyerId: number) => {
+        try { 
+            const res = await axios.patch(`${BASE_URL}/api/items/${itemId}/sold-out?buyerId=${buyerId}`, {}, {
+                headers: {
+                    Authorization: `Bearer ${ACCES_TOKEN}`
+                }
+            });
+
+            if(res.status === 200){
+                handleOpen();
+            };
+
+        } catch (err){
+            console.log(err);
         }
     }
     
@@ -106,16 +126,25 @@ const SellerBidModal = ({handleOpen, itemId, priceData}: SellerBidModalTypes) =>
                     <button className={`pl-2`}>저가순</button>
                 </div>
                 <div className="flex flex-col mb-8">
-                    {bidRecord && bidRecord.map((item:BidRecordItemTypes , idx) => (
-                        <BidPriceItem key={idx} data={item} type={"seller"} itemId={Number(itemId)}/>
-                    ))
-
+                    { bidRecord && bidRecord.length > 0 
+                        ? bidRecord.map((item:BidRecordItemTypes , idx) => (
+                        <BidPriceItem key={idx} data={item} type={"seller"} itemId={Number(itemId)} itemStatus={itemStatus} /> )) 
+                        : <div className="mx-auto text-LINE_BORDER font-normal h-10 pt-5">아직 입찰 내역이 없습니다. </div>
                     }
-                    {/* <BidSoldItem /> */}
+                    {/* {itemStatus === "판매완료" 
+                        ?  <BidSoldItem />
+                        : null
+                    } */}
                 </div>
-                <div className="flex flex-col items-center">
-                    <button className="mt-14 bg-MAIN_COLOR hover:bg-DEEP_MAIN text-white px-8 py-2 rounded-md text-sm ">입찰하기</button>
-                </div>     
+                {itemStatus === "판매완료"
+                    ? <p className="text-center font-light text-sm">&quot; 판매가 완료된 상품입니다. &quot;</p>
+                    : <div className="flex flex-col items-center">
+                            <button
+                                className="mt-14 bg-MAIN_COLOR hover:bg-DEEP_MAIN text-white px-8 py-2 rounded-md text-sm "
+                                onClick={(e) => {e.preventDefault(); handleSoldOut(Number(itemId), checkState.buyerId)}}
+                            >입찰하기</button>
+                        </div>     
+                }
             </div>
         </div>
     )

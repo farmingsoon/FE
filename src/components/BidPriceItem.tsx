@@ -9,15 +9,15 @@ import LocalStorage from "@/util/localstorage";
 import { tokenSelector } from "@/stores/tokenModal";
 import { useRouter } from "next/navigation";
 import { refreshToken } from "@/util/refreshToken";
-import { ModalTypes } from "@/types/Modal";
 
 interface BidPriceTypes {
     data: BidRecordItemTypes;
     type: "buyer" | "seller";
     itemId: number;
+    itemStatus: string | undefined;
 }
 
-const BidPriceItem = ( {data, type, itemId}: BidPriceTypes ) => {
+const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
     const ACCES_TOKEN = LocalStorage.getItem("accessToken");
     const [ checkState, setCheckState ] = useRecoilState(bidCheckState);
@@ -26,7 +26,9 @@ const BidPriceItem = ( {data, type, itemId}: BidPriceTypes ) => {
     const router = useRouter();
     const btnStyle = "bg-white border border-LINE_BORDER rounded-md px-3 mx-1.5 py-1 font-semibold text-sm my-3 hover:bg-zinc-200";
     const checkBoxStyle = check ? `bg-POINT_RED relative` : ``;
-    console.log(checkState)
+    //console.log(checkState)
+    console.log(itemStatus)
+
     const handleClick = () => {
         setCheckState({
             isCheck: !checkState.isCheck,
@@ -98,14 +100,22 @@ const BidPriceItem = ( {data, type, itemId}: BidPriceTypes ) => {
                 <Img type={"circle"} src={data.bidderProfileUrl} width={40} height={40} />
             </div>
             <span className="flex-1 text-TEXT_BLACK ml-3 w-80">{data.bidderName} 님이 <span className="text-MAIN_COLOR">{formatPrice(data && data.price)}</span>원을 제시하였습니다. </span>
-            <div className={`border border-LINE_BORDER rounded-full w-6 h-6 mr-2 overflow-hidden ${checkBoxStyle}`} onClick={handleClick}>
-                {check && <span className="absolute top-1.5 left-1.5"><CheckBox width={"10px"} height={"10px"}/></span>}
-                <input className="appearance-none" type="checkbox"/>
-            </div>
-            <div className="">
-                {type === "seller" ?  <button className={btnStyle} onClick={() => handleChatting( checkState.buyerId, itemId)} >채팅</button> : null}
-                {type === "buyer" ?  <button className={btnStyle} onClick={(e) => {e.preventDefault(); handleDelete(data.bidId)}}>삭제</button> : null}
-            </div>
+
+            {itemStatus === "판매완료"
+                ? null
+                : 
+                <>
+                    <div className={`border border-LINE_BORDER rounded-full w-6 h-6 mr-2 overflow-hidden ${checkBoxStyle}`} onClick={handleClick}>
+                    {check && <span className="absolute top-1.5 left-1.5"><CheckBox width={"10px"} height={"10px"}/></span>}
+                    <input className="appearance-none" type="checkbox"/>
+                    </div>
+                    <div className="">
+                        {type === "seller" ?  <button className={btnStyle} onClick={() => handleChatting( checkState.buyerId, itemId)} >채팅</button> : null}
+                        {type === "buyer" ?  <button className={btnStyle} onClick={(e) => {e.preventDefault(); handleDelete(data.bidId)}}>삭제</button> : null}
+                    </div>
+                </>
+
+            }
         </div>
     )
 }

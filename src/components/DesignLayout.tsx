@@ -20,7 +20,6 @@ export default function DesignLayout({
 
   //token만료
   const isToken = useRecoilValue(tokenState);
-  console.log(isToken);
 
   return (
     <main className="flex-1 py-8 px-5 min-h-screen overflow-y-auto">

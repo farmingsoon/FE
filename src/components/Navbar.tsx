@@ -1,44 +1,35 @@
 "use client"; 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import BellSVG from "../../public/svg/BellSVG";
 import CategorySVG from "../../public/svg/CategorySVG";
 import ChatSVG from "../../public/svg/ChatSVG";
-// import Hamburger from "../../public/svg/Hamburger";
+import Hamburger from "../../public/svg/Hamburger";
 import HomeSVG from "../../public/svg/HomeSVG";
 import SearchSVG from "../../public/svg/SearchSVG";
 import TagSVG from "../../public/svg/TagSVG";
-// import NavDropdown from "./NavDropdown";
-import { useRecoilState } from "recoil";
+import NavDropdown from "./NavDropdown";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { menuState } from "@/stores/NavMenuState";
-import LocalStorage from "@/util/localstorage";
 import { searchState } from "@/stores/searchOptionState";
+import LOGO from "@/../public/img/Logo.png";
+import Image from "next/image";
 
-//임시
-import { useRouter } from "next/navigation";
-import { loginSelector } from "@/stores/loginState";
+import { loginState } from "@/stores/loginState";
 
 const Navbar = () => {
     const [openDrop, setOpenDrop] = useState(false);
     const [menusState, setMenusState ] = useRecoilState(menuState);
     const [ ,setSearchOption ] = useRecoilState(searchState)
-    //const isLogin = LocalStorage.getItem("loginState");
+    const isLogin = useRecoilValue(loginState);
+    const [ mounted, setMounted ] = useState<boolean>(false);
     const btnStyle = "flex flex-row items-center w-fit whitespace-nowrap mb-6"
-    // console.log(login.isLogin)
+
     const handleClick = () => {
         setOpenDrop(!openDrop)
     };
 
     const handleOpenModal = ( menuTab: string ) => {
-
-        // const newMenu = menusState.map((el) => {
-        //     if(el.menu === menuTab){
-        //         return {...el, onOff: !el.onOff};
-        //     }
-        //     return el;
-        // });
-        
-
         if(menuTab === "search"){
             const newMenu = [{menu: "search", onOff: !menusState[0].onOff }, {menu: "alarm", onOff: false}];
             setMenusState(newMenu)
@@ -48,8 +39,6 @@ const Navbar = () => {
             const newMenu = [{menu: "search", onOff: false }, {menu: "alarm", onOff: !menusState[1].onOff}];
             setMenusState(newMenu)
         }
-
-        // setMenusState(newMenu);
     };
 
     const handleNavCategory = ( selectMenu: string ) => {
@@ -64,36 +53,32 @@ const Navbar = () => {
 
     };
 
-    //임시
-    const [ , setLogin ] = useRecoilState(loginSelector);
-    const router = useRouter();
-    const handleLoginOut = (e:any) => {
-        e.preventDefault();
-        handleClick();
-        setLogin((prev) => ({
-            ...prev,
-            isLogin: false,
-        }));
-        localStorage.clear();
-        router.push("/");
-    };
+    useEffect(() => {
+        setMounted(true);
+    }, [])
 
     return(
         <nav className="flex flex-col shadow-lg w-52 pt-8 sticky top-0 h-screen ">
-            <Link href="/"><h1 className="mb-5">FARMINGSOON</h1></Link>
-            <ul className="flex-1 px-3">
+            <Link href="/"><Image src={LOGO} width={180} alt="logo image" style={{margin: "auto"}}/></Link>
+            <ul className="flex-1 px-3 mt-10">
                 <li>
                     <Link href="/">
-                        <button className={btnStyle}><HomeSVG width={"12px"} height={"12px"}/><span className="pl-2 hover:text-DEEP_MAIN">홈</span>
+                        <button className={btnStyle}>
+                            <HomeSVG width={"12px"} height={"12px"}/>
+                            <span className="pl-2 hover:text-DEEP_MAIN">홈</span>
                         </button>
                     </Link>
                 </li>
                 <li>
-                    <button className={btnStyle} onClick={() => handleOpenModal("search")}><SearchSVG width={"12px"} height={"12px"}/><span className="pl-2 hover:text-DEEP_MAIN">검색</span>
+                    <button className={btnStyle} onClick={() => handleOpenModal("search")}>
+                        <SearchSVG width={"12px"} height={"12px"}/>
+                        <span className="pl-2 hover:text-DEEP_MAIN">검색</span>
                     </button>
                 </li>
                 <li>
-                    <button className="flex flex-row items-center w-fit whitespace-nowrap mb-2"><CategorySVG width={"12px"} height={"12px"}/><span className="pl-2 ">카테고리</span>
+                    <button className="flex flex-row items-center w-fit whitespace-nowrap mb-2">
+                        <CategorySVG width={"12px"} height={"12px"}/>
+                        <span className="pl-2 ">카테고리</span>
                     </button>
                 </li>
                 <ul className="px-8 grid gap-y-3 whitespace-nowrap mb-6">               
@@ -109,32 +94,38 @@ const Navbar = () => {
                 </ul>                
                 <li>
                     <Link href="/chat">
-                        <button className={btnStyle}><ChatSVG width={"'12px"} height={"12px"} /><span className="pl-2 hover:text-DEEP_MAIN">채팅</span>
+                        <button className={btnStyle}>
+                            <ChatSVG width={"12px"} height={"12px"} />
+                            <span className="pl-2 hover:text-DEEP_MAIN">채팅</span>
                         </button>
                     </Link>
                 </li>
                 <li>
-                    <button className={btnStyle} onClick={() => handleOpenModal("alarm")}><BellSVG width={"12px"} height={"12px"}/><span className="pl-2 hover:text-DEEP_MAIN">알림</span>
+                    <button className={btnStyle} onClick={() => handleOpenModal("alarm")}>
+                        <BellSVG width={"12px"} height={"12px"}/>
+                        <span className="pl-2 hover:text-DEEP_MAIN">알림</span>
                     </button>
                 </li>
                 <li>
                     <Link href="/product/edit">
-                        <button className={btnStyle}><TagSVG width={"12px"} height={"12px"}/><span className="pl-2 hover:text-DEEP_MAIN">판매하기</span>
+                        <button className={btnStyle}>
+                            <TagSVG width={"12px"} height={"12px"}/>
+                            <span className="pl-2 hover:text-DEEP_MAIN">판매하기</span>
                         </button>
                     </Link>
                 </li>
             </ul>
-            <div className="flex flex-row ml-5 mb-5">
+            {/* <div className="flex flex-row ml-5 mb-5">
                 <Link href="/login"><button className=" mr-5 hover:text-MAIN_COLOR">로그인</button></Link>
                 <button className="hover:text-MAIN_COLOR ml-5" onClick={handleLoginOut}>로그아웃</button>
-            </div>
-{/* 
-            { isLogin
+            </div> */}
+
+            { mounted && isLogin.isLogin
                 ? <button className="px-3 mb-5 " onClick={handleClick}><Hamburger width={"25px"} height={"25px"}/></button>
-                : <Link href="/login"><button className="mb-5 ml-5 hover:text-MAIN_COLOR">로그인</button></Link>
+                : <Link href="/login"><button className="mb-5 ml-5 hover:text-MAIN_COLOR text-sm">로그인</button></Link>
 
             }
-            {openDrop && <NavDropdown handleClick={handleClick}/>} */}
+            {openDrop && <NavDropdown handleClick={handleClick}/>}
         </nav>
     )
 }
