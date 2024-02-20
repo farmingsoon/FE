@@ -17,7 +17,7 @@ export interface MypageTypes {
     highestPrice: number;
     hopePrice: number;
     lowestPrice: number;
-    itemStatus: "경매중" | "경매종료" | "판매완료";
+    itemStatus: string | undefined
     bidCount: number;
     likeCount: number;
     viewCount: number;
@@ -34,6 +34,7 @@ export default function Login() {
     const [ biddingData, setBiddingData ] = useState<MypageTypes[]>([]);
     const [ saleData, setSaleData ] = useState<MypageTypes[]>([]);
     const [ mineClick, setMineClick ] = useRecoilState(mineItemSelector);
+    // console.log(saleData);
 
     const handleGetMine = async () => {
         try { 
@@ -123,9 +124,16 @@ export default function Login() {
                         handleOpen={ () => handleOpen("seller") } 
                         itemId={String(mineClick.itemId)} 
                         priceData={[mineClick.highestPrice, mineClick.lowestPrice]}
+                        itemStatus={ saleData.find(el => el.itemId === mineClick.itemId)?.itemStatus }
+                        
                     />
             }
-            {mounted && mineClick.buyerBidOpen && <BiddingModal handleOpen={ () => handleOpen("buyer") } itemId={String(mineClick.itemId)}/>}
+            {mounted && mineClick.buyerBidOpen 
+                && <BiddingModal 
+                    handleOpen={ () => handleOpen("buyer") } 
+                    itemId={String(mineClick.itemId)}
+                    itemStatus={ biddingData.find(el => el.itemId === mineClick.itemId)?.itemStatus }
+                />}
         </div>
     )
 }

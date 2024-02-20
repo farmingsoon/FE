@@ -6,10 +6,8 @@ import axios from "axios";
 import LocalStorage from "@/util/localstorage";
 import { BidRecordItemTypes } from "./SellerBidModal";
 import { tokenSelector } from "@/stores/tokenModal";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import BidPriceItem from "../BidPriceItem";
-import { bidCheckState } from "@/stores/bidCheckState";
-
 
 interface BiddingModalTypes extends ModalTypes {
     itemId: string;

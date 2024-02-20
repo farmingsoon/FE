@@ -12,7 +12,7 @@ interface MineItemTypes {
 
 const MineItem = ({type, data}: MineItemTypes) => {
     const router = useRouter();
-    const [ mineClick, setMineClick ] = useRecoilState(mineItemSelector);
+    const [ , setMineClick ] = useRecoilState(mineItemSelector);
 
     const formatDate = (date: string) => {
         const expiredAtDate = new Date(date);
@@ -27,10 +27,6 @@ const MineItem = ({type, data}: MineItemTypes) => {
 
 
     const handleClick = (itemId: number, highPrice:number, lowPrice:number, type: string) => {
-        console.log("MineItem 버튼 클릭")
-        console.log(mineClick)
-        console.log(itemId)
-        console.log(type)
         if(type === "seller"){
             setMineClick((prev) => ({
                 ...prev,

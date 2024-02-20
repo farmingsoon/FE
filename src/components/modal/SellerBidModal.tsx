@@ -32,7 +32,6 @@ const SellerBidModal = ({handleOpen, itemId, priceData, itemStatus}: SellerBidMo
     const ACCES_TOKEN = LocalStorage.getItem("accessToken");
     const [ bidRecord, setBidRecord ] = useState<BidRecordItemTypes[]>([])
     const [ , setOpenTokenModal ] = useRecoilState(tokenSelector);
-    // console.log("비드모달", itemId);
     const checkState = useRecoilValue(bidCheckState);
     //priceData[0] : 최고가 , priceData[1] : 최저가 
 
