@@ -3,7 +3,7 @@ import { SVG } from "@/types/SVG";
 import { useRecoilValue } from "recoil";
 
 interface BookmarkSVG extends SVG {
-    itemId: number;
+    itemId?: number;
 }
 
 const BookmarkSVG = ({width, height, itemId}: BookmarkSVG) => {
