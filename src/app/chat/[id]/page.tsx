@@ -41,9 +41,9 @@ export default function Chat() {
   const [currentMessage, setCurrentMessage] = useState("");
   const userId = Number(LocalStorage.getItem("memberId"));
 
-  const socket = new SockJS("http://server.farmingsoon.site/ws", null, {
-    transports: ["websocket", "xhr-streaming", "xhr-polling"],
-  });
+  const socket = new SockJS("http://server.farmingsoon.site/ws");
+  //, null, {transports: ["websocket", "xhr-streaming", "xhr-polling"],}
+  // const socket = new SockJS("http://server.farmingsoon.site/ws", null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
 
   const connect = () => {
     try {
@@ -51,15 +51,15 @@ export default function Chat() {
       const client = new Stomp.Client({
         webSocketFactory: () => socket,
         // brokerURL: "wss://server.farmingsoon.site/ws",
+        connectHeaders: {
+          Authorization: `Bearer ${ACCES_TOKEN}`
+        },
         debug: (str) => {
           console.log(`debg: ${str}`);
         },
         reconnectDelay: 5000, //자동 재 연결
         heartbeatIncoming: 0,
         heartbeatOutgoing: 0,
-        connectHeaders: {
-          Authorization: `Bearer ${ACCES_TOKEN}`
-        }
       });
 
       client.onConnect = () => {
@@ -85,29 +85,25 @@ export default function Chat() {
   };
 
   const disconnect = () => {
-    // if (chatSocket === undefined) {
-    //   return;
-    // }
-    // console.log("==== Disconnect ==== ");
-    // console.log(">> ", chatSocket);
-    // chatSocket.deactivate();
     if(chatSocket){
       chatSocket.deactivate
+      setChatSocket(null);
+
     }
   };
 
   // console.log(messages);
 
-  useEffect(() => {
-    if(!chatSocket) {
-      connect();
-    }
-    // 컴포넌트 언마운트 시 연결 해제
-    return () => {
-      disconnect();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   if(!chatSocket) {
+  //     connect();
+  //   }
+  //   // 컴포넌트 언마운트 시 연결 해제
+  //   return () => {
+  //     disconnect();
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   //채팅방 목록 && 채팅 리스트
 
@@ -179,6 +175,13 @@ export default function Chat() {
     getList();
     getHistoryChat();
     getChatRoomInfo();
+    if(!chatSocket) {
+      connect();
+    }
+
+    return () => {
+      disconnect();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
 
@@ -198,6 +201,7 @@ export default function Chat() {
         destination,
         body: JSON.stringify({
           chatRoomId: params.id,
+          senderId: userId,
           message: currentMessage,
         }),
         headers: {
