@@ -85,14 +85,10 @@ export default function Chat() {
   };
 
   const disconnect = () => {
-    // if (chatSocket === undefined) {
-    //   return;
-    // }
-    // console.log("==== Disconnect ==== ");
-    // console.log(">> ", chatSocket);
-    // chatSocket.deactivate();
     if(chatSocket){
       chatSocket.deactivate
+      setChatSocket(null);
+
     }
   };
 
@@ -179,7 +175,9 @@ export default function Chat() {
     getList();
     getHistoryChat();
     getChatRoomInfo();
-    connect();
+    if(!chatSocket) {
+      connect();
+    }
 
     return () => {
       disconnect();
