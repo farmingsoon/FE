@@ -43,7 +43,7 @@ const HomeItem = ({data}: HomeItemTypes) => {
                         <span className="ml-1">{data.bidCount}</span>
                     </div>
                     <div className="flex flex-row items-center ml-2">
-                        <BookmarkSVG width={"12px"} height={"12px"}/>
+                        <BookmarkSVG width={"12px"} height={"12px"} itemId={data.itemId}/>
                         <span className="ml-1">{data.likeCount}</span>
                     </div>
                 </div>
