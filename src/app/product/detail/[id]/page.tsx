@@ -15,8 +15,7 @@ import StatusPrice from "@/components/StatusPrice";
 import { useRecoilState } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
 import LikeItem from "@/common/LikeItem";
-
-// import BiddingModal from "@/components/modal/BiddingModal";
+import Cookies from "js-cookie";
 
 interface DetailPageTypes {
     sellerId: number;
@@ -52,7 +51,9 @@ export default function ProductDetail(  ) {
     const [, setIsToken] = useRecoilState(tokenState);
     const router = useRouter();
     const params = useParams<{ id: string; }>()
-    // console.log(detailData)
+
+    console.log(Cookies.get("viewCountCookie"));
+
     //뒤로가기 History
     const handleNavigationBack = (e:any) => {
         e.preventDefault();
@@ -76,7 +77,6 @@ export default function ProductDetail(  ) {
         try { 
             const config = {
                 ...options,
-                withCredentials: true,
             }
             const response = await axios.get(url, config);
             return response;
@@ -85,7 +85,7 @@ export default function ProductDetail(  ) {
             if(axios.isAxiosError(err) && err.response){
                 if(err.response.status === 401){
                     //헤더 없이 다시 요청 
-                    const retryRes = await axios.get(url);
+                    const retryRes = await axios.get(url, { withCredentials : true });
                     return retryRes;
                 }
                 
@@ -112,13 +112,14 @@ export default function ProductDetail(  ) {
 
     const getDetailData = async (userId: number) => {
         const headers = {
-            Authorization : `Bearer ${ACCES_TOKEN}`
+            Authorization : `Bearer ${ACCES_TOKEN}`,
+            withCredentials: true,
         };
 
         try { 
             const url = `${BASE_URL}/api/items/${params.id}`;
             const res = await fetchData(url, {headers})
-
+            console.log("전송 헤더", headers);
             if(res?.status === 200){
                 setDetailData(res.data.result);
 
@@ -213,6 +214,7 @@ export default function ProductDetail(  ) {
     useEffect(() => {
         const userId = localStorage.getItem("memberId"); //recoil
         getDetailData(Number(userId));
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -234,6 +236,7 @@ export default function ProductDetail(  ) {
 
             <div className="flex flex-col mt-5 whitespace-nowrap">
                 <div className="flex flex-row justify-between items-center">
+                    <div>{  }</div>
                     <div className="overflow-hidden rounded-full"><Img src={detailData && detailData.sellerProfileImgUrl} type={"circle"} width={40} height={40}/></div>
                     <div className="text-lg ml-2 flex-1">{detailData && detailData.sellerNickname}</div>
                     <LikeItem 

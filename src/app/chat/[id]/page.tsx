@@ -13,6 +13,8 @@ import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import LocalStorage from "@/util/localstorage";
 import { refreshToken } from "@/util/refreshToken";
+import { useRecoilState } from "recoil";
+import { tokenState } from "@/stores/tokenModal";
 
 export interface message {
   message: string;
@@ -41,6 +43,7 @@ export default function Chat() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const [websocketCount, setWebsocketCount] = useState(0);
+  const [, setIsToken] = useRecoilState(tokenState);
 
   //임시
   const [messages, setMessages] = useState<message[]>([]);
@@ -121,8 +124,9 @@ export default function Chat() {
       console.log(`채팅방 목록 리스트 에러 ${err}`);
       if (axios.isAxiosError(err) && err.response) {
         if (err.response.status === 401) {
-          refreshToken();
-          router.refresh();
+          // refreshToken();
+          // router.refresh();
+          setIsToken({tokenExpired: true})
         }
       }
     }
@@ -145,8 +149,9 @@ export default function Chat() {
       console.log(`이전 채팅 내역 ${err}`);
       if (axios.isAxiosError(err) && err.response) {
         if (err.response.status === 401) {
-          refreshToken();
-          router.refresh();
+          // refreshToken();
+          // router.refresh();
+          setIsToken({tokenExpired: true})
         }
       }
     }
