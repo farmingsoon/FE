@@ -85,7 +85,7 @@ export default function ProductDetail(  ) {
             if(axios.isAxiosError(err) && err.response){
                 if(err.response.status === 401){
                     //헤더 없이 다시 요청 
-                    const retryRes = await axios.get(url);
+                    const retryRes = await axios.get(url, { withCredentials : true });
                     return retryRes;
                 }
                 
