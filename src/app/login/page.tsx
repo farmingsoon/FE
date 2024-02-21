@@ -49,6 +49,8 @@ export default function Login() {
                 // console.log(res.data.result.accessToken);
                 const token = res.data.result.accessToken;
                 const id = res.data.result.memberId;
+                const userName = res.data.result.nickname;
+                const profile = res.data.result.profileImgUrl;
                 setErr("");
                 setLogin((prev)=> ({
                     ...prev,
@@ -57,12 +59,11 @@ export default function Login() {
                     isLogin: true,
                     memberId: res.data.result.memberId,
                 }));
-                // localStorage.setItem("loginState", JSON.stringify(true));
-                // localStorage.setItem("accessToken", token);
-                // localStorage.setItem("memberId", JSON.stringify(login.memberId));
                 LocalStorage.setItem("loginState", String(true));
                 LocalStorage.setItem("accessToken", token);
                 LocalStorage.setItem("memberId", String(id));
+                LocalStorage.setItem("userName", userName);
+                LocalStorage.setItem("userProfileImg", profile);
 
                 router.push("/")
             }
