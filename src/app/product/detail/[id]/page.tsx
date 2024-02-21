@@ -119,7 +119,7 @@ export default function ProductDetail(  ) {
         try { 
             const url = `${BASE_URL}/api/items/${params.id}`;
             const res = await fetchData(url, {headers})
-
+            console.log("전송 헤더", headers);
             if(res?.status === 200){
                 setDetailData(res.data.result);
 
