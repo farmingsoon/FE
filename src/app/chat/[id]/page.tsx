@@ -1,9 +1,11 @@
 "use client";
 import ChatListItem from "@/components/chat/ChatListItem";
-import ChatProductItem, { itemChatInfoTypes } from "@/components/chat/ChatProductItem";
+import ChatProductItem, {
+  itemChatInfoTypes,
+} from "@/components/chat/ChatProductItem";
 import Img from "@/common/Img";
 import SendButton from "@/../public/svg/SendButton";
-import { useEffect, useState } from "react"; 
+import { useEffect, useRef, useState } from "react";
 
 import * as Stomp from "@stomp/stompjs";
 import SockJS from "sockjs-client";
@@ -30,80 +32,77 @@ export default function Chat() {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
   const ACCES_TOKEN = LocalStorage.getItem("accessToken");
   const [chatList, setChatList] = useState<chatListTypes[]>([]);
-  const [curDetailChatInfo, setDetailChatInfo ] = useState<itemChatInfoTypes>();
+  const [curDetailChatInfo, setDetailChatInfo] = useState<itemChatInfoTypes>();
   const [isConnected, setIsConnected] = useState(false);
-  const [chatSocket, setChatSocket] = useState<any | null>();
+  // const [chatSocket, setChatSocket] = useState<any | null>();
+
+  const chatSocket = useRef<Stomp.Client | null>(null);
+
   const params = useParams<{ id: string }>();
   const router = useRouter();
+  const [websocketCount, setWebsocketCount] = useState(0);
 
   //임시
-  const [messages, setMessages] = useState<message[]>([ ]);
+  const [messages, setMessages] = useState<message[]>([]);
   const [currentMessage, setCurrentMessage] = useState("");
   const userId = Number(LocalStorage.getItem("memberId"));
 
-  const socket = new SockJS("http://server.farmingsoon.site/ws");
-  //, null, {transports: ["websocket", "xhr-streaming", "xhr-polling"],}
-  // const socket = new SockJS("http://server.farmingsoon.site/ws", null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
-
   const connect = () => {
-    try {
+    console.log("connect함수", chatSocket.current);
+    if (chatSocket.current === null) {
       console.log(">>>  첫 연결 시도 ");
+      const socket = new SockJS("http://server.farmingsoon.site/ws", null, {
+        transports: ["websocket", "xhr-streaming", "xhr-polling"],
+      });
+
       const client = new Stomp.Client({
         webSocketFactory: () => socket,
         // brokerURL: "wss://server.farmingsoon.site/ws",
         connectHeaders: {
-          Authorization: `Bearer ${ACCES_TOKEN}`
+          Authorization: `Bearer ${ACCES_TOKEN}`,
         },
         debug: (str) => {
           console.log(`debg: ${str}`);
         },
         reconnectDelay: 5000, //자동 재 연결
-        heartbeatIncoming: 0,
-        heartbeatOutgoing: 0,
+        heartbeatIncoming: 10000,
+        heartbeatOutgoing: 10000,
       });
 
       client.onConnect = () => {
+        setWebsocketCount((prev) => prev + 1);
         console.log("=== connect Success === ");
         setIsConnected(true);
-        client.subscribe(`/sub/chat-room/${params.id}`, (message) => {
-          // console.log("[ 구독  ]: ", message);
-          if (message.body) {
-            const msg = message.body;
-            // console.log("00 : ", JSON.parse(msg).message);
-            setMessages((chats) => [...chats, JSON.parse(msg)]);
+        client.subscribe(
+          `/sub/chat-room/${params.id}`,
+          (message) => {
+            // console.log("[ 구독  ]: ", message);
+            if (message.body) {
+              const msg = message.body;
+              // console.log("00 : ", JSON.parse(msg).message);
+              setMessages((chats) => [...chats, JSON.parse(msg)]);
+            }
+          },
+          {
+            Authorization: `Bearer ${ACCES_TOKEN}`,
           }
-        });
+        );
         //1번 채팅방 나갈 때 구독 끊기 .unsubscribe()
       };
 
       client.activate();
-      setChatSocket(client);
-    } catch (err) {
-      console.log(">> 연결 connect 시도", err);
-      setIsConnected(false);
+      chatSocket.current = client; //useRef를 통해서 인스턴스 저장.
     }
   };
 
   const disconnect = () => {
-    if(chatSocket){
-      chatSocket.deactivate
-      setChatSocket(null);
-
+    if (chatSocket.current) {
+      chatSocket.current.deactivate();
+      setWebsocketCount((prev) => prev - 1);
+      setIsConnected(false);
+      // setChatSocket(null);
     }
   };
-
-  // console.log(messages);
-
-  // useEffect(() => {
-  //   if(!chatSocket) {
-  //     connect();
-  //   }
-  //   // 컴포넌트 언마운트 시 연결 해제
-  //   return () => {
-  //     disconnect();
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   //채팅방 목록 && 채팅 리스트
 
@@ -148,7 +147,6 @@ export default function Chat() {
         if (err.response.status === 401) {
           refreshToken();
           router.refresh();
-          
         }
       }
     }
@@ -156,36 +154,39 @@ export default function Chat() {
 
   //디테일정보
   const getChatRoomInfo = async () => {
-    try { 
-        const res = await axios.get(`${BASE_URL}/api/chat-rooms/${params.id}`, {
-            headers: {
-                Authorization: `Bearer ${ACCES_TOKEN}`
-            }
-        });
+    try {
+      const res = await axios.get(`${BASE_URL}/api/chat-rooms/${params.id}`, {
+        headers: {
+          Authorization: `Bearer ${ACCES_TOKEN}`,
+        },
+      });
 
-        if(res.status === 200){
-          setDetailChatInfo(res.data.result);
-        }
-    } catch (err){
-        console.log(`채팅 관련 상품 정보 에러 ${err}`)
+      if (res.status === 200) {
+        setDetailChatInfo(res.data.result);
+      }
+    } catch (err) {
+      console.log(`채팅 관련 상품 정보 에러 ${err}`);
     }
-};
+  };
 
   useEffect(() => {
     getList();
     getHistoryChat();
     getChatRoomInfo();
-    if(!chatSocket) {
-      connect();
-    }
 
-    return () => {
-      disconnect();
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
 
+  useEffect(() => {
+    // console.log("새로고침", chatSocket);
+    connect();
 
+    return () => {
+      disconnect();
+    };
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   //메세지 보내기
   const sendMessage = async (e: any) => {
@@ -197,7 +198,7 @@ export default function Chat() {
     if (isConnected) {
       console.log("메세지 보내기 ");
       const destination = `/pub/chat/message`;
-      chatSocket.publish({
+      chatSocket.current?.publish({
         destination,
         body: JSON.stringify({
           chatRoomId: params.id,
@@ -236,23 +237,38 @@ export default function Chat() {
         <ChatProductItem curDetailChatInfo={curDetailChatInfo} />
         <div className="flex flex-col  justif-end overflow-y-auto px-2">
           <p className="text-POINT_RED font-normal text-center pt-1 text-sm">
-            {isConnected ? "채팅 방이 연결 되었습니다. " : "채팅 방이 연결 중입니다."}
+            {isConnected
+              ? "채팅 방이 연결 되었습니다. "
+              : "채팅 방이 연결 중입니다."}
+            채팅방 연결 갯수 {websocketCount}
           </p>
           <div className="flex flex-col mb-12 h-screen justify-end">
             {messages.length > 0 ? (
               messages.map((message, idx) => (
                 <div
-                className={`flex flex-row items-center ${message.senderId === userId ? "self-end" : "self-start"}`}
+                  className={`flex flex-row items-center ${message.senderId === userId ? "self-end" : "self-start"}`}
                   key={idx}
                 >
-                  {message.senderId === userId 
-                    ? null 
-                    : <div className="flex flex-col items-center mr-3">
-                        <p className="text-xs pb-1">{curDetailChatInfo?.toUsername}</p>
-                        <div className=""><Img type={"circle"} src={curDetailChatInfo?.toUserProfileImage} width={35} height={35} /></div>
+                  {message.senderId === userId ? null : (
+                    <div className="flex flex-col items-center mr-3">
+                      <p className="text-xs pb-1">
+                        {curDetailChatInfo?.toUsername}
+                      </p>
+                      <div className="">
+                        <Img
+                          type={"circle"}
+                          src={curDetailChatInfo?.toUserProfileImage}
+                          width={35}
+                          height={35}
+                        />
                       </div>
-                  }
-                  <p className={`px-2 my-2 py-3 rounded-lg w-fit ${message.senderId === userId ? "bg-indigo-400 text-white " : "bg-[#87dac2] text-white "}`}>{message.message}</p>
+                    </div>
+                  )}
+                  <p
+                    className={`px-2 my-2 py-3 rounded-lg w-fit ${message.senderId === userId ? "bg-indigo-400 text-white " : "bg-[#87dac2] text-white "}`}
+                  >
+                    {message.message}
+                  </p>
                 </div>
               ))
             ) : (
@@ -285,7 +301,6 @@ export default function Chat() {
           </button>
         </form>
       </div>
-
     </div>
   );
 }
