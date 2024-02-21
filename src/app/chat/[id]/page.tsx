@@ -51,7 +51,7 @@ export default function Chat() {
     console.log("connect함수", chatSocket.current);
     if (chatSocket.current === null) {
       console.log(">>>  첫 연결 시도 ");
-      const socket = new SockJS("http://server.farmingsoon.site/ws", null, {
+      const socket = new SockJS("https://server.farmingsoon.site/ws", null, {
         transports: ["websocket", "xhr-streaming", "xhr-polling"],
       });
 

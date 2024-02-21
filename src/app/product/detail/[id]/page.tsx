@@ -74,7 +74,11 @@ export default function ProductDetail(  ) {
 
     const fetchData = async (url: string, options = {}) => {
         try { 
-            const response = await axios.get(url, options);
+            const config = {
+                ...options,
+                withCredentials: true,
+            }
+            const response = await axios.get(url, config);
             return response;
         } catch (err){
             console.log(err);
