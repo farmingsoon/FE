@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+FarmingSoon.site
 
-## Getting Started
+## FarmingSoon 중고 거래 옥션 프로젝트
 
-First, run the development server:
+중고 물품 옥션 거래 사이트
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+* 프로젝트 기간 : 2024년 1월 8일 ~ 2월 21일 (약 6주)
+* 베포 링크 : 🌐 https://farmingsoon.site/
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 팀원 
+| 조혜진  | 지승용  |
+| :---: | :---: |
+| <img alt="조혜진" src="https://github.com/TRIP-Side-Project/.github/assets/110151638/a94e8171-daa9-4e76-89f8-e93f9ce5b5ec" height="200" width="180"> | <img alt="지승용" src="https://github.com/TRIP-Side-Project/.github/assets/110151638/9795281d-bd22-41ff-af97-29d6438baf21" height="200" width="180"> |
+| [깃허브 링크](https://github.com/Emma-Hyejin) | [깃허브 링크](https://github.com/gkfktkrh153)  |
+| 프론트 담당 | 백엔드 담당 |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+## 기술 스텍 (FE)
+<img alt="기술 스텍 " src="https://github.com/TRIP-Side-Project/.github/assets/110151638/6e42b237-c03f-445f-81b7-9b930e4887f9">
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## 작업 사항
 
-## Deploy on Vercel
+#### 01. 로그인, 회원가입 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+<p >
+<img src="https://github.com/farmingsoon/FE/assets/110151638/53ff8f73-7788-473f-8c28-9646a6d12a77" width="100%">
+</p>
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+#### 02. 상품 등록
+
+<p >
+<img src="https://github.com/farmingsoon/FE/assets/110151638/4f53f6b9-eba8-40be-9e69-3669c02f3145" width="100%">
+</p>
