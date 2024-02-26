@@ -9,10 +9,9 @@ import { useEffect, useRef, useState } from "react";
 
 import * as Stomp from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import { useParams, useRouter } from "next/navigation";
-import axios from "axios";
+import { useParams } from "next/navigation";
+
 import LocalStorage from "@/util/localstorage";
-import { refreshToken } from "@/util/refreshToken";
 import { useRecoilState } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
 import { axiosCall } from "@/util/axiosCall";
@@ -32,8 +31,6 @@ export interface chatListTypes {
 }
 
 export default function Chat() {
-  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-  const ACCES_TOKEN = LocalStorage.getItem("accessToken");
   const [chatList, setChatList] = useState<chatListTypes[]>([]);
   const [curDetailChatInfo, setDetailChatInfo] = useState<itemChatInfoTypes>();
   const [isConnected, setIsConnected] = useState(false);
@@ -42,9 +39,7 @@ export default function Chat() {
   const chatSocket = useRef<Stomp.Client | null>(null);
 
   const params = useParams<{ id: string }>();
-  const router = useRouter();
   const [websocketCount, setWebsocketCount] = useState(0);
-  const [, setIsToken] = useRecoilState(tokenState);
   const config = { withCredentials: true}
 
   const [messages, setMessages] = useState<message[]>([]);
