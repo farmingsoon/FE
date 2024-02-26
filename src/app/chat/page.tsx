@@ -57,6 +57,11 @@ export default function Chat() {
           
       }
 
+      if(axios.isAxiosError(err) && err.status === 403 ){
+        //로그인 후 이용할 수 있습니다. 
+        setOpenTokenModal({ tokenExpired: true })
+      }
+
     }
   };
 
