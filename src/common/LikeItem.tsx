@@ -3,7 +3,6 @@ import { useRecoilState } from "recoil";
 import debounce from 'lodash.debounce';
 
 import { tokenState } from "@/stores/tokenModal";
-import LocalStorage from "@/util/localstorage";
 import { likeSelector } from "@/stores/likeItemState";
 
 import BookmarkSVG from "../../public/svg/BookmarkSVG"
@@ -17,8 +16,8 @@ interface LikeItemTypes {
 }
 
 const LikeItem = ({bidCount, likeCount, itemId}: LikeItemTypes) => {
-    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const accessToken = LocalStorage.getItem("accessToken");
+    // const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+    // const accessToken = LocalStorage.getItem("accessToken");
     const [, setIsToken] = useRecoilState(tokenState);
     const [ likeItemColor , setLikeItemColor ] = useRecoilState(likeSelector);
 

@@ -37,8 +37,6 @@ interface DetailPageTypes {
 
 
 export default function ProductDetail(  ) {
-    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const ACCES_TOKEN = LocalStorage.getItem("accessToken");
     const userId = LocalStorage.getItem("memberId");
     const [sellerBiddOpen, setSellerBiddOpen] = useState(false);
     const [buyerBidOppen, setBuyerBidOpen] = useState(false);
