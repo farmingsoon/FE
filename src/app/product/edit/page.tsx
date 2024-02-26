@@ -10,6 +10,7 @@ import { useRecoilState } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
 import { categoryState } from "@/stores/categoryState";
 import Close from "../../../../public/svg/Close";
+import { axiosCall } from "@/util/axiosCall";
 
 export default function ProductEdit() {
     const inputStyle = "border-b border-LINE_BORDER placeholder:text-zinc-300 text-sm py-1 mb-12 pl-2 font-light ";
@@ -127,33 +128,45 @@ export default function ProductEdit() {
         };
 
         if(isValidImg(imageFile[0]) && isValidTitle(title) && isValidPrice(hopePrice) && isValidPeriod(period) && isValidContent(contents)){
+            const url = "/api/items";
+            const config = { 
+                'Content-Type': 'multipart/form-data',
+                withCredentials: true,
+             }
 
             try { 
-                const res = await axios.post(`${BASE_URL}/api/items`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                });
+
+                const res = await axiosCall(url, "POST", formData, config);
+                if(res.status === 200){
+                    console.log("상품 등록 성공하였습니다. ")
+                    const id = res.data.result;
+                    router.push(`/product/detail/${id}`);
+                }
+                // const res = await axios.post(`${BASE_URL}/api/items`, formData, {
+                //     headers: {
+                //         'Content-Type': 'multipart/form-data',
+                //         Authorization: `Bearer ${accessToken}`
+                //     }
+                // });
     
                 //성공
-                if(res.status === 200){
-                    console.log(formData);
-                    console.log(res.data);
-                    console.log(res.data.result);
-                    const id = res.data.result;
-                    router.push(`/product/detail/${id}`)
-                }
+                // if(res.status === 200){
+                //     console.log(formData);
+                //     console.log(res.data);
+                //     console.log(res.data.result);
+                //     const id = res.data.result;
+                //     router.push(`/product/detail/${id}`)
+                // }
     
             } catch (err){
                 console.log(`상품 등록 수정 실패 ${err}`)
-                if(axios.isAxiosError(err) && err.response){
-                    if(err.response.status === 404){
-                        setErr("로그인이 만료 되었습니다. 로그인을 다시 진행해주세요. ");
-                        setIsToken({tokenExpired: true})
-                    }
+                // if(axios.isAxiosError(err) && err.response){
+                //     if(err.response.status === 404){
+                //         setErr("로그인이 만료 되었습니다. 로그인을 다시 진행해주세요. ");
+                //         setIsToken({tokenExpired: true})
+                //     }
                     
-                }
+                // }
             }
     
         }

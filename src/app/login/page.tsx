@@ -39,6 +39,8 @@ export default function Login() {
                 email: email,
                 password: password,
                 
+            }, {
+                withCredentials: true
             });
             
             //실패
