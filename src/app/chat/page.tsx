@@ -45,7 +45,7 @@ export default function Chat() {
     // }
       console.log(`채팅방 목록 리스트 에러 ${err}`);
       if(axios.isAxiosError(err) && err.status === 401 ){
-        if(err.message === "기한이 만료된 AccessToken입니다."){
+        if(err instanceof Error && err.message === "기한이 만료된 AccessToken입니다."){
           //AT 만료 
           console.log("AcessToken 만료");
           rotateRefresh();
