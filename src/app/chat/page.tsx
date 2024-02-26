@@ -2,9 +2,10 @@
 import ChatListItem from "@/components/chat/ChatListItem";
 import { useEffect, useState } from "react"; 
 
-import { axiosCall } from "@/util/axiosCall";
+import { rotateRefresh } from "@/util/axiosCall";
 import { useRecoilState } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
+import axios from "axios";
 
 export interface message {
   message: string;
@@ -27,20 +28,34 @@ export default function Chat() {
   //채팅방 목록 && 채팅 리스트
 
   const getList = async () => {
-    const url = "/api/chat-rooms/me";
+    const url = "https://server.farmingsoon.site/api/chat-rooms/me";
     const config = { withCredentials: true };
 
     try {
-      const res = await axiosCall(url, "GET", config);
-      setChatList(res);
+      const res = await axios.get(url, config);
+      if(res.status === 200){
+        setChatList(res.data.result);
+      }
 
     } catch (err) {
-      if(err instanceof Error && err.message === "RefreshTokenUnauthorized") {
-        // 토큰 만료 시 토큰 모달 상태를 업데이트
-        console.log("refresh토큰 만료 ")
-        setOpenTokenModal({ tokenExpired: true });
-    }
+    //   if(err instanceof Error && err.message === "RefreshTokenUnauthorized") {
+    //     // 토큰 만료 시 토큰 모달 상태를 업데이트
+    //     console.log("refresh토큰 만료 ")
+    //     setOpenTokenModal({ tokenExpired: true });
+    // }
       console.log(`채팅방 목록 리스트 에러 ${err}`);
+      if(axios.isAxiosError(err) && err.status === 401 ){
+        if(err.message === "기한이 만료된 AccessToken입니다."){
+          //AT 만료 
+          console.log("AcessToken 만료");
+          rotateRefresh();
+        }
+
+        if(err.message === "기한이 만료된 RefreshToken입니다"){
+          setOpenTokenModal({ tokenExpired: true })
+        }
+          
+      }
 
     }
   };

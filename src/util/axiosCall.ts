@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const rotateRefresh = async () => {
+export const rotateRefresh = async () => {
     try { 
         const res = await axios.get(`https://server.farmingsoon.site/api/members/rotate`, {
             withCredentials: true

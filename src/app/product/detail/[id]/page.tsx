@@ -73,12 +73,12 @@ export default function ProductDetail(  ) {
 
     const getDetailData = async (userId: number) => {
         const url = `https://server.farmingsoon.site/api/items/${params.id}`;
-        const options = {
-            withCredentials: true
-        }
+        // const options = {
+        //     withCredentials: true
+        // }
 
         try { 
-            const res = await axios.get(url, options);
+            const res = await axios.get(url);
             console.log(res.data.result);
 
             if(userId === res.data.result.sellerId){
@@ -89,13 +89,13 @@ export default function ProductDetail(  ) {
 
         } catch (err){
             console.log(`디테일 페이지 ${err}`)
-            if(axios.isAxiosError(err) && err.status === 401){
-                const res =  await axios.get(url);
-                if(userId === res.data.result.sellerId){
-                    setAmIuser(res.data.result);
-                }
-                setDetailData(res.data.result);
-            }
+            // if(axios.isAxiosError(err) && err.status === 401){
+            //     const res =  await axios.get(url);
+            //     if(userId === res.data.result.sellerId){
+            //         setAmIuser(res.data.result);
+            //     }
+            //     setDetailData(res.data.result);
+            // }
             
         }
     };
