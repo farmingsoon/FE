@@ -43,7 +43,7 @@ const BiddingModal = ({handleOpen, itemId, itemStatus}: BiddingModalTypes ) => {
         const numbidValue = Number(bidValue.replace(/,/g, ''));
 
         try {    
-            const url = "api/bids";
+            const url = "/api/bids";
             const body = {
                 itemId: itemId,
                 price: numbidValue,

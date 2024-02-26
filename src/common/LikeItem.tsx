@@ -46,7 +46,10 @@ const LikeItem = ({bidCount, likeCount, itemId}: LikeItemTypes) => {
                 ));
 
                 
-                const cancelRes = await axiosCall( `/api/likeable-items/${itemId}`, "DELETE", config );
+                // const cancelRes = await axiosCall( `/api/likeable-items/${itemId}`, "DELETE", config );
+                const cancelRes = await axios.delete(`https://server.farmingsoon.site/api/likeable-items/${itemId}`, {
+                    withCredentials: true
+                })
                 
                 // 좋아요 취소 클릭 성공 
                 if(cancelRes.status === 200){
