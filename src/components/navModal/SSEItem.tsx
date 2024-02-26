@@ -12,10 +12,11 @@ const SSEItem = ({data}: SSEItemTypes) => {
 
     const handleRead = async () => {
         const url = `api/notifications/${notificationId}`;
+        const data = {};
         const config = { withCredentials: true }
 
         try { 
-            const res = await axiosCall(url, "PATCH", {}, config );
+            const res = await axiosCall(url, "PATCH", data, config );
             if(res.status === 200){
                 console.log("읽음 처리 성공")
             }
