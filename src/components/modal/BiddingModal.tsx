@@ -1,13 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import Close from "../../../public/svg/Close";
+
+import { axiosCall } from "@/util/axiosCall";
 import { ModalTypes } from "@/types/Modal";
-import axios from "axios";
-import LocalStorage from "@/util/localstorage";
 import { BidRecordItemTypes } from "./SellerBidModal";
-import { tokenSelector } from "@/stores/tokenModal";
-import { useRecoilState } from "recoil";
 import BidPriceItem from "../BidPriceItem";
+import Close from "../../../public/svg/Close";
+// import LocalStorage from "@/util/localstorage";
+// import { tokenSelector } from "@/stores/tokenModal";
+// import { useRecoilState } from "recoil";
+
 
 interface BiddingModalTypes extends ModalTypes {
     itemId: string;
@@ -15,9 +17,7 @@ interface BiddingModalTypes extends ModalTypes {
 }
 
 const BiddingModal = ({handleOpen, itemId, itemStatus}: BiddingModalTypes ) => {
-    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const ACCES_TOKEN = LocalStorage.getItem("accessToken");
-    const [ , setOpenTokenModal ] = useRecoilState(tokenSelector);
+    // const [ , setOpenTokenModal ] = useRecoilState(tokenSelector);
 
     const [ bidRecord, setBidRecord ] = useState<BidRecordItemTypes[]>([])
     const [bidValue, setBidValue] = useState("");
@@ -43,19 +43,20 @@ const BiddingModal = ({handleOpen, itemId, itemStatus}: BiddingModalTypes ) => {
         const numbidValue = Number(bidValue.replace(/,/g, ''));
 
         try {    
-            const res = await axios.post(`${BASE_URL}/api/bids`, {
+            const url = "api/bids";
+            const body = {
                 itemId: itemId,
-                price: numbidValue
-            } , {
-                headers: {
-                    Authorization: `Bearer ${ACCES_TOKEN}`
-                }
-            });
+                price: numbidValue,
+            };
+            const config = { withCredentials: true };
+
+            const res = await axiosCall( url, "POST", body, config );
 
             if(res.status === 200){
                 console.log("입찰 성공");
                 handleOpen();
-            }
+            };
+
         } catch (err) {
             console.log(`입찰하기 에러 ${err}`)
         }
@@ -65,29 +66,22 @@ const BiddingModal = ({handleOpen, itemId, itemStatus}: BiddingModalTypes ) => {
     //기존 입찰 내역 
     const getBidRecord = async () => {
         try { 
-            const res = await axios.get(`${BASE_URL}/api/bids?itemId=${itemId}`, {
-                headers: {
-                    Authorization: `Bearer ${ACCES_TOKEN}`
-                }
-            });
+            const url = `/api/bids?itemId=${itemId}`;
+            const config = { withCredentials: true };
 
-            //성공
-            if(res.status === 200){
-                const data = res.data.result;
-                setBidRecord(data.bids);
-                console.log(data);
-            };
+            const res = await axiosCall(url, "GET", config);
+            setBidRecord(res.bids);
 
 
         } catch (err) {
             console.log(`입찰내역 ${err}`)
-            if(axios.isAxiosError(err) && err.response){
-                if(err.response.status === 401){
-                    //token모달 열기 
-                    setOpenTokenModal({tokenExpired: true});
-                }
+            // if(axios.isAxiosError(err) && err.response){
+            //     if(err.response.status === 401){
+            //         //token모달 열기 
+            //         setOpenTokenModal({tokenExpired: true});
+            //     }
                 
-            }
+            // }
         }
     };
 

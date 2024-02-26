@@ -15,6 +15,7 @@ import LocalStorage from "@/util/localstorage";
 import { refreshToken } from "@/util/refreshToken";
 import { useRecoilState } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
+import { axiosCall } from "@/util/axiosCall";
 
 export interface message {
   message: string;
@@ -36,7 +37,7 @@ export default function Chat() {
   const [chatList, setChatList] = useState<chatListTypes[]>([]);
   const [curDetailChatInfo, setDetailChatInfo] = useState<itemChatInfoTypes>();
   const [isConnected, setIsConnected] = useState(false);
-  // const [chatSocket, setChatSocket] = useState<any | null>();
+  const [, setOpenTokenModal] = useRecoilState(tokenState);
 
   const chatSocket = useRef<Stomp.Client | null>(null);
 
@@ -44,8 +45,8 @@ export default function Chat() {
   const router = useRouter();
   const [websocketCount, setWebsocketCount] = useState(0);
   const [, setIsToken] = useRecoilState(tokenState);
+  const config = { withCredentials: true}
 
-  //임시
   const [messages, setMessages] = useState<message[]>([]);
   const [currentMessage, setCurrentMessage] = useState("");
   const userId = Number(LocalStorage.getItem("memberId"));
@@ -61,9 +62,9 @@ export default function Chat() {
       const client = new Stomp.Client({
         webSocketFactory: () => socket,
         // brokerURL: "wss://server.farmingsoon.site/ws",
-        connectHeaders: {
-          Authorization: `Bearer ${ACCES_TOKEN}`,
-        },
+        // connectHeaders: {
+        //   Authorization: `Bearer ${ACCES_TOKEN}`,
+        // },
         debug: (str) => {
           console.log(`debg: ${str}`);
         },
@@ -86,9 +87,9 @@ export default function Chat() {
               setMessages((chats) => [...chats, JSON.parse(msg)]);
             }
           },
-          {
-            Authorization: `Bearer ${ACCES_TOKEN}`,
-          }
+          // {
+          //   Authorization: `Bearer ${ACCES_TOKEN}`,
+          // }
         );
         //1번 채팅방 나갈 때 구독 끊기 .unsubscribe()
       };
@@ -110,66 +111,60 @@ export default function Chat() {
   //채팅방 목록 && 채팅 리스트
 
   const getList = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/api/chat-rooms/me`, {
-        headers: {
-          Authorization: `Bearer ${ACCES_TOKEN}`,
-        },
-      });
+    const url = "/api/chat-rooms/me";
 
-      if (res.status === 200) {
-        setChatList(res.data.result);
-      }
+    try {
+      const res = await axiosCall(url, "GET", config);
+      setChatList(res);
+    
+      
     } catch (err) {
+      if(err instanceof Error && err.message === "RefreshTokenUnauthorized") {
+        // 토큰 만료 시 토큰 모달 상태를 업데이트
+        console.log("refresh토큰 만료 ")
+        setOpenTokenModal({ tokenExpired: true });
+    }
       console.log(`채팅방 목록 리스트 에러 ${err}`);
-      if (axios.isAxiosError(err) && err.response) {
-        if (err.response.status === 401) {
-          // refreshToken();
-          // router.refresh();
-          setIsToken({tokenExpired: true})
-        }
-      }
+      
     }
   };
 
   const getHistoryChat = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/api/chats/${params.id}`, {
-        headers: {
-          Authorization: `Bearer ${ACCES_TOKEN}`,
-        },
-      });
+    const url = `/api/chats/${params.id}`;
 
-      if (res.status === 200) {
-        const history = res.data.result.chats;
-        // console.log(history)
-        setMessages([...history]);
-      }
+    try {
+      const res = await axiosCall( url, "GET", config );
+      setMessages([... res.chats]);
+
     } catch (err) {
-      console.log(`이전 채팅 내역 ${err}`);
-      if (axios.isAxiosError(err) && err.response) {
-        if (err.response.status === 401) {
-          // refreshToken();
-          // router.refresh();
-          setIsToken({tokenExpired: true})
-        }
+      if(err instanceof Error && err.message === "RefreshTokenUnauthorized" ) {
+        console.log(`이전 채팅 내역 ${err}`);
+        // 토큰 만료 시 토큰 모달 상태를 업데이트
+        console.log("refresh토큰 만료 ")
+        setOpenTokenModal({ tokenExpired: true });
+
       }
+      console.log(`채팅방 히스토리 GET 요청 에러 ${err}`);
+
     }
   };
 
   //디테일정보
   const getChatRoomInfo = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/api/chat-rooms/${params.id}`, {
-        headers: {
-          Authorization: `Bearer ${ACCES_TOKEN}`,
-        },
-      });
+    const url = `/api/chat-rooms/${params.id}`;
 
-      if (res.status === 200) {
-        setDetailChatInfo(res.data.result);
-      }
+    try {
+      const res = await axiosCall( url, "GET", config );
+      setDetailChatInfo(res);
+
     } catch (err) {
+      if(err instanceof Error && err.message === "RefreshTokenUnauthorized" ) {
+        console.log(err);
+        // 토큰 만료 시 토큰 모달 상태를 업데이트
+        console.log("refresh토큰 만료 ")
+        setOpenTokenModal({ tokenExpired: true });
+
+      }
       console.log(`채팅 관련 상품 정보 에러 ${err}`);
     }
   };
@@ -210,9 +205,9 @@ export default function Chat() {
           senderId: userId,
           message: currentMessage,
         }),
-        headers: {
-          Authorization: `Bearer ${ACCES_TOKEN}`,
-        },
+        // headers: {
+        //   Authorization: `Bearer ${ACCES_TOKEN}`,
+        // },
       });
       //입력 창 초기화
       setCurrentMessage("");

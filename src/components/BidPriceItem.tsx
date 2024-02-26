@@ -1,14 +1,15 @@
 import Img from "@/common/Img";
 import { useState } from "react";
-import CheckBox from "../../public/svg/CheckBox";
-import { BidRecordItemTypes } from "./modal/SellerBidModal";
 import { useRecoilState } from "recoil";
+import { axiosCall } from "@/util/axiosCall";
 import { bidCheckState } from "@/stores/bidCheckState";
-import axios from "axios";
-import LocalStorage from "@/util/localstorage";
-import { tokenSelector } from "@/stores/tokenModal";
+
+import { BidRecordItemTypes } from "./modal/SellerBidModal";
+import CheckBox from "../../public/svg/CheckBox";
 import { useRouter } from "next/navigation";
-import { refreshToken } from "@/util/refreshToken";
+// import { tokenSelector } from "@/stores/tokenModal";
+// import { refreshToken } from "@/util/refreshToken";
+
 
 interface BidPriceTypes {
     data: BidRecordItemTypes;
@@ -18,16 +19,12 @@ interface BidPriceTypes {
 }
 
 const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
-    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const ACCES_TOKEN = LocalStorage.getItem("accessToken");
     const [ checkState, setCheckState ] = useRecoilState(bidCheckState);
-    const [ , setOpenTokenModal ] = useRecoilState(tokenSelector);
+    // const [ , setOpenTokenModal ] = useRecoilState(tokenSelector);
     const [check, setCheck] = useState(false);
     const router = useRouter();
     const btnStyle = "bg-white border border-LINE_BORDER rounded-md px-3 mx-1.5 py-1 font-semibold text-sm my-3 hover:bg-zinc-200";
     const checkBoxStyle = check ? `bg-POINT_RED relative` : ``;
-    //console.log(checkState)
-    console.log(itemStatus)
 
     const handleClick = () => {
         setCheckState({
@@ -42,12 +39,10 @@ const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
     }
 
     const handleDelete = async (bidId: number) => {
+        const config = { withCredentials: true };
+
         try { 
-            const res = await axios.delete(`${BASE_URL}/api/bids/${bidId}`, {
-                headers: {
-                    Authorization: `Bearer ${ACCES_TOKEN}`
-                }
-            });
+            const res = await axiosCall(`/api/bids/${bidId}`, "DELETE", config);
 
             if(res.status === 200){
                 console.log(`${bidId} 입찰 내역 삭제 성공`)
@@ -55,27 +50,28 @@ const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
 
         } catch (err){
             console.log(`입찰 내역 삭제 ${err}`);
-            if(axios.isAxiosError(err) && err.response){
-                if(err.response.status === 401){
-                    //token모달 열기 
-                    setOpenTokenModal({tokenExpired: true});
-                }
+            // if(axios.isAxiosError(err) && err.response){
+            //     if(err.response.status === 401){
+            //         //token모달 열기 
+            //         setOpenTokenModal({tokenExpired: true});
+            //     }
                 
-            }
+            // }
         }
     };
 
     const handleChatting = async (buyerId: number, itemId: number) => {
         if(buyerId && itemId && checkState.isCheck){
+            const url = "/api/chat-rooms";
+            const body = {
+                buyerId: buyerId,
+                itemId: itemId,
+            };
+            const config = { withCredentials: true }
+
+
             try{ 
-                const res = await axios.post(`${BASE_URL}/api/chat-rooms`, {
-                    buyerId: buyerId,
-                    itemId: itemId
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${ACCES_TOKEN}`
-                    }
-                });
+                const res = await axiosCall(url, "POST", body, config);
 
                 if(res.status === 200){
                     const chatRoomId = res.data.result;
@@ -85,11 +81,11 @@ const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
 
             } catch (err){
                 console.log(`채팅하기 ${err}`);
-                if (axios.isAxiosError(err) && err.response) {
-                    if (err.response.status === 401) {
-                        refreshToken();
-                    }
-                  }
+                // if (axios.isAxiosError(err) && err.response) {
+                //     if (err.response.status === 401) {
+                //         refreshToken();
+                //     }
+                // }
             }
         }
     };

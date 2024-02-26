@@ -1,27 +1,25 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-// import Fileuploader from "@/common/FileUploader"
-import PlusCircle from "../../../../public/svg/PlusCircle";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import LocalStorage from "@/util/localstorage";
 import { useRecoilState } from "recoil";
-import { tokenState } from "@/stores/tokenModal";
+import { useRouter } from "next/navigation";
+import { axiosCall } from "@/util/axiosCall";
+
 import { categoryState } from "@/stores/categoryState";
 import Close from "../../../../public/svg/Close";
-import { axiosCall } from "@/util/axiosCall";
+import PlusCircle from "../../../../public/svg/PlusCircle";
+import { tokenState } from "@/stores/tokenModal";
+
 
 export default function ProductEdit() {
     const inputStyle = "border-b border-LINE_BORDER placeholder:text-zinc-300 text-sm py-1 mb-12 pl-2 font-light ";
     const btnStyle = `rounded-full w-20 h-10 text-sm font-normal mx-3 mt-2 text-TEXT_BLACK border border-indigo-500 rounded-lg shadow-sm cursor-pointer  `
     const checkBtnStyle = `bg-gradient-to-br from-purple-500 via-indigo-500 to-indigo-500  font-semibold text-white`;
-    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
     const router = useRouter();
     const [imageFile, setImageFile] = useState<File[]>([]);
     const [contents, setContents] = useState("");
-    const accessToken = LocalStorage.getItem("accessToken");
-    const [, setIsToken] = useRecoilState(tokenState);
+    // const accessToken = LocalStorage.getItem("accessToken");
+    const [, setOpenTokenModal] = useRecoilState(tokenState);
     const [ selectCategory, setSelectCategory ] = useRecoilState(categoryState);
     const [priceValue, setPriceValue] = useState("");
 
@@ -142,31 +140,14 @@ export default function ProductEdit() {
                     const id = res.data.result;
                     router.push(`/product/detail/${id}`);
                 }
-                // const res = await axios.post(`${BASE_URL}/api/items`, formData, {
-                //     headers: {
-                //         'Content-Type': 'multipart/form-data',
-                //         Authorization: `Bearer ${accessToken}`
-                //     }
-                // });
-    
-                //성공
-                // if(res.status === 200){
-                //     console.log(formData);
-                //     console.log(res.data);
-                //     console.log(res.data.result);
-                //     const id = res.data.result;
-                //     router.push(`/product/detail/${id}`)
-                // }
     
             } catch (err){
+                if(err instanceof Error && err.message === "RefreshTokenUnauthorized") {
+                    // 토큰 만료 시 토큰 모달 상태를 업데이트
+                    console.log("refresh토큰 만료 ")
+                    setOpenTokenModal({ tokenExpired: true });
+                }
                 console.log(`상품 등록 수정 실패 ${err}`)
-                // if(axios.isAxiosError(err) && err.response){
-                //     if(err.response.status === 404){
-                //         setErr("로그인이 만료 되었습니다. 로그인을 다시 진행해주세요. ");
-                //         setIsToken({tokenExpired: true})
-                //     }
-                    
-                // }
             }
     
         }

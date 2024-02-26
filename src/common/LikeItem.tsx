@@ -8,6 +8,7 @@ import { likeSelector } from "@/stores/likeItemState";
 
 import BookmarkSVG from "../../public/svg/BookmarkSVG"
 import PersonSVG from "../../public/svg/PersonSVG"
+import { axiosCall } from "@/util/axiosCall";
 
 interface LikeItemTypes {
     itemId: number;
@@ -22,24 +23,19 @@ const LikeItem = ({bidCount, likeCount, itemId}: LikeItemTypes) => {
     const [ likeItemColor , setLikeItemColor ] = useRecoilState(likeSelector);
 
 
-    // console.log(likeItemColor)
-
-    //debounce 적용 예정 
     const handleLikeItem = debounce(async () => {
         const isLikedItem = likeItemColor.includes(String(itemId));
+        const config = { withCredentials: true };
+
         try { 
             if(!isLikedItem){
                 setLikeItemColor((prev) => (
                     [...prev, String(itemId) ]
                 ));
                 
-                const likeRes = await axios.post(`${BASE_URL}/api/likeable-items/${itemId}`,{}, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                });
+                const likeRes = await axiosCall( `/api/likeable-items/${itemId}`, "POST", {}, config )
 
-                // //좋아요 클릭 성공
+                //좋아요 클릭 성공
                 if(likeRes.status === 200){
                     console.log("북마크 좋아요 클릭 성공");
                 }
@@ -51,13 +47,9 @@ const LikeItem = ({bidCount, likeCount, itemId}: LikeItemTypes) => {
                 ));
 
                 
-                const cancelRes = await axios.delete(`${BASE_URL}/api/likeable-items/${itemId}`, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                });
+                const cancelRes = await axiosCall( `/api/likeable-items/${itemId}`, "DELETE", config );
                 
-                // //좋아요 취소 클릭 성공 
+                // 좋아요 취소 클릭 성공 
                 if(cancelRes.status === 200){
                     console.log("북마크 취소 성공");
                 }

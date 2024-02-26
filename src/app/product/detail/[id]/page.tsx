@@ -57,27 +57,6 @@ export default function ProductDetail(  ) {
     //이미지 페이지네이션
     const [ curImg, setCurImg ] = useState(0);
 
-    // const fetchData = async (url: string, options = {}) => {
-    //     try { 
-    //         const config = {
-    //             ...options,
-    //         }
-    //         const response = await axios.get(url, config);
-    //         return response;
-    //     } catch (err){
-    //         console.log(err);
-    //         if(axios.isAxiosError(err) && err.response){
-    //             if(err.response.status === 401){
-    //                 //헤더 없이 다시 요청 
-    //                 const retryRes = await axios.get(url, { withCredentials : true });
-    //                 return retryRes;
-    //             }
-                
-    //         }
-    //         console.log(err);
-    //     }
-    // }
-
 
     const handleOpen = (sellerId: number) => {
         if(Number(userId) === sellerId){
@@ -117,17 +96,17 @@ export default function ProductDetail(  ) {
     };
 
     const handleDelete = async () => {
+        const url = `/api/items/${params.id}`;
+        const config = { withCredentials : true };
+
         try {
-            const res = await axios.delete(`${BASE_URL}/api/items/${params.id}`, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${ACCES_TOKEN}`
-                }
-            });
+            const res = await axiosCall( url, "DELETE", config )
+            
             if(res.status === 200){
                 console.log("성공적 데이터 삭제 ")
                 router.push("/");
             }
+            
         } catch (err){
             console.log(`상품 상세 삭제 ${err}`);
             if(axios.isAxiosError(err) && err.response){
