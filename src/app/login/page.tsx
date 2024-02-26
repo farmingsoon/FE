@@ -70,6 +70,12 @@ export default function Login() {
 
                 router.push("/")
             }
+
+            if(res.status === 401){
+                rotateRefresh();
+                setErr("업데이트 : 로그인 버튼을 다시 한번 눌러주세요! ")
+            }
+
         } catch(Err) {
 
 
@@ -87,7 +93,6 @@ export default function Login() {
                 
             }
 
-            console.log(`로그인 실패 ${Err}`)
         }
     }
 

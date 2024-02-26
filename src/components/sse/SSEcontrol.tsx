@@ -16,6 +16,7 @@ const SSEcontrol = () => {
 
 
     useEffect(() => {
+        console.log(" ==== SSE ==== ")
         const connectSSE = () => {
             eventSource.current = new EventSourcePolyfill(`${BASE_URL}/api/notifications/subscribe`, {
                 withCredentials: true
@@ -50,14 +51,16 @@ const SSEcontrol = () => {
         };
 
 
-        if(isLogin.tokenExpired === true && localState === "false"){
+        if(isLogin.tokenExpired === true || localState === "false"){
             //토큰 만료 시 연결 종료 
+            console.log(" == 토큰 만료 및 비로그인 상태라 연결 종료 == ")
             eventSource.current?.close(); // 연결 종료
             eventSource.current = null; //참조 제거
             setGotMessage(false);
         }
 
         if(isLogin.tokenExpired === false && localState === "true"){
+            console.log(" == 로그인 상태라 연결  == ")
             connectSSE();
         }
 
