@@ -1,5 +1,6 @@
 "use client";
 import { loginSelector } from "@/stores/loginState";
+import { rotateRefresh } from "@/util/axiosCall";
 import LocalStorage from "@/util/localstorage";
 import axios from "axios";
 import Link from "next/link";
@@ -49,7 +50,7 @@ export default function Login() {
             //성공
             if(res.status === 200){
                 // console.log(res.data.result.accessToken);
-                const token = res.data.result.accessToken;
+                // const token = res.data.result.accessToken;
                 const id = res.data.result.memberId;
                 const userName = res.data.result.nickname;
                 const profile = res.data.result.profileImgUrl;
@@ -62,7 +63,7 @@ export default function Login() {
                     memberId: res.data.result.memberId,
                 }));
                 LocalStorage.setItem("loginState", String(true));
-                LocalStorage.setItem("accessToken", token);
+                // LocalStorage.setItem("accessToken", token);
                 LocalStorage.setItem("memberId", String(id));
                 LocalStorage.setItem("userName", userName);
                 LocalStorage.setItem("userProfileImg", profile);
@@ -70,17 +71,19 @@ export default function Login() {
                 router.push("/")
             }
         } catch(Err) {
-            console.log(Err);
+
+
             if(axios.isAxiosError(Err) && Err.response){
                 if(Err.response.status === 404){
+                    console.log("404", Err);
                     setErr("존재하지 않는 회원입니다. 회원가입을 진행해주세요.");
                 }
 
-                // if(Err.response.status === 401){
-                //     await axios.get(`${BASER_URL}}/api/members/rotate`, {
-                //         withCredentials: true
-                //     });
-                // }
+                if(Err.response.status === 401){
+                    console.log("401", Err);
+                    rotateRefresh();
+                    setErr("로그인 버튼을 다시 한번 눌러주세요! ")
+                } 
                 
             }
 

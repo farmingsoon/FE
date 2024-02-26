@@ -1,14 +1,36 @@
 import Img from "@/common/Img";
+import { SSEDatasTypes } from "./SSEModal";
+import notificationSVG from "@/../public/svg/notificationSVG.svg";
+import { axiosCall } from "@/util/axiosCall";
 
-const SSEItem = () => {
+interface SSEItemTypes {
+    data: SSEDatasTypes
+}
+
+const SSEItem = ({data}: SSEItemTypes) => {
+    const notificationId = data.itemId
+
+    const handleRead = async () => {
+        const url = `api/notifications/${notificationId}`;
+        const config = { withCredentials: true }
+
+        try { 
+            const res = await axiosCall(url, "PATCH", {}, config );
+            if(res.status === 200){
+                console.log("읽음 처리 성공")
+            }
+        }catch (err){
+            console.log(err);
+        }
+    }
+
     return(
-        <div className="flex flex-row justify-between my-1 items-center">
-            <div><Img type={"circle"} src={undefined} width={40} height={40} /></div>
+        <div className="flex flex-row justify-between my-1 items-center" onClick={handleRead}>
+            <div><Img type={"circle"} src={notificationSVG} width={40} height={40} /></div>
             <div className="font-normal text-sm mx-3 whitespace-normal">
-                <span>낙찰에 성공했습니다. 판매자와 채팅을 시작해보세요. </span>
-                <span className="font-light text-xs text-DARK_GRAY ml-1 text-center"> 31분전</span>
+                <span>{data.message} </span>
+                {/* <span className="font-light text-xs text-DARK_GRAY ml-1 text-center"> 31분전</span> */}
             </div>
-            <div><Img type={"normal"} src={undefined} width={60} height={40} /></div>
         </div>
     )
 }
