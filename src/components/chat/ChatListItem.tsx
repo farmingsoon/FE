@@ -24,10 +24,25 @@ const ChatListItem = ( {list}:chatListItemTypes ) => {
     };
 
     const moveToChatRoom = async (chatRoomId: number) => {
+        // api 웹소켓 가능 여부 확인 추가 예정 
+        // api/chat-rooms/1/auth - GET -=> 200 ok 
+        // 요청 -> token 만료 -> rotate 요청 후(refreshTOKEN) -> 재 요청 
+        //const validURL = `/api/chat-rooms/${params.id}/auth`;
+        // const validBody = {
+        //     userId: userId
+        // }
+
+
         if(chatRoomId){
             try { 
+                // const validToken = await axiosCall(validURL, "POST", validBody, config);
+                // if(validToken.status === 200){
+                //     console.log("채팅 방 이동하기 :", chatRoomId)
+                //     router.push(`/chat/${chatRoomId}`)
+                // }
                 console.log("채팅 방 이동하기 :", chatRoomId)
                 router.push(`/chat/${chatRoomId}`)
+
             } catch (err){
                 console.log(err);
             }

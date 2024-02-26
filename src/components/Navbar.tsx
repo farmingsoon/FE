@@ -23,6 +23,7 @@ const Navbar = () => {
     const [ ,setSearchOption ] = useRecoilState(searchState)
     const isLogin = useRecoilValue(loginState);
     const [ mounted, setMounted ] = useState<boolean>(false);
+    const [ subDrop, setSubDrop ] = useState(false);
     const btnStyle = "flex flex-row items-center w-fit whitespace-nowrap mb-6"
 
     const handleClick = () => {
@@ -53,6 +54,10 @@ const Navbar = () => {
 
     };
 
+    const handleSubOpen = () => {
+        setSubDrop(!subDrop);
+    }
+
     useEffect(() => {
         setMounted(true);
     }, [])
@@ -76,11 +81,15 @@ const Navbar = () => {
                     </button>
                 </li>
                 <li>
-                    <button className="flex flex-row items-center w-fit whitespace-nowrap mb-2">
+                    <button 
+                        className="flex flex-row items-center w-fit whitespace-nowrap mb-2"
+                        onClick={handleSubOpen}
+                        >
                         <CategorySVG width={"12px"} height={"12px"}/>
                         <span className="pl-2 ">카테고리</span>
                     </button>
                 </li>
+                {subDrop && (
                 <ul className="px-8 grid gap-y-3 whitespace-nowrap mb-6">               
                     <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("의류")} >- 의류</button></li>
                     <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("신발")} >- 신발</button></li>
@@ -91,8 +100,9 @@ const Navbar = () => {
                     <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("악기")} >- 악기</button></li>
                     <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("펫용품")} >- 펫용품</button></li>
                     <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("기타")} >- 기타</button></li>
-                </ul>                
-                <li>
+                </ul>    
+                )}            
+                <li className="pt-4">
                     <Link href="/chat">
                         <button className={btnStyle}>
                             <ChatSVG width={"12px"} height={"12px"} />
@@ -115,16 +125,13 @@ const Navbar = () => {
                     </Link>
                 </li>
             </ul>
-            {/* <div className="flex flex-row ml-5 mb-5">
-                <Link href="/login"><button className=" mr-5 hover:text-MAIN_COLOR">로그인</button></Link>
-                <button className="hover:text-MAIN_COLOR ml-5" onClick={handleLoginOut}>로그아웃</button>
-            </div> */}
+            <div className="bg-white sticky bottom-0 shadow-custom-top">
+                { mounted && isLogin.isLogin
+                    ? <button className="px-3 py-2 " onClick={handleClick}><Hamburger width={"25px"} height={"25px"}/></button>
+                    : <Link href="/login"><button className="py-2 ml-5 hover:text-MAIN_COLOR text-sm">로그인</button></Link>
 
-            { mounted && isLogin.isLogin
-                ? <button className="px-3 mb-5 " onClick={handleClick}><Hamburger width={"25px"} height={"25px"}/></button>
-                : <Link href="/login"><button className="mb-5 ml-5 hover:text-MAIN_COLOR text-sm">로그인</button></Link>
-
-            }
+                }
+            </div>
             {openDrop && <NavDropdown handleClick={handleClick}/>}
         </nav>
     )

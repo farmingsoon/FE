@@ -29,12 +29,13 @@ export interface MypageTypes {
 export default function Login() {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
     const accessToken = LocalStorage.getItem("accessToken");
-    // const userId = LocalStorage.getItem("memberId");
+    const userProfile = LocalStorage.getItem("userProfileImg");
+    const userName = LocalStorage.getItem("userName");
     const [ mounted, setMounted ] = useState<boolean>(false);
     const [ biddingData, setBiddingData ] = useState<MypageTypes[]>([]);
     const [ saleData, setSaleData ] = useState<MypageTypes[]>([]);
     const [ mineClick, setMineClick ] = useRecoilState(mineItemSelector);
-    // console.log(saleData);
+
 
     const handleGetMine = async () => {
         try { 
@@ -94,8 +95,8 @@ export default function Login() {
     return(
         <div className="flex min-h-screen flex-col">
             <div className="p-4 border border-LINE_BORDER rounded-lg flex flex-row items-center max-w-[800px]">
-                <div className="overflow-hidden"><Img src={null} type={"circle"} width={64} height={64}/></div>
-                <div className="text-lg font-semibold  ml-2">사용자1</div>
+                <div className="overflow-hidden"><Img src={userProfile} type={"circle"} width={64} height={64}/></div>
+                <div className="text-lg font-semibold  ml-2">{userName}</div>
             </div>
             <div className="mt-5">
                 <h1>판매한 상품</h1>
