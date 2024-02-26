@@ -79,7 +79,7 @@ export default function Signup() {
         if(isValidEmail(email) && isValidImg(profile) && isValidPasswrord (password, rePassword) && isValidNickname(nickname)){ 
             console.log("회원가입 유효성 검증 통과 ")
             try {
-                const res = await axios.post(`${BASE_URL}/api/members/join`, formData);
+                const res = await axios.post(`${BASE_URL}/api/members/join`, formData, {withCredentials: true});
                 console.log(formData)
                 
                 //실패 -> 승용님께 등록 해달라고 요청하기 0203

@@ -128,7 +128,7 @@ export default function ProductEdit() {
         };
 
         if(isValidImg(imageFile[0]) && isValidTitle(title) && isValidPrice(hopePrice) && isValidPeriod(period) && isValidContent(contents)){
-            const url = "api/items";
+            const url = "/api/items";
             const config = { 
                 'Content-Type': 'multipart/form-data',
                 withCredentials: true,
