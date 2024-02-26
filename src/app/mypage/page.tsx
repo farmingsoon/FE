@@ -4,10 +4,12 @@ import MineItem from "@/components/MineItem";
 import BiddingModal from "@/components/modal/BiddingModal";
 import SellerBidModal from "@/components/modal/SellerBidModal";
 import { mineItemSelector } from "@/stores/mineItem";
-import { axiosCall } from "@/util/axiosCall";
+import { rotateRefresh } from "@/util/axiosCall";
 import LocalStorage from "@/util/localstorage";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
+import { useRouter } from "next/navigation";
 
 export interface MypageTypes {
     itemId: number;
@@ -33,26 +35,39 @@ export default function Login() {
     const [ biddingData, setBiddingData ] = useState<MypageTypes[]>([]);
     const [ saleData, setSaleData ] = useState<MypageTypes[]>([]);
     const [ mineClick, setMineClick ] = useRecoilState(mineItemSelector);
+    const router = useRouter();
 
 
     const handleGetMine = async () => {
-        const bidURL = "/api/items/bid/me";
-        const myURL = "/api/items/me";
+        const bidURL = "https://server.farmingsoon.site/api/items/bid/me";
+        const myURL = "https://server.farmingsoon.site/api/items/me";
         const config = {
             withCredentials: true
         }
 
         try { 
             //입찰한 상품 
-            const bidRes = await axiosCall(bidURL, "GET", config);
-            setBiddingData(bidRes.items);
+            const bidRes = await axios.get(bidURL, config);
+            setBiddingData(bidRes.data.result.items);
 
             //내가 등록한 상품 
-            const myRes = await axiosCall(myURL, "GET", config);
-            setSaleData(myRes.items)
+            const myRes = await axios.get(myURL, config);
+            setSaleData(myRes.data.result.items)
 
         } catch (Err){
             console.log(`마이페이지 에러 ${Err}`)
+            if(axios.isAxiosError(Err) && Err.status === 401 ){
+                if(Err.message === "기한이 만료된 AccessToken입니다."){
+                    //AT 만료 
+                    console.log("AcessToken 만료");
+                    rotateRefresh();
+                }
+
+                if(Err.message === "기한이 만료된 RefreshToken입니다"){
+                    router.push("/login")
+                }
+                
+            }
         }
     };
 
