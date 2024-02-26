@@ -39,7 +39,10 @@ export default function Chat() {
 
 
     } catch (err) {
+      rotateRefresh();
       console.log(`채팅방 목록 리스트 에러 ${err}`);
+
+      
       if(axios.isAxiosError(err) && err.response) {
         const status = err.response.status;
         const errorMessage = err.response.data.message;

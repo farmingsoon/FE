@@ -4,9 +4,10 @@ import NoData from "../../public/svg/NoData";
 import HomeItem from "@/components/HomeItem";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { searchState } from "@/stores/searchOptionState";
 import { axiosCall } from "@/util/axiosCall";
+import { tokenState } from "@/stores/tokenModal";
 
 export interface MerchanTypes {
   itemId: number;
@@ -29,6 +30,8 @@ export default function Home() {
   const [ searchOption,  ] = useRecoilState(searchState)
   const [ sortCode, setSortCode ] = useState("recent");
   const [ isCheckBox, setIsCheckBox ] = useState(false);
+  const recoilToken = useRecoilValue(tokenState);
+  console.log(recoilToken);
 
   const handleSortCode = (e:any) => {
     setSortCode(e.target.value);

@@ -16,6 +16,7 @@ import LOGO from "@/../public/img/Logo.png";
 import Image from "next/image";
 
 import { loginState } from "@/stores/loginState";
+import { sseNotiState } from "@/stores/sseNotification";
 
 const Navbar = () => {
     const [openDrop, setOpenDrop] = useState(false);
@@ -24,6 +25,7 @@ const Navbar = () => {
     const isLogin = useRecoilValue(loginState);
     const [ mounted, setMounted ] = useState<boolean>(false);
     const [ subDrop, setSubDrop ] = useState(false);
+    const gotNewNotification = useRecoilValue(sseNotiState);
     const btnStyle = "flex flex-row items-center w-fit whitespace-nowrap mb-6"
 
     const handleClick = () => {
@@ -114,6 +116,12 @@ const Navbar = () => {
                     <button className={btnStyle} onClick={() => handleOpenModal("alarm")}>
                         <BellSVG width={"12px"} height={"12px"}/>
                         <span className="pl-2 hover:text-DEEP_MAIN">알림</span>
+                        { gotNewNotification && 
+                            <span className="relative flex h-2 w-2 -top-2 -right-1">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-MAIN_COLOR opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-MAIN_COLOR"></span>
+                            </span>
+                        }
                     </button>
                 </li>
                 <li>

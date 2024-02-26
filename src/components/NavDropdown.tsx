@@ -1,4 +1,5 @@
 import { loginSelector } from "@/stores/loginState";
+import LocalStorage from "@/util/localstorage";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRecoilState } from "recoil";
@@ -23,6 +24,7 @@ const NavDropdown = ( {handleClick}:DropDownTypes ) => {
         localStorage.removeItem("memberId");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("loginState");
+        LocalStorage.setItem("loginState", String(false));
         router.push("/");
     };
 
