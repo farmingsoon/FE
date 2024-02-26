@@ -79,7 +79,7 @@ export default function Chat() {
             // console.log("[ 구독  ]: ", message);
             if (message.body) {
               const msg = message.body;
-              // console.log("00 : ", JSON.parse(msg).message);
+              console.log("00 : ", JSON.parse(msg).message);
               setMessages((chats) => [...chats, JSON.parse(msg)]);
             }
           },
@@ -143,6 +143,7 @@ export default function Chat() {
       const res = await axios.get(url, config);
       if(res.status === 200){
         const history = res.data.result.chats;
+        console.log(history);
         setMessages([...history]);
       }
 
@@ -178,7 +179,7 @@ export default function Chat() {
 
     } catch (err) {
       console.log(`채팅 관련 상품 정보 에러 ${err}`);
-      
+
       if(axios.isAxiosError(err) && err.status === 401 ){
         if(err.message === "기한이 만료된 AccessToken입니다."){
           //AT 만료 
