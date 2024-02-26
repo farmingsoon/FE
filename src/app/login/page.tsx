@@ -75,8 +75,15 @@ export default function Login() {
                 if(Err.response.status === 404){
                     setErr("존재하지 않는 회원입니다. 회원가입을 진행해주세요.");
                 }
+
+                // if(Err.response.status === 401){
+                //     await axios.get(`${BASER_URL}}/api/members/rotate`, {
+                //         withCredentials: true
+                //     });
+                // }
                 
             }
+
             console.log(`로그인 실패 ${Err}`)
         }
     }

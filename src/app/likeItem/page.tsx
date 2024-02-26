@@ -1,6 +1,7 @@
 "use client";
 import MineItem from "@/components/MineItem";
-import { axiosCall } from "@/util/axiosCall";
+// import { axiosCall } from "@/util/axiosCall";
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 export interface MypageTypes {
@@ -25,14 +26,17 @@ export default function Login() {
 
     const handleGetMine = async () => {
         const url = "/api/likeable-items/me";
-        const config = { withCredentials: true };
+        // const config = { withCredentials: true };
 
         try { 
             //내가 좋아요한 상품 
-            const likeRes = await axiosCall(url, "GET", config);
+            //const likeRes = await axiosCall(url, "GET", config);
+            const likeRes = await axios.get(`https://server.farmingsoon.site${url}`, {
+                withCredentials: true
+            })
 
-            setLikeData(likeRes.items)
-            console.log(likeRes.items);
+            setLikeData(likeRes.data.result.items)
+            console.log(likeRes.data.result.items);
 
 
         } catch (Err){
