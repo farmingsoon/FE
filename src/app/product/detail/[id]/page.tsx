@@ -72,7 +72,7 @@ export default function ProductDetail(  ) {
     }
 
     const getDetailData = async (userId: number) => {
-        const url = `/api/items/${params.id}`;
+        const url = `https://server.farmingsoon.site/api/items/${params.id}`;
         const options = {
             withCredentials: true
         }
