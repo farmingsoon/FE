@@ -37,31 +37,32 @@ export default function Chat() {
         setChatList(res.data.result);
       }
 
+
     } catch (err) {
-    //   if(err instanceof Error && err.message === "RefreshTokenUnauthorized") {
-    //     // 토큰 만료 시 토큰 모달 상태를 업데이트
-    //     console.log("refresh토큰 만료 ")
-    //     setOpenTokenModal({ tokenExpired: true });
-    // }
       console.log(`채팅방 목록 리스트 에러 ${err}`);
-      if(axios.isAxiosError(err) && err.status === 401 ){
-        if(err instanceof Error && err.message === "기한이 만료된 AccessToken입니다."){
-          //AT 만료 
-          console.log("AcessToken 만료");
-          rotateRefresh();
+      if(axios.isAxiosError(err) && err.response) {
+        const status = err.response.status;
+        const errorMessage = err.response.data.message;
+        
+        if(status === 401){
+          if(errorMessage === "기한이 만료된 AccessToken입니다."){
+            // Access Token expired 
+            console.log("AccessToken 만료");
+            rotateRefresh();
+          }
+    
+          if(errorMessage === "기한이 만료된 RefreshToken입니다"){
+            setOpenTokenModal({ tokenExpired: true });
+          }
+            
         }
-
-        if(err.message === "기한이 만료된 RefreshToken입니다"){
-          setOpenTokenModal({ tokenExpired: true })
+    
+        if(status === 403){
+          //로그인 후 이용할 수 있습니다. 
+          setOpenTokenModal({ tokenExpired: true });
         }
-          
-      }
-
-      if(axios.isAxiosError(err) && err.status === 403 ){
-        //로그인 후 이용할 수 있습니다. 
-        setOpenTokenModal({ tokenExpired: true })
-      }
-
+      };
+      
     }
   };
 
