@@ -17,7 +17,7 @@ const rotateRefresh = async () => {
 }
 
 
-export const axiosCall = async (url: string, method:string, options = {}, data = {}) => {
+export const axiosCall = async (url: string, method:string, data = {}, options = {} ) => {
     const baseURL = "https://server.farmingsoon.site" + url;
     const config = {
         ...options,
