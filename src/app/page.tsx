@@ -4,9 +4,9 @@ import NoData from "../../public/svg/NoData";
 import HomeItem from "@/components/HomeItem";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import axios from "axios";
 import { useRecoilState } from "recoil";
 import { searchState } from "@/stores/searchOptionState";
+import { axiosCall } from "@/util/axiosCall";
 
 export interface MerchanTypes {
   itemId: number;
@@ -25,14 +25,10 @@ export interface MerchanTypes {
 
 
 export default function Home() {
-  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
   const [ homeData, setHomeData ] = useState<MerchanTypes[]>([]);
   const [ searchOption,  ] = useRecoilState(searchState)
   const [ sortCode, setSortCode ] = useState("recent");
   const [ isCheckBox, setIsCheckBox ] = useState(false);
-
-  // console.log(searchOption)
-  // console.log(sortCode)
 
   const handleSortCode = (e:any) => {
     setSortCode(e.target.value);
@@ -48,51 +44,27 @@ export default function Home() {
   const getHomeData = async () => {
     try { 
       //검색 
-      const categoryRes = `${BASE_URL}/api/items?sortCode=${sortCode}&category=${searchOption.option}&keyword=${searchOption.keyword}`;
-      const normalRes = `${BASE_URL}/api/items?sortCode=${sortCode}&keyword=${searchOption.keyword}`;
-
+      const categoryRes = `/api/items?sortCode=${sortCode}&category=${searchOption.option}&keyword=${searchOption.keyword}`;
+      const normalRes = `/api/items?sortCode=${sortCode}&keyword=${searchOption.keyword}`;
       //일반 조회 
-      const originRes = `${BASE_URL}/api/items?sortCode=${sortCode}`;
+      const originRes = `/api/items?sortCode=${sortCode}`;
+
 
       if( searchOption.keyword !== "" &&  searchOption.option === "category"){
-        const res = await axios.get(categoryRes);
-
-        //성공           
-        if(res.status === 200){
-          console.log(res.data.result);
-          setHomeData(res.data.result.items);
-          // setSearchOption((prev) => ({
-          //   ...prev,
-          //   keyword: "",
-          // }));
-        };
+        const res = await axiosCall(categoryRes, "GET");
+        console.log(res)
+        setHomeData(res.items);
 
       } else if( searchOption.keyword !== "" &&  searchOption.option === "") {
-        const res = await axios.get(normalRes);
-
-        //성공
-        if(res.status === 200){
-          console.log(res.data.result);
-          setHomeData(res.data.result.items);
-          //키워드 초기화 에러 2번 요청 0211
-          // setSearchOption((prev) => ({
-          //   ...prev,
-          //   keyword: "",
-          // }));
-        };
+        const res =  await axiosCall(normalRes, "GET");
+        console.log(res);
+        setHomeData(res.items);
         
       } else {
-        const res = await axios.get(originRes);
+        const res = await axiosCall(originRes, "GET");
+        console.log(res);
+        setHomeData(res.items);
 
-        //성공
-        if(res.status === 200){
-          console.log(res.data.result);
-          setHomeData(res.data.result.items);
-          // setSearchOption((prev) => ({
-          //   ...prev,
-          //   keyword: "",
-          // }));
-        };
       }
 
       // const res = await axios.get(`${BASE_URL}/api/items`);
@@ -104,7 +76,6 @@ export default function Home() {
 
   useEffect(() => {
     getHomeData();
-    // console.log("리렌더링")
     
     if(isCheckBox){
       const parsedData = homeData.filter((el)=> {
@@ -144,15 +115,10 @@ export default function Home() {
           </select>
         </div>
       </div>
-      {/* <div className="py-2 min-h-fit mt-5 flex flex-col justify-center items-center bg-blue-500 "> */}
+
       <div className="w-full">
         { homeData.length > 0 ? 
           <div className="w-full grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-10 gap-x-4 mt-10 mb-5">
-            {/* {homeData.map((item, idx) => (
-              <Link href={`/product/detail/${item.itemId}`} key={`link ${idx}`}>
-                <HomeItem key={idx} data={item} />
-              </Link>
-            ))} */}
              {homeData.map((item, idx) => (
               <Link href={`/product/detail/${item.itemId}`} key={`link ${idx}`}>
                 <HomeItem key={idx} data={item} />

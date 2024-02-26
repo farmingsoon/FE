@@ -8,14 +8,13 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import BiddingModal from "@/components/modal/BiddingModal";
 import { useParams } from 'next/navigation'
-// import { useRecoilState } from "recoil";
-// import { amendState } from "@/stores/amendData";
 import LocalStorage from "@/util/localstorage";
 import StatusPrice from "@/components/StatusPrice";
 import { useRecoilState } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
 import LikeItem from "@/common/LikeItem";
-import Cookies from "js-cookie";
+import { axiosCall } from "@/util/axiosCall";
+
 
 interface DetailPageTypes {
     sellerId: number;
@@ -36,9 +35,6 @@ interface DetailPageTypes {
     likeStatus: boolean;
 }
 
-// interface Headers {
-//     Authorization?: string; // 'Authorization' 키는 선택적이며, 값은 문자열입니다.
-//   }
 
 export default function ProductDetail(  ) {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -52,8 +48,6 @@ export default function ProductDetail(  ) {
     const router = useRouter();
     const params = useParams<{ id: string; }>()
 
-    console.log(Cookies.get("viewCountCookie"));
-
     //뒤로가기 History
     const handleNavigationBack = (e:any) => {
         e.preventDefault();
@@ -63,36 +57,26 @@ export default function ProductDetail(  ) {
     //이미지 페이지네이션
     const [ curImg, setCurImg ] = useState(0);
 
-    //토큰 여부 상세 페이지
-    const headers: Record<string, string> = {
-        // 예시: Authorization 헤더
-        'Authorization': `Bearer ${ACCES_TOKEN}`
-      };
-    // 토큰이 있는 경우에만 Authorization 헤더 추가
-    if (ACCES_TOKEN) {
-        headers.Authorization = `Bearer ${ACCES_TOKEN}`;
-    }
-
-    const fetchData = async (url: string, options = {}) => {
-        try { 
-            const config = {
-                ...options,
-            }
-            const response = await axios.get(url, config);
-            return response;
-        } catch (err){
-            console.log(err);
-            if(axios.isAxiosError(err) && err.response){
-                if(err.response.status === 401){
-                    //헤더 없이 다시 요청 
-                    const retryRes = await axios.get(url, { withCredentials : true });
-                    return retryRes;
-                }
+    // const fetchData = async (url: string, options = {}) => {
+    //     try { 
+    //         const config = {
+    //             ...options,
+    //         }
+    //         const response = await axios.get(url, config);
+    //         return response;
+    //     } catch (err){
+    //         console.log(err);
+    //         if(axios.isAxiosError(err) && err.response){
+    //             if(err.response.status === 401){
+    //                 //헤더 없이 다시 요청 
+    //                 const retryRes = await axios.get(url, { withCredentials : true });
+    //                 return retryRes;
+    //             }
                 
-            }
-            console.log(err);
-        }
-    }
+    //         }
+    //         console.log(err);
+    //     }
+    // }
 
 
     const handleOpen = (sellerId: number) => {
@@ -111,23 +95,21 @@ export default function ProductDetail(  ) {
     }
 
     const getDetailData = async (userId: number) => {
-        const headers = {
-            Authorization : `Bearer ${ACCES_TOKEN}`,
-            withCredentials: true,
-        };
+        const options = {
+            withCredentials: true
+        }
 
         try { 
-            const url = `${BASE_URL}/api/items/${params.id}`;
-            const res = await fetchData(url, {headers})
-            console.log("전송 헤더", headers);
-            if(res?.status === 200){
-                setDetailData(res.data.result);
-
-                if(userId === res.data.result.sellerId) {
-                    setAmIuser(true);
-                }
-                console.log(res.data);
+            const url = `/api/items/${params.id}`;
+            // const res = await fetchData(url, {headers})
+            const res = await axiosCall(url, "GET" , options);
+            console.log(res);
+            if(userId === res.sellerId){
+                setAmIuser(res);
             }
+            setDetailData(res);
+
+
         } catch (err){
             console.log(`디테일 페이지 ${err}`)
             
@@ -158,22 +140,32 @@ export default function ProductDetail(  ) {
     };
 
     const handleChatClick = async () => {
-        console.log("채팅하기 버튼 클릭 ")
-        try { 
-            const res = await axios.post(`${BASE_URL}/api/chat-rooms`, {
-                buyerId: userId,
-                itemId: params.id,
-            }, {
-                headers: {
-                    Authorization : `Bearer ${ACCES_TOKEN}`
-                }
-            });
+        console.log("채팅하기 버튼 클릭 ");
+        //const validURL = `/api/chat-rooms/${params.id}/auth`;
+        const chatRoomURL = "/api/chat-rooms";
+        const config =  { withCredentials: true }
+        // const validBody = {
+        //     userId: userId
+        // }
+        const chatRoomBody = {
+            buyerId: userId,
+            itemId: params.id,
+        }
 
+        try { 
+            // const validToken = await axiosCall(validURL, "POST", validBody, config);
+            // if(validToken.status === 200){
+            //     const res = await axiosCall(chatRoomURL, "POST", chatRoomBody, config);
+            //     console.log("채팅방 생성 성공 ", res.data.result);
+            //     router.push(`/chat/${res.data.result}`)
+            // }
+
+            const res = await axiosCall(chatRoomURL, "POST", chatRoomBody, config);
             if(res.status === 200){
                 console.log("채팅방 생성 성공 ", res.data.result);
                 router.push(`/chat/${res.data.result}`)
-
             }
+
         } catch (err){
             console.log(`채팅 연결 ${err}`);
         }
