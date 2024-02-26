@@ -1,7 +1,6 @@
 "use client";
 import MineItem from "@/components/MineItem";
-import LocalStorage from "@/util/localstorage";
-import axios from "axios";
+import { axiosCall } from "@/util/axiosCall";
 import { useEffect, useState } from "react";
 
 export interface MypageTypes {
@@ -22,25 +21,19 @@ export interface MypageTypes {
 }
 
 export default function Login() {
-    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const accessToken = LocalStorage.getItem("accessToken");
     const [ likeData, setLikeData ] = useState<MypageTypes[]>([]);
 
     const handleGetMine = async () => {
+        const url = "/api/likeable-items/me";
+        const config = { withCredentials: true };
+
         try { 
-
             //내가 좋아요한 상품 
-            const likeRes = await axios.get(`${BASE_URL}/api/likeable-items/me`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })
+            const likeRes = await axiosCall(url, "GET", config);
 
-            if(likeRes.status === 200){
-                const data = likeRes.data.result;
-                setLikeData(data.items)
-                console.log(data);
-            }
+            setLikeData(likeRes.items)
+            console.log(likeRes.items);
+
 
         } catch (Err){
             console.log(`마이페이지 에러 ${Err}`)

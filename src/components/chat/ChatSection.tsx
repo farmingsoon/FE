@@ -37,6 +37,7 @@ const ChatSection = ( { chatRoomId, isConnected }:ChatTypes ) => {
     useEffect(() => {
         getHistoryChat();
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     console.log(messages);

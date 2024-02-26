@@ -4,8 +4,8 @@ import MineItem from "@/components/MineItem";
 import BiddingModal from "@/components/modal/BiddingModal";
 import SellerBidModal from "@/components/modal/SellerBidModal";
 import { mineItemSelector } from "@/stores/mineItem";
+import { axiosCall } from "@/util/axiosCall";
 import LocalStorage from "@/util/localstorage";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 
@@ -27,8 +27,6 @@ export interface MypageTypes {
 }
 
 export default function Login() {
-    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const accessToken = LocalStorage.getItem("accessToken");
     const userProfile = LocalStorage.getItem("userProfileImg");
     const userName = LocalStorage.getItem("userName");
     const [ mounted, setMounted ] = useState<boolean>(false);
@@ -38,31 +36,20 @@ export default function Login() {
 
 
     const handleGetMine = async () => {
+        const bidURL = "/api/items/bid/me";
+        const myURL = "/api/items/me";
+        const config = {
+            withCredentials: true
+        }
+
         try { 
             //입찰한 상품 
-            const bidRes = await axios.get(`${BASE_URL}/api/items/bid/me`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
-
-            if(bidRes.status === 200){
-                const data = bidRes.data.result;
-                setBiddingData(data.items);
-            }
+            const bidRes = await axiosCall(bidURL, "GET", config);
+            setBiddingData(bidRes.items);
 
             //내가 등록한 상품 
-            const myRes = await axios.get(`${BASE_URL}/api/items/me`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })
-
-            if(myRes.status === 200){
-                const data = myRes.data.result;
-                setSaleData(data.items)
-            }
-
+            const myRes = await axiosCall(myURL, "GET", config);
+            setSaleData(myRes.items)
 
         } catch (Err){
             console.log(`마이페이지 에러 ${Err}`)
