@@ -34,6 +34,11 @@ const HomeItem = ({data}: HomeItemTypes) => {
                         <div className="font-semibold text-2xl text-white">판매 완료</div>
                     </div>
                 }
+                { data.itemStatus === "경매종료" && 
+                    <div className="absolute inset-0 w-full h-full bg-gray-500 bg-opacity-75 transition-opacity flex items-center justify-center">
+                        <div className="font-semibold text-2xl text-white">경매 종료</div>
+                    </div>
+                }
             </div>
             <div className="flex flex-row mt-1.5 ">
                 <div className="flex-1 justify-start text-lg font-semibold">{data.title}</div>

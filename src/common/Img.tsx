@@ -1,5 +1,6 @@
 import Image, { StaticImageData } from "next/image";
 import noPhoto from "../../public/img/noPhoto.png";
+
 interface ImgTypes {
     type: "circle" | "normal";
     src: string | undefined | null | StaticImageData;
@@ -13,13 +14,12 @@ const Img = ({type, src, width, height, status}: ImgTypes) => {
     //src가 StaticImage 인 경우, 객체의 src 속성을 사용
     //그렇지 않은 경우 src가 null 이면 noPhotosrc | src그대로 사용 
     const imageSrc = src instanceof Object ? src.src : (src ?? noPhoto);
-    // const imageSrc = src ? src : noPhoto;
-    // console.log(imgStyle)
+   
 
     return(
         <div className={imgStyle}>
             <Image src={imageSrc} width={width} height={height} alt={src ? "Content" : "No Image"} placeholder="blur"  
-                blurDataURL="data:image/png;base52,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOUtrSsBwACEgEOqjmvDwAAAABJRU5ErkJggg=="/>
+                blurDataURL={"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNMjor6DwAEVwIYw8TrsgAAAABJRU5ErkJggg=="}/>
             {status && status === "soldout" && (
             <div className="absolute inset-0 w-full h-full bg-gray-500 bg-opacity-75 transition-opacity flex items-center justify-center">
                 <div className="font-semibold text-2xl text-white">판매 완료</div>

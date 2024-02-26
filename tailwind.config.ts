@@ -21,6 +21,9 @@ const config: Config = {
         POINT_BLUE: "#7991FF",
         POINT_RED: "#FF7171",
         TEXT_BLACK: "#2B2B2B",
+      },
+      boxShadow: {
+        "custom-top" : " -5px -5px 20px 2px rgba(0,0,0,0.1)"
       }
     },
   },

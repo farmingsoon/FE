@@ -230,6 +230,11 @@ export default function ProductDetail(  ) {
                             <div className="font-semibold text-2xl text-white">판매 완료</div>
                         </div>
                     }
+                    { detailData?.itemStatus === "경매종료" && 
+                        <div className="absolute inset-0 w-full h-full bg-gray-500 bg-opacity-75 transition-opacity flex items-center justify-center">
+                            <div className="font-semibold text-2xl text-white">경매 종료</div>
+                        </div>
+                    }
                 </div>
                 <ArrowRight width={"25px"} height={"25px"} onClick={handleNextImg}/>
             </div>
