@@ -18,7 +18,7 @@ const NavDropdown = ( {handleClick}:DropDownTypes ) => {
 
     const handleLoginOut = async (e:any) => {
         e.preventDefault();
-        const url = `${BASER_URL}/api/refresh-token/logout`;
+        const url = `${BASER_URL}/api/members/refresh-token/logout`;
         const config = { withCredentials: true }
 
         try {

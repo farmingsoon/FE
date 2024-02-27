@@ -3,7 +3,7 @@ import LocalStorage from "./localstorage";
 
 export const rotateRefresh = async () => {
     try { 
-        const res = await axios.get(`https://server.farmingsoon.site/api/refresh-token/rotate`, {
+        const res = await axios.get(`https://server.farmingsoon.site/api/members/refresh-token/rotate`, {
             withCredentials: true
         });
 
