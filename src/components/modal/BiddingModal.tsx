@@ -7,8 +7,8 @@ import { BidRecordItemTypes } from "./SellerBidModal";
 import BidPriceItem from "../BidPriceItem";
 import Close from "../../../public/svg/Close";
 // import LocalStorage from "@/util/localstorage";
-// import { tokenSelector } from "@/stores/tokenModal";
-// import { useRecoilState } from "recoil";
+import { tokenSelector } from "@/stores/tokenModal";
+import { useRecoilState } from "recoil";
 
 
 interface BiddingModalTypes extends ModalTypes {
@@ -17,7 +17,7 @@ interface BiddingModalTypes extends ModalTypes {
 }
 
 const BiddingModal = ({handleOpen, itemId, itemStatus}: BiddingModalTypes ) => {
-    // const [ , setOpenTokenModal ] = useRecoilState(tokenSelector);
+    const [ , setOpenTokenModal ] = useRecoilState(tokenSelector);
 
     const [ bidRecord, setBidRecord ] = useState<BidRecordItemTypes[]>([])
     const [bidValue, setBidValue] = useState("");
@@ -59,6 +59,7 @@ const BiddingModal = ({handleOpen, itemId, itemStatus}: BiddingModalTypes ) => {
 
         } catch (err) {
             console.log(`입찰하기 에러 ${err}`)
+            setOpenTokenModal({tokenExpired: true})
         }
     }
 
