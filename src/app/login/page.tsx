@@ -71,13 +71,9 @@ export default function Login() {
                 router.push("/")
             }
 
-            if(res.status === 401){
-                rotateRefresh();
-                setErr("업데이트 : 로그인 버튼을 다시 한번 눌러주세요! ")
-            }
 
         } catch(Err) {
-
+            console.log(Err);
 
             if(axios.isAxiosError(Err) && Err.response){
                 if(Err.response.status === 404){
@@ -87,7 +83,11 @@ export default function Login() {
 
                 if(Err.response.status === 401){
                     console.log("401", Err);
-                    rotateRefresh();
+                    rotateRefresh().catch((refreshErr) => {
+                        if(refreshErr.message === "RefreshTokenUnauthorized"){
+                            setErr("세션 만료 ")
+                        }
+                    });
                     setErr("로그인 버튼을 다시 한번 눌러주세요! ")
                 } 
                 
