@@ -2,7 +2,7 @@ import { atom, selector } from "recoil";
 
 export const showNotificationAtom = atom<boolean>({
     key: "showNotifistate",
-    default: true
+    default: false
 });
 
 export const showNotificationSelctor = selector({
