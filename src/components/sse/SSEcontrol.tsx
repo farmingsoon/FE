@@ -33,11 +33,11 @@ const SSEcontrol = () => {
             }
 
             //기본 메세지 받았을 때 
-            eventSource.current.onmessage = (event) => {
+            eventSource.current.addEventListener("sse", function (event){
                 console.log(" === 메세지가 왔다 === ")
                 console.log(event);
-                const parsedData = JSON.parse(event.data);
-                console.log("기본 메세지", parsedData);
+                // const parsedData = JSON.parse(event.data);
+                // console.log("기본 메세지", parsedData);
                 setGotMessage(true);  // 메뉴 바 핑
                 setShowNotification(true);  //상단 알림모달
 
@@ -51,8 +51,9 @@ const SSEcontrol = () => {
                     setShowNotification(false);
                     // useRef를 사용하기 때문에 null로 설정할 필요가 없습니다.
                 }, 2500)
+            })
 
-            }
+
 
             //연결 옿류 헨들러 
             eventSource.current.onerror = (err) => {
