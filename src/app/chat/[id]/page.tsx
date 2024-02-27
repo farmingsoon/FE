@@ -46,6 +46,7 @@ export default function Chat() {
   const [messages, setMessages] = useState<message[]>([]);
   const [currentMessage, setCurrentMessage] = useState("");
   const userId = Number(LocalStorage.getItem("memberId"));
+  const isLogin = LocalStorage.getItem("loginState");
 
   const connect = () => {
     console.log("connect함수", chatSocket.current);
@@ -203,16 +204,22 @@ export default function Chat() {
   };
 
   useEffect(() => {
-    getList();
-    getHistoryChat();
-    getChatRoomInfo();
 
+    if(isLogin === "true"){
+      getList();
+      getHistoryChat();
+      getChatRoomInfo();
+    }
+
+    setOpenTokenModal({ tokenExpired: true })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
 
   useEffect(() => {
     // console.log("새로고침", chatSocket);
-    connect();
+    if(isLogin === "true"){
+      connect();
+    }
 
     return () => {
       disconnect();

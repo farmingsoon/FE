@@ -6,6 +6,7 @@ import { rotateRefresh } from "@/util/axiosCall";
 import { useRecoilState } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
 import axios from "axios";
+import LocalStorage from "@/util/localstorage";
 
 export interface message {
   message: string;
@@ -30,43 +31,50 @@ export default function Chat() {
   const getList = async () => {
     const url = "https://server.farmingsoon.site/api/chat-rooms/me";
     const config = { withCredentials: true };
+    const isLogin = LocalStorage.getItem("loginState");
 
-    try {
-      const res = await axios.get(url, config);
-      if(res.status === 200){
-        setChatList(res.data.result);
-      }
+    if(isLogin === "true"){
+
+      try {
+        const res = await axios.get(url, config);
+        if(res.status === 200){
+          setChatList(res.data.result);
+        }
 
 
-    } catch (err) {
-      rotateRefresh();
-      console.log(`채팅방 목록 리스트 에러 ${err}`);
+      } catch (err) {
+        rotateRefresh();
+        console.log(`채팅방 목록 리스트 에러 ${err}`);
 
-      
-      if(axios.isAxiosError(err) && err.response) {
-        const status = err.response.status;
-        const errorMessage = err.response.data.message;
         
-        if(status === 401){
-          if(errorMessage === "기한이 만료된 AccessToken입니다."){
-            // Access Token expired 
-            console.log("AccessToken 만료");
-            rotateRefresh();
+        if(axios.isAxiosError(err) && err.response) {
+          const status = err.response.status;
+          const errorMessage = err.response.data.message;
+          
+          if(status === 401){
+            if(errorMessage === "기한이 만료된 AccessToken입니다."){
+              // Access Token expired 
+              console.log("AccessToken 만료");
+              rotateRefresh();
+            }
+      
+            if(errorMessage === "기한이 만료된 RefreshToken입니다"){
+              setOpenTokenModal({ tokenExpired: true });
+            }
+              
           }
-    
-          if(errorMessage === "기한이 만료된 RefreshToken입니다"){
+      
+          if(status === 403){
+            //로그인 후 이용할 수 있습니다. 
             setOpenTokenModal({ tokenExpired: true });
           }
-            
-        }
-    
-        if(status === 403){
-          //로그인 후 이용할 수 있습니다. 
-          setOpenTokenModal({ tokenExpired: true });
-        }
-      };
-      
+        };
+        
+      }
     }
+
+    setOpenTokenModal({ tokenExpired: true })    
+
   };
 
   useEffect(() => {
