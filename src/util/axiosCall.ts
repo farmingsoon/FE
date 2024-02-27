@@ -1,8 +1,9 @@
 import axios from "axios";
+import LocalStorage from "./localstorage";
 
 export const rotateRefresh = async () => {
     try { 
-        const res = await axios.get(`https://server.farmingsoon.site/api/members/rotate`, {
+        const res = await axios.get(`https://server.farmingsoon.site/api/refresh-token/rotate`, {
             withCredentials: true
         });
 
@@ -16,6 +17,7 @@ export const rotateRefresh = async () => {
         console.log(err, "rotate 함수 에러");
         if(axios.isAxiosError(err) && err.response){
             if(err.response.status === 401 && err.response.data.message === "기한이 만료된 RefreshToken입니다."){
+                LocalStorage.setItem("loginState", "false");
                 console.log("RefreshToken 만료");
                 throw new Error("RefreshTokenUnauthorized");
             }

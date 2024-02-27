@@ -35,7 +35,7 @@ export default function Login() {
         }
 
         try { 
-            const res = await axios.post(`${BASER_URL}/api/members/login`, 
+            const res = await axios.post(`${BASER_URL}/api/refresh-token/login`, 
             {    
                 email: email,
                 password: password,
@@ -78,11 +78,13 @@ export default function Login() {
             if(axios.isAxiosError(Err) && Err.response){
                 if(Err.response.status === 404){
                     console.log("404", Err);
+                    LocalStorage.setItem("loginState", "false");
                     setErr("존재하지 않는 회원입니다. 회원가입을 진행해주세요.");
                 }
 
                 if(Err.response.status === 401){
                     console.log("401", Err);
+                    LocalStorage.setItem("loginState", "false");
                     rotateRefresh().catch((refreshErr) => {
                         if(refreshErr.message === "RefreshTokenUnauthorized"){
                             setErr("세션 만료 ")

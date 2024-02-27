@@ -11,7 +11,7 @@ interface loginAtomTypes {
 export const loginState = atom<loginAtomTypes>({
     key: "loginState",
     default : {
-        isLogin: LocalStorage.getItem("accessToken") ? true : false,
+        isLogin: LocalStorage.getItem("accessToken") === "true" ? true : false,
         ACCESS_TOKEN: "",
         REFRESH_TOKEN: "",
         memberId: 0,
