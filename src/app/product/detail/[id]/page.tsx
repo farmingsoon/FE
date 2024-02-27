@@ -13,7 +13,7 @@ import StatusPrice from "@/components/StatusPrice";
 import { useRecoilState } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
 import LikeItem from "@/common/LikeItem";
-import { axiosCall } from "@/util/axiosCall";
+import { axiosCall, rotateRefresh } from "@/util/axiosCall";
 
 
 interface DetailPageTypes {
@@ -101,11 +101,11 @@ export default function ProductDetail(  ) {
     };
 
     const handleDelete = async () => {
-        const url = `/api/items/${params.id}`;
+        const url = `https://server.farmingsoon.site/api/items/${params.id}`;
         const config = { withCredentials : true };
 
         try {
-            const res = await axiosCall( url, "DELETE", config )
+            const res = await axios.delete( url, config );
             
             if(res.status === 200){
                 console.log("성공적 데이터 삭제 ")
@@ -116,9 +116,20 @@ export default function ProductDetail(  ) {
             console.log(`상품 상세 삭제 ${err}`);
             if(axios.isAxiosError(err) && err.response){
                 if(err.response.status === 404){
+                    LocalStorage.setItem("loginState", "false");
+                    setIsToken({tokenExpired: true})
+                }
+
+                if(err.response.status === 403){
+                    LocalStorage.setItem("loginState", "false");
                     setIsToken({tokenExpired: true})
                 }
                 
+                rotateRefresh().catch((refreshErr) => {
+                    if(refreshErr.message === "RefreshTokenUnauthorized"){
+                       console.log("rotateRefresh 함수 실행")
+                    }
+                });
             }
         }
     };
