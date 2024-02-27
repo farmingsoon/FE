@@ -19,10 +19,11 @@ const NavDropdown = ( {handleClick}:DropDownTypes ) => {
     const handleLoginOut = async (e:any) => {
         e.preventDefault();
         const url = `${BASER_URL}/api/members/refresh-token/logout`;
+        const data = {};
         const config = { withCredentials: true }
 
         try {
-            const res = await axios.get(url, config);
+            const res = await axios.post(url, data, config);
 
             if(res.status === 200){
                 handleClick();
