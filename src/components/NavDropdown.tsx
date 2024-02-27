@@ -1,5 +1,6 @@
 import { loginSelector } from "@/stores/loginState";
 import LocalStorage from "@/util/localstorage";
+import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRecoilState } from "recoil";
@@ -10,22 +11,36 @@ interface DropDownTypes {
 
 const NavDropdown = ( {handleClick}:DropDownTypes ) => {
     const [ , setLogin ] = useRecoilState(loginSelector);
+    const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
     const router = useRouter();
-    const btnStyle = ""
+    const btnStyle = "";
 
 
-    const handleLoginOut = (e:any) => {
+    const handleLoginOut = async (e:any) => {
         e.preventDefault();
-        handleClick();
-        setLogin((prev) => ({
-            ...prev,
-            isLogin: false,
-        }));
-        localStorage.removeItem("memberId");
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("loginState");
-        LocalStorage.setItem("loginState", String(false));
-        router.push("/");
+        const url = `${BASER_URL}/api/refresh-token/logout`;
+        const config = { withCredentials: true }
+
+        try {
+            const res = await axios.get(url, config);
+
+            if(res.status === 200){
+                handleClick();
+                setLogin((prev) => ({
+                    ...prev,
+                    isLogin: false,
+                }));
+                localStorage.removeItem("memberId");
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("loginState");
+                LocalStorage.setItem("loginState", String(false));
+                router.push("/");
+            }
+
+
+        } catch (err){
+            console.log(err);
+        }
     };
 
     return(

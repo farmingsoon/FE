@@ -1,15 +1,22 @@
+import { loginSelector } from "@/stores/loginState";
 import { tokenState } from "@/stores/tokenModal";
+import LocalStorage from "@/util/localstorage";
 import { useRouter } from "next/navigation";
-import { useResetRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 
 
 const LoginTokenModal = () => {
     const resetToken = useResetRecoilState(tokenState);
+    const [ ,setLoginState] = useRecoilState(loginSelector);
     const router = useRouter();
 
     const handleClick = (e:any) => {
         e.preventDefault();
-        console.log("버튼 클릭")
+        setLoginState((prev) => ({
+            ...prev,
+            isLogin: false
+        }))
+        LocalStorage.setItem("loginState", "false");
         router.push("/login")
         resetToken();
     };
