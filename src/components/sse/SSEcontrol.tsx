@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
 import LocalStorage from "@/util/localstorage";
 import { sseNotiSelector } from "@/stores/sseNotification";
+import { showNotificationSelctor } from "@/stores/showNotification";
 
 
 const SSEcontrol = () => {
@@ -13,6 +14,7 @@ const SSEcontrol = () => {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
     const [retryCount, setRetryCount] = useState(-1);
     const [, setGotMessage] = useRecoilState(sseNotiSelector);
+    const [, setShowNotification] = useRecoilState(showNotificationSelctor);
 
 
     useEffect(() => {
@@ -23,11 +25,11 @@ const SSEcontrol = () => {
             });
 
             //기본 메세지 받았을 때 
-            //알림 발생 지 -> 종 모양 ping 발생 설정 
             eventSource.current.onmessage = (event) => {
                 const parsedData = JSON.parse(event.data);
                 console.log("기본 메세지", parsedData);
-                setGotMessage(true);
+                setGotMessage(true);  // 메뉴 바 핑
+                setShowNotification(true);  //상단 알림모달
 
             }
 
