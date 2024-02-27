@@ -35,7 +35,7 @@ export default function Login() {
         }
 
         try { 
-            const res = await axios.post(`${BASER_URL}/api/refresh-token/login`, 
+            const res = await axios.post(`${BASER_URL}/api/members/refresh-token/login`, 
             {    
                 email: email,
                 password: password,
