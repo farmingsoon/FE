@@ -14,6 +14,13 @@ export const rotateRefresh = async () => {
         
     } catch (err){
         console.log(err, "rotate 함수 에러");
+        if(axios.isAxiosError(err) && err.response){
+            if(err.response.status === 401 && err.response.data.message === "기한이 만료된 RefreshToken입니다."){
+                console.log("RefreshToken 만료");
+                throw new Error("RefreshTokenUnauthorized");
+            }
+            
+        }
     }
 }
 
@@ -62,13 +69,13 @@ export const axiosCall = async (url: string, method:string, data = {}, options =
     } catch (err){
         console.log(err);
         if(axios.isAxiosError(err) && err.response){
-            if(err.response.status === 401 && err.message === "기한이 만료된 AccessToken입니다.") {
+            if(err.response.status === 401 && err.response.data.message === "기한이 만료된 AccessToken입니다.") {
                 //AT 만료 
                 console.log("AcessToken 만료");
-                rotateRefresh();
+                rotateRefresh()
             }
             
-            if(err.response.status === 401 && err.message === "기한이 만료된 RefreshToken입니다") {
+            if(err.response.status === 401 && err.response.data.message === "기한이 만료된 RefreshToken입니다") {
                 //RT 만료
                 console.log("RefreshToken 만료");
                 throw new Error("RefreshTokenUnauthorized");

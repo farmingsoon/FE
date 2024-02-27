@@ -3,12 +3,13 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRecoilState } from "recoil";
 import { useRouter } from "next/navigation";
-import { axiosCall } from "@/util/axiosCall";
+import { rotateRefresh } from "@/util/axiosCall";
 
 import { categoryState } from "@/stores/categoryState";
 import Close from "../../../../public/svg/Close";
 import PlusCircle from "../../../../public/svg/PlusCircle";
 import { tokenState } from "@/stores/tokenModal";
+import axios from "axios";
 
 
 export default function ProductEdit() {
@@ -18,7 +19,7 @@ export default function ProductEdit() {
     const router = useRouter();
     const [imageFile, setImageFile] = useState<File[]>([]);
     const [contents, setContents] = useState("");
-    // const accessToken = LocalStorage.getItem("accessToken");
+    const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
     const [, setOpenTokenModal] = useRecoilState(tokenState);
     const [ selectCategory, setSelectCategory ] = useRecoilState(categoryState);
     const [priceValue, setPriceValue] = useState("");
@@ -126,7 +127,7 @@ export default function ProductEdit() {
         };
 
         if(isValidImg(imageFile[0]) && isValidTitle(title) && isValidPrice(hopePrice) && isValidPeriod(period) && isValidContent(contents)){
-            const url = "/api/items";
+            const url = `${BASER_URL}/api/items`;
             const config = { 
                 'Content-Type': 'multipart/form-data',
                 withCredentials: true,
@@ -134,7 +135,8 @@ export default function ProductEdit() {
 
             try { 
 
-                const res = await axiosCall(url, "POST", formData, config);
+                const res = await axios.post(url, formData, config );
+
                 if(res.status === 200){
                     console.log("상품 등록 성공하였습니다. ")
                     const id = res.data.result;
@@ -142,12 +144,18 @@ export default function ProductEdit() {
                 }
     
             } catch (err){
-                if(err instanceof Error && err.message === "RefreshTokenUnauthorized") {
-                    // 토큰 만료 시 토큰 모달 상태를 업데이트
-                    console.log("refresh토큰 만료 ")
-                    setOpenTokenModal({ tokenExpired: true });
+                console.log("상품 등록 : ", err);
+                if(axios.isAxiosError(err) && err.response){
+                    if(err.response.status === 401 && err.response.data.message === 
+                        "기한이 만료된 AccessToken입니다."){
+                        //AT토큰 만료 
+                        rotateRefresh().catch((refreshErr) => {
+                            if(refreshErr.message === "RefreshTokenUnauthorized"){
+                                setOpenTokenModal({tokenExpired: true})
+                            }
+                        })
+                    }
                 }
-                console.log(`상품 등록 수정 실패 ${err}`)
             }
     
         }
