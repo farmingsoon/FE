@@ -24,7 +24,16 @@ const config: Config = {
       },
       boxShadow: {
         "custom-top" : " -5px -5px 20px 2px rgba(0,0,0,0.1)"
-      }
+      },
+      keyframes: {
+        slideInAndOut: {
+          '0%, 100%': { opacity: "0", transform: 'translateX(100%)' },
+          '10%, 90%': { opacity: "1", transform: 'translateX(0)' },
+        }
+      },
+      animation: {
+        'slide-in-and-out': 'slideInAndOut 4s ease-in-out forwards',
+      },
     },
   },
   plugins: [],

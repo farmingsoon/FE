@@ -90,6 +90,16 @@ export default function Login() {
                     });
                     setErr("로그인 버튼을 다시 한번 눌러주세요! ")
                 } 
+
+                if(Err.response.status === 303){
+                    console.log("아직 유효한 토큰으로 로그인 시도합니다. ");
+                    setLogin((prev)=> ({
+                        ...prev,
+                        isLogin: true,
+                    }));
+                    router.push("/");
+
+                }
                 
             }
 
