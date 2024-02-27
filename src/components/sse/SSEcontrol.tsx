@@ -1,3 +1,4 @@
+"use client";
 import { useRef, useEffect, useState } from "react";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -15,10 +16,12 @@ const SSEcontrol = () => {
     const [retryCount, setRetryCount] = useState(-1);
     const [, setGotMessage] = useRecoilState(sseNotiSelector);
     const [, setShowNotification] = useRecoilState(showNotificationSelctor);
+    const notificationTimeoutId = useRef<NodeJS.Timeout | null>(null);
 
 
     useEffect(() => {
         console.log(" ==== SSE ==== ")
+
         const connectSSE = () => {
             eventSource.current = new EventSourcePolyfill(`${BASE_URL}/api/notifications/subscribe`, {
                 withCredentials: true
@@ -30,6 +33,17 @@ const SSEcontrol = () => {
                 console.log("기본 메세지", parsedData);
                 setGotMessage(true);  // 메뉴 바 핑
                 setShowNotification(true);  //상단 알림모달
+
+                // clearTimeout을 호출할 때 useRef를 사용합니다.
+                if (notificationTimeoutId.current) {
+                    clearTimeout(notificationTimeoutId.current);
+                }
+
+                //setTimeout 호출
+                notificationTimeoutId.current = setTimeout(() => {
+                    setShowNotification(false);
+                    // useRef를 사용하기 때문에 null로 설정할 필요가 없습니다.
+                }, 2500)
 
             }
 
@@ -73,11 +87,17 @@ const SSEcontrol = () => {
                 setGotMessage(false);
 				console.log("언마운트 이벤트 헨들러 종료");
             }
+
+            if(notificationTimeoutId.current){
+                clearTimeout(notificationTimeoutId.current);
+                notificationTimeoutId.current = null; // 이제 타이머 ID를 null로 설정할 필요가 있습니다.
+            }
+
         };
 
         
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isLogin.tokenExpired, retryCount]);
+    }, [isLogin.tokenExpired, retryCount, notificationTimeoutId]);
 
 
     return null;

@@ -22,6 +22,7 @@ export default function DesignLayout({
 
   //실시간 알림 상단 알림 바 
   const showNotification = useRecoilValue(showNotificationAtom);
+  console.log("상담 모달: ", showNotification)
 
   //token만료
   const isToken = useRecoilValue(tokenState);
