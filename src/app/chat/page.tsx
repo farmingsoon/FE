@@ -34,7 +34,7 @@ export default function Chat() {
     const isLogin = LocalStorage.getItem("loginState");
 
     if(isLogin === "true"){
-
+      console.log("채팅방 === 함수 실행 : ", isLogin)
       try {
         const res = await axios.get(url, config);
         if(res.status === 200){
@@ -42,11 +42,7 @@ export default function Chat() {
         }
 
 
-      } catch (err) {
-        rotateRefresh();
-        console.log(`채팅방 목록 리스트 에러 ${err}`);
-
-        
+      } catch (err) {       
         if(axios.isAxiosError(err) && err.response) {
           const status = err.response.status;
           const errorMessage = err.response.data.message;
@@ -59,6 +55,7 @@ export default function Chat() {
             }
       
             if(errorMessage === "기한이 만료된 RefreshToken입니다"){
+              console.log("RefreshToken 만료로 모달 오픈 ")
               setOpenTokenModal({ tokenExpired: true });
             }
               
@@ -73,7 +70,10 @@ export default function Chat() {
       }
     }
 
-    setOpenTokenModal({ tokenExpired: true })    
+    if(isLogin === "false"){
+      console.log("채팅방 === 만료 실행 : ", isLogin)
+      setOpenTokenModal({ tokenExpired: true })    
+    }
 
   };
 
