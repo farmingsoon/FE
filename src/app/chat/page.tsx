@@ -52,9 +52,10 @@ export default function Chat() {
               // Access Token expired 
               console.log("AccessToken 만료");
               rotateRefresh().catch((refreshErr) => {
+                console.log("ROTATE함수 실행 후 본 컴포넌트 에러 : ", refreshErr)
                 if(refreshErr.message === "RefreshTokenUnauthorized"){
                   setOpenTokenModal({ tokenExpired: true });
-                  // console.log("!! 로테이트 함수의 기한 만료 토큰 관리 !! ")
+                  console.log("!! 로테이트 함수의 기한 만료 토큰 관리 !! ")
                 }
             });
             }

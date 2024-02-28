@@ -14,15 +14,15 @@ export const rotateRefresh = async () => {
         }
         
     } catch (err){
-        console.log(err, "rotate 함수 에러");
         if(axios.isAxiosError(err) && err.response){
             if(err.response.status === 401){
                 LocalStorage.setItem("loginState", "false");
                 console.log("RefreshToken 만료");
                 throw new Error("RefreshTokenUnauthorized");
-            }
-            
-        }
+            }       
+        };
+
+        console.log("rotate 함수 에러", err);
     }
 }
 
