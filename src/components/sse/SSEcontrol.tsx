@@ -6,6 +6,7 @@ import { tokenState } from "@/stores/tokenModal";
 import LocalStorage from "@/util/localstorage";
 import { sseNotiSelector } from "@/stores/sseNotification";
 import { showNotificationSelctor } from "@/stores/showNotification";
+import { sseChattingSelector } from "@/stores/sseChatPingState";
 
 
 const SSEcontrol = () => {
@@ -15,6 +16,7 @@ const SSEcontrol = () => {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
     const [retryCount, setRetryCount] = useState(-1);
     const [, setGotMessage] = useRecoilState(sseNotiSelector);
+    const [, setGotChatMessage] = useRecoilState(sseChattingSelector)
     const [, setShowNotification] = useRecoilState(showNotificationSelctor);
     const notificationTimeoutId = useRef<NodeJS.Timeout | null>(null);
 
@@ -33,11 +35,18 @@ const SSEcontrol = () => {
             }
 
             //기본 메세지 받았을 때 
-            eventSource.current.addEventListener("sse", function (event){
-                console.log(" === 메세지가 왔다 === ")
-                console.log(event);
+            eventSource.current.addEventListener("CONNECT", function (event){
+                console.log(" === 연결 메세지 === ")
+                const customEvent = event as MessageEvent;
+                console.log(customEvent.data);
                 // const parsedData = JSON.parse(event.data);
                 // console.log("기본 메세지", parsedData);
+            });
+
+            eventSource.current.addEventListener("NOTIFICATION", function(event){
+                console.log(" === 알림 메세지 === ");
+                const customEvent = event as MessageEvent;
+                console.log(customEvent.data);
                 setGotMessage(true);  // 메뉴 바 핑
                 setShowNotification(true);  //상단 알림모달
 
@@ -51,7 +60,26 @@ const SSEcontrol = () => {
                     setShowNotification(false);
                     // useRef를 사용하기 때문에 null로 설정할 필요가 없습니다.
                 }, 2500)
-            })
+            });
+
+            eventSource.current.addEventListener("CHATTING", function(event){
+                console.log(" === 채팅 메세지 === ");
+                const customEvent = event as MessageEvent;
+                console.log(customEvent.data);
+                setGotChatMessage(true);  // 메뉴 바 핑
+                setShowNotification(true);  //상단 알림모달
+
+                // clearTimeout을 호출할 때 useRef를 사용합니다.
+                if (notificationTimeoutId.current) {
+                    clearTimeout(notificationTimeoutId.current);
+                }
+
+                //setTimeout 호출
+                notificationTimeoutId.current = setTimeout(() => {
+                    setShowNotification(false);
+                    // useRef를 사용하기 때문에 null로 설정할 필요가 없습니다.
+                }, 2500)
+            });
 
 
 
