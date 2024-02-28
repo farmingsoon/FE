@@ -1,14 +1,14 @@
 import Img from "@/common/Img";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
-import { axiosCall } from "@/util/axiosCall";
+import { axiosCall, rotateRefresh } from "@/util/axiosCall";
 import { bidCheckState } from "@/stores/bidCheckState";
 
 import { BidRecordItemTypes } from "./modal/SellerBidModal";
 import CheckBox from "../../public/svg/CheckBox";
 import { useRouter } from "next/navigation";
-// import { tokenSelector } from "@/stores/tokenModal";
-// import { refreshToken } from "@/util/refreshToken";
+import axios from "axios";
+import { tokenState } from "@/stores/tokenModal";
 
 
 interface BidPriceTypes {
@@ -20,7 +20,7 @@ interface BidPriceTypes {
 
 const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
     const [ checkState, setCheckState ] = useRecoilState(bidCheckState);
-    // const [ , setOpenTokenModal ] = useRecoilState(tokenSelector);
+    const [, setOpenTokenModal] = useRecoilState(tokenState);
     const [check, setCheck] = useState(false);
     const router = useRouter();
     const btnStyle = "bg-white border border-LINE_BORDER rounded-md px-3 mx-1.5 py-1 font-semibold text-sm my-3 hover:bg-zinc-200";
@@ -39,10 +39,11 @@ const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
     }
 
     const handleDelete = async (bidId: number) => {
+        const url = `https://server.farmingsoon.site/api/bids/${bidId}`;
         const config = { withCredentials: true };
 
         try { 
-            const res = await axiosCall(`/api/bids/${bidId}`, "DELETE", config);
+            const res = await axios.delete(url, config);
 
             if(res.status === 200){
                 console.log(`${bidId} 입찰 내역 삭제 성공`)
@@ -50,13 +51,30 @@ const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
 
         } catch (err){
             console.log(`입찰 내역 삭제 ${err}`);
-            // if(axios.isAxiosError(err) && err.response){
-            //     if(err.response.status === 401){
-            //         //token모달 열기 
-            //         setOpenTokenModal({tokenExpired: true});
-            //     }
-                
-            // }
+            if(axios.isAxiosError(err) && err.response) {
+              const status = err.response.status;
+              const errorMessage = err.response.data.message;
+              
+              if(status === 401){
+                if(errorMessage === "기한이 만료된 AccessToken입니다."){
+                  // Access Token expired 
+                  console.log("AccessToken 만료");
+                  rotateRefresh();
+                }
+          
+                if(errorMessage === "기한이 만료된 RefreshToken입니다"){
+                  console.log("RefreshToken 만료로 모달 오픈 ")
+                  setOpenTokenModal({ tokenExpired: true });
+                }
+                  
+              }
+          
+              if(status === 403){
+                //로그인 후 이용할 수 있습니다. 
+                setOpenTokenModal({ tokenExpired: true });
+              }
+            };
+
         }
     };
 
@@ -80,12 +98,32 @@ const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
                 };
 
             } catch (err){
-                console.log(`채팅하기 ${err}`);
-                // if (axios.isAxiosError(err) && err.response) {
-                //     if (err.response.status === 401) {
-                //         refreshToken();
-                //     }
-                // }
+                console.log(`채팅하기 ${err}`);    
+                if(axios.isAxiosError(err) && err.response) {
+                  const status = err.response.status;
+                  const errorMessage = err.response.data.message;
+                  
+                  if(status === 401){
+                    if(errorMessage === "기한이 만료된 AccessToken입니다."){
+                      // Access Token expired 
+                      console.log("AccessToken 만료");
+                      rotateRefresh();
+                    }
+              
+                    if(errorMessage === "기한이 만료된 RefreshToken입니다"){
+                      console.log("RefreshToken 만료로 모달 오픈 ")
+                      setOpenTokenModal({ tokenExpired: true });
+                    }
+                      
+                  }
+              
+                  if(status === 403){
+                    //로그인 후 이용할 수 있습니다. 
+                    setOpenTokenModal({ tokenExpired: true });
+                  }
+                };
+                
+
             }
         }
     };

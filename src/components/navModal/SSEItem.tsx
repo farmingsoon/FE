@@ -11,7 +11,7 @@ const SSEItem = ({data}: SSEItemTypes) => {
     const notificationId = data.itemId
 
     const handleRead = async () => {
-        const url = `api/notifications/${notificationId}`;
+        const url = `/api/notifications/${notificationId}`;
         const data = {};
         const config = { withCredentials: true }
 
