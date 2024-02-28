@@ -35,9 +35,10 @@ const SSEModal = () => {
 
     const handleReadAll = async () => {
         const url = "https://server.farmingsoon.site/api/notifications";
+        const data = {};
         const config = { withCredentials: true };
         try { 
-            const res = await axios.patch(url, config);
+            const res = await axios.patch(url, data, config);
             if(res.status === 200){
                 console.log("전체 읽음 처리 ")
                 setGotNewNotification(false);
