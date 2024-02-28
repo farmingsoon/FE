@@ -68,7 +68,7 @@ export default function Login() {
                 LocalStorage.setItem("userName", userName);
                 LocalStorage.setItem("userProfileImg", profile);
 
-                router.push("/")
+                router.replace("/")
             }
 
 
