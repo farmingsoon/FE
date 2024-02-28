@@ -54,12 +54,12 @@ export default function Chat() {
               rotateRefresh().catch((refreshErr) => {
                 if(refreshErr.message === "RefreshTokenUnauthorized"){
                   setOpenTokenModal({ tokenExpired: true });
-                  console.log("!! 로테이트 함수의 기한 만료 토큰 관리 !! ")
+                  // console.log("!! 로테이트 함수의 기한 만료 토큰 관리 !! ")
                 }
             });
             }
       
-            if(errorMessage === "기한이 만료된 RefreshToken입니다"){
+            if(errorMessage === "기한이 만료된 RefreshToken입니다."){
               console.log("RefreshToken 만료로 모달 오픈 ")
               setOpenTokenModal({ tokenExpired: true });
             }

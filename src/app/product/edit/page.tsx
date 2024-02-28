@@ -144,19 +144,32 @@ export default function ProductEdit() {
                 }
     
             } catch (err){
-                console.log("상품 등록 : ", err);
                 if(axios.isAxiosError(err) && err.response){
-                    if(err.response.status === 401 && err.response.data.message === 
-                        "기한이 만료된 AccessToken입니다."){
+                    const status = err.response.status;
+                    const errorMessage = err.response.data.message;
+
+                    if(status === 401 && errorMessage === "기한이 만료된 AccessToken입니다."){
                         //AT토큰 만료 
+                        console.log("AT만료+상품 등록 : ", err)
                         rotateRefresh().catch((refreshErr) => {
                             if(refreshErr.message === "RefreshTokenUnauthorized"){
                                 setOpenTokenModal({tokenExpired: true})
                             }
-                        })
-                    }
-                }
-            }
+                        });
+                    };
+
+                    if(status === 401 && errorMessage === "기한이 만료된 RefreshToken입니다."){
+                        //RT토큰 만료 
+                        console.log("RT만료+상품 등록 : ", err);
+                        setOpenTokenModal({tokenExpired: true});
+                    };
+
+                    if(status === 403){
+                        //로그인 후 이용할 수 있습니다. 
+                        setOpenTokenModal({ tokenExpired: true });
+                    };
+                };
+            };
     
         }
     };
