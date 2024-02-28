@@ -27,7 +27,7 @@ const SSEItem = ({data}: SSEItemTypes) => {
 
     return(
         <div className="flex flex-row justify-between my-1 items-center" onClick={handleRead}>
-            <div><Img type={"circle"} src={notificationSVG} width={40} height={40} /></div>
+            <div className=""><Img type={"circle"} src={notificationSVG} width={25} height={25} /></div>
             <div className="font-normal text-sm mx-3 whitespace-normal">
                 <span>{data.message} </span>
                 {/* <span className="font-light text-xs text-DARK_GRAY ml-1 text-center"> 31분전</span> */}
