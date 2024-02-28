@@ -1,8 +1,11 @@
 "use client";
 import MineItem from "@/components/MineItem";
-// import { axiosCall } from "@/util/axiosCall";
+import { tokenState } from "@/stores/tokenModal";
+import { rotateRefresh } from "@/util/axiosCall";
+import LocalStorage from "@/util/localstorage";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 
 export interface MypageTypes {
     itemId: number;
@@ -23,6 +26,8 @@ export interface MypageTypes {
 
 export default function Login() {
     const [ likeData, setLikeData ] = useState<MypageTypes[]>([]);
+    const [, setOpenTokenModal] = useRecoilState(tokenState);
+    const isLogin = LocalStorage.getItem("loginState");
 
     const handleGetMine = async () => {
         const url = "/api/likeable-items/me";
@@ -39,13 +44,43 @@ export default function Login() {
             console.log(likeRes.data.result.items);
 
 
-        } catch (Err){
-            console.log(`마이페이지 에러 ${Err}`)
+        } catch (err){
+            if(axios.isAxiosError(err) && err.response){
+                const status = err.response.status;
+                const errorMessage = err.response.data.message;
+
+                if(status === 401 && errorMessage === "기한이 만료된 AccessToken입니다."){
+                    //AT토큰 만료 
+                    console.log("AT만료+상품 등록 : ", err)
+                    rotateRefresh().catch((refreshErr) => {
+                        if(refreshErr.message === "RefreshTokenUnauthorized"){
+                            setOpenTokenModal({tokenExpired: true})
+                        }
+                    });
+                };
+
+                if(status === 401 && errorMessage === "기한이 만료된 RefreshToken입니다."){
+                    //RT토큰 만료 
+                    console.log("RT만료+상품 등록 : ", err);
+                    setOpenTokenModal({tokenExpired: true});
+                };
+
+                console.log(`마이페이지 에러 : ${err}`);
+
+            }
+
         }
     };
 
     useEffect(() => {
-        handleGetMine();
+        if(isLogin === "true"){
+            handleGetMine();
+        }
+
+        if(isLogin === "false"){
+            setOpenTokenModal({tokenExpired: true});
+        }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

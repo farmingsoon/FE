@@ -7,7 +7,8 @@ import { likeSelector } from "@/stores/likeItemState";
 
 import BookmarkSVG from "../../public/svg/BookmarkSVG"
 import PersonSVG from "../../public/svg/PersonSVG"
-import { axiosCall } from "@/util/axiosCall";
+import { axiosCall, rotateRefresh } from "@/util/axiosCall";
+import LocalStorage from "@/util/localstorage";
 
 interface LikeItemTypes {
     itemId: number;
@@ -16,10 +17,9 @@ interface LikeItemTypes {
 }
 
 const LikeItem = ({bidCount, likeCount, itemId}: LikeItemTypes) => {
-    // const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    // const accessToken = LocalStorage.getItem("accessToken");
-    const [, setIsToken] = useRecoilState(tokenState);
+    const [, setOpenTokenModal] = useRecoilState(tokenState);
     const [ likeItemColor , setLikeItemColor ] = useRecoilState(likeSelector);
+    const isLogin = LocalStorage.getItem("loginState");
 
 
     const handleLikeItem = debounce(async () => {
@@ -58,19 +58,38 @@ const LikeItem = ({bidCount, likeCount, itemId}: LikeItemTypes) => {
             };
 
         } catch (err) {
-            console.log(`좋아요 아이템 등록 ${err}`);
             if(axios.isAxiosError(err) && err.response){
-                if(err.response.status === 404){
-                    setIsToken({tokenExpired: true})
-                }
+                const status = err.response.status;
+                const errorMessage = err.response.data.message;
                 
-            }
+                if(status === 401 && errorMessage === "기한이 만료된 AccessToken입니다."){
+                    //AT 만료 
+                    console.log("AcessToken 만료");
+                    rotateRefresh().catch((refreshErr) => {
+                        if(refreshErr.message === "RefreshTokenUnauthorized"){
+                            setOpenTokenModal({tokenExpired: true})
+                        }
+                    });
+                };
+
+                if(status === 401 && errorMessage === "기한이 만료된 RefreshToken입니다."){
+                    setOpenTokenModal({ tokenExpired: true })
+                };
+            };
+
+            console.log(`좋아요 아이템 등록 ${err}`);
         }
     }, 500);
 
 
     const handleClick = ( ) => {
-        handleLikeItem();
+        if(isLogin === "true"){
+            handleLikeItem();
+        }
+
+        if(isLogin === "false"){
+            setOpenTokenModal({ tokenExpired: true })
+        }
 
     };
 

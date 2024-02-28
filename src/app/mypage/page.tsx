@@ -9,7 +9,7 @@ import LocalStorage from "@/util/localstorage";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { useRouter } from "next/navigation";
+import { tokenState } from "@/stores/tokenModal";
 
 export interface MypageTypes {
     itemId: number;
@@ -31,11 +31,12 @@ export interface MypageTypes {
 export default function Login() {
     const userProfile = LocalStorage.getItem("userProfileImg");
     const userName = LocalStorage.getItem("userName");
+    const isLogin = LocalStorage.getItem("loginState");
     const [ mounted, setMounted ] = useState<boolean>(false);
     const [ biddingData, setBiddingData ] = useState<MypageTypes[]>([]);
     const [ saleData, setSaleData ] = useState<MypageTypes[]>([]);
     const [ mineClick, setMineClick ] = useRecoilState(mineItemSelector);
-    const router = useRouter();
+    const [, setOpenTokenModal] = useRecoilState(tokenState);
 
 
     const handleGetMine = async () => {
@@ -43,7 +44,7 @@ export default function Login() {
         const myURL = "https://server.farmingsoon.site/api/items/me";
         const config = {
             withCredentials: true
-        }
+        };
 
         try { 
             //입찰한 상품 
@@ -55,25 +56,39 @@ export default function Login() {
             setSaleData(myRes.data.result.items)
 
         } catch (Err){
-            console.log(`마이페이지 에러 ${Err}`)
-            if(axios.isAxiosError(Err) && Err.status === 401 ){
-                if(Err.message === "기한이 만료된 AccessToken입니다."){
+            if(axios.isAxiosError(Err) && Err.response ){
+                const status = Err.response.status;
+                const errorMessage = Err.response.data.message;
+                
+                if(status === 401 && errorMessage === "기한이 만료된 AccessToken입니다."){
                     //AT 만료 
                     console.log("AcessToken 만료");
-                    rotateRefresh();
+                    rotateRefresh().catch((refreshErr) => {
+                        if(refreshErr.message === "RefreshTokenUnauthorized"){
+                            setOpenTokenModal({tokenExpired: true})
+                        }
+                    });
                 }
 
-                if(Err.message === "기한이 만료된 RefreshToken입니다"){
-                    router.push("/login")
+                if(status === 401 && errorMessage === "기한이 만료된 RefreshToken입니다."){
+                    setOpenTokenModal({ tokenExpired: true })
                 }
                 
-            }
+            };
+
+            console.log(`마이페이지 에러 ${Err}`)
         }
     };
 
     useEffect(() => {
-        handleGetMine();
-        setMounted(true);
+        if(isLogin === "true"){
+            handleGetMine();
+            setMounted(true);
+        }
+
+        if(isLogin === "false"){
+            setOpenTokenModal({tokenExpired: true})
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
