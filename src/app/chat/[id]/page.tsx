@@ -121,7 +121,12 @@ export default function Chat() {
         if(err.message === "기한이 만료된 AccessToken입니다."){
           //AT 만료 
           console.log("AcessToken 만료");
-          rotateRefresh();
+          rotateRefresh().catch((refreshErr) => {
+            if(refreshErr.message === "RefreshTokenUnauthorized"){
+              setOpenTokenModal({ tokenExpired: true });
+              console.log("!! 로테이트 함수의 기한 만료 토큰 관리 !! ")
+            }
+        });
         }
 
         if(err.message === "기한이 만료된 RefreshToken입니다"){
