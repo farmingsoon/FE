@@ -9,7 +9,6 @@ import LocalStorage from "@/util/localstorage";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { useRouter } from "next/navigation";
 import { tokenState } from "@/stores/tokenModal";
 
 export interface MypageTypes {
@@ -38,7 +37,6 @@ export default function Login() {
     const [ saleData, setSaleData ] = useState<MypageTypes[]>([]);
     const [ mineClick, setMineClick ] = useRecoilState(mineItemSelector);
     const [, setOpenTokenModal] = useRecoilState(tokenState);
-    const router = useRouter();
 
 
     const handleGetMine = async () => {
@@ -73,7 +71,7 @@ export default function Login() {
                 }
 
                 if(status === 401 && errorMessage === "기한이 만료된 RefreshToken입니다."){
-                    router.push("/login")
+                    setOpenTokenModal({ tokenExpired: true })
                 }
                 
             };

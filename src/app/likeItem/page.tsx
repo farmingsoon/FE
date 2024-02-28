@@ -2,6 +2,7 @@
 import MineItem from "@/components/MineItem";
 import { tokenState } from "@/stores/tokenModal";
 import { rotateRefresh } from "@/util/axiosCall";
+import LocalStorage from "@/util/localstorage";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -26,6 +27,7 @@ export interface MypageTypes {
 export default function Login() {
     const [ likeData, setLikeData ] = useState<MypageTypes[]>([]);
     const [, setOpenTokenModal] = useRecoilState(tokenState);
+    const isLogin = LocalStorage.getItem("loginState");
 
     const handleGetMine = async () => {
         const url = "/api/likeable-items/me";
@@ -71,7 +73,14 @@ export default function Login() {
     };
 
     useEffect(() => {
-        handleGetMine();
+        if(isLogin === "true"){
+            handleGetMine();
+        }
+
+        if(isLogin === "false"){
+            setOpenTokenModal({tokenExpired: true});
+        }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
