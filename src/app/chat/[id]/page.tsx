@@ -211,7 +211,10 @@ export default function Chat() {
       getChatRoomInfo();
     }
 
-    setOpenTokenModal({ tokenExpired: true })
+    if(isLogin === "false"){
+      setOpenTokenModal({ tokenExpired: true })
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
 
