@@ -22,7 +22,9 @@ const SSEcontrol = () => {
 
 
     useEffect(() => {
-        console.log(" ==== SSE ==== ")
+        const pageLocation = window.location.pathname;
+        console.log(pageLocation)
+
 
         const connectSSE = () => {
             eventSource.current = new EventSourcePolyfill(`${BASE_URL}/api/notifications/subscribe`, {
@@ -48,7 +50,13 @@ const SSEcontrol = () => {
                 const customEvent = event as MessageEvent;
                 console.log(customEvent.data);
                 setGotMessage(true);  // 메뉴 바 핑
-                setShowNotification(true);  //상단 알림모달
+                //상단 알림모달
+                if(pageLocation.includes("chat")){
+                    console.log("채팅방 페이지 열려있음")
+                    setShowNotification(false);  
+                } else {
+                    setShowNotification(true);  
+                }
 
                 // clearTimeout을 호출할 때 useRef를 사용합니다.
                 if (notificationTimeoutId.current) {
@@ -67,7 +75,12 @@ const SSEcontrol = () => {
                 const customEvent = event as MessageEvent;
                 console.log(customEvent.data);
                 setGotChatMessage(true);  // 메뉴 바 핑
-                setShowNotification(true);  //상단 알림모달
+                if(pageLocation.includes("chat")){
+                    console.log("채팅방 페이지 열려있음")
+                    setShowNotification(false);  
+                } else {
+                    setShowNotification(true);  
+                }
 
                 // clearTimeout을 호출할 때 useRef를 사용합니다.
                 if (notificationTimeoutId.current) {

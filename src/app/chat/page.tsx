@@ -78,8 +78,7 @@ export default function Chat() {
   };
 
   useEffect(() => {
-    getList();
-    
+    getList(); 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
