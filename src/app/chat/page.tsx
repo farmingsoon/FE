@@ -3,10 +3,11 @@ import ChatListItem from "@/components/chat/ChatListItem";
 import { useEffect, useState } from "react"; 
 
 import { rotateRefresh } from "@/util/axiosCall";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
 import axios from "axios";
 import LocalStorage from "@/util/localstorage";
+import { sseNotiAtomFamily } from "@/stores/sseNotiState";
 
 export interface message {
   message: string;
@@ -25,6 +26,7 @@ export interface chatListTypes {
 export default function Chat() {
   const [, setOpenTokenModal] = useRecoilState(tokenState);
   const [chatList, setChatList] = useState<chatListTypes[]>([]);
+  const chatPING = useRecoilValue(sseNotiAtomFamily("chatPING"));
 
   //채팅방 목록 && 채팅 리스트
 
@@ -86,7 +88,14 @@ export default function Chat() {
   useEffect(() => {
     getList(); 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    if(chatPING.sseState){
+      getList();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[chatPING.sseState])
 
   return (
     <div className="flex h-screen">

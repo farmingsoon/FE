@@ -6,9 +6,6 @@ import { tokenState } from "@/stores/tokenModal";
 import LocalStorage from "@/util/localstorage";
 import { sseNotiSelectorFamily } from "@/stores/sseNotiState";
 import NotificationItem from "./NotificationItem";
-// import { sseNotiSelector } from "@/stores/sseNotification";
-// import { showNotificationSelctor } from "@/stores/showNotification";
-// import { sseChattingSelector } from "@/stores/sseChatPingState";
 
 
 
@@ -26,9 +23,6 @@ const SSEcontrol = () => {
     const [ alarmMSG, setAlarmMSG ] = useRecoilState(sseNotiSelectorFamily("notiMSG"));
     const [ chatMSG, setChatMSG ] = useRecoilState(sseNotiSelectorFamily("chatMSG"));
 
-    // const [gotMessage, setGotMessage] = useRecoilState(sseNotiSelector); //알림 핑
-    // const [gotChatMessage, setGotChatMessage] = useRecoilState(sseChattingSelector); //채팅 핑
-    // const [, setShowNotification] = useRecoilState(showNotificationSelctor); //상단 모달
 
 
 
@@ -162,11 +156,11 @@ const SSEcontrol = () => {
 
     // return null;
     if(alarmMSG.sseState){
-        return <NotificationItem msg={"새로운 알림이 도착했습니다!"} />
+        return <NotificationItem msg={"새로운 알림이 도착했습니다!"} type={"alarm"}/>
     }
 
     if(chatMSG.sseState){
-        return <NotificationItem msg={"새로운 채팅이 도착했습니다!"} />
+        return <NotificationItem msg={"새로운 채팅이 도착했습니다!"} type={"chat"}/>
     }
 
     return null;

@@ -1,11 +1,25 @@
-import { showNotificationSelctor } from "@/stores/showNotification";
+
+import { sseNotiSelectorFamily } from "@/stores/sseNotiState";
 import { useRecoilState } from "recoil";
 
-const NotificationItem = ( {msg}: { msg: string } ) => {
-    const [, setShowNotification ] = useRecoilState(showNotificationSelctor);
+const NotificationItem = ( {msg, type}: { msg: string, type: "alarm" | "chat" } ) => {
+    const [ , setAlarmMSG ] = useRecoilState(sseNotiSelectorFamily("notiMSG"));
+    const [ , setChatMSG ] = useRecoilState(sseNotiSelectorFamily("chatMSG"));
 
     const handleClose = () => {
-        setShowNotification(false);
+        if(type === "alarm"){
+            setAlarmMSG((cur) => ({
+                ...cur, 
+                sseState: false,
+            }));
+        }
+
+        if(type === "chat"){
+            setChatMSG((cur) => ({
+                ...cur,
+                sseState: false,
+            }))
+        }
     }
 
     return(
