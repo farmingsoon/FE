@@ -6,9 +6,6 @@ import { tokenState } from "@/stores/tokenModal";
 import LocalStorage from "@/util/localstorage";
 import { sseNotiSelectorFamily } from "@/stores/sseNotiState";
 import NotificationItem from "./NotificationItem";
-// import { sseNotiSelector } from "@/stores/sseNotification";
-// import { showNotificationSelctor } from "@/stores/showNotification";
-// import { sseChattingSelector } from "@/stores/sseChatPingState";
 
 
 
@@ -26,9 +23,6 @@ const SSEcontrol = () => {
     const [ alarmMSG, setAlarmMSG ] = useRecoilState(sseNotiSelectorFamily("notiMSG"));
     const [ chatMSG, setChatMSG ] = useRecoilState(sseNotiSelectorFamily("chatMSG"));
 
-    // const [gotMessage, setGotMessage] = useRecoilState(sseNotiSelector); //알림 핑
-    // const [gotChatMessage, setGotChatMessage] = useRecoilState(sseChattingSelector); //채팅 핑
-    // const [, setShowNotification] = useRecoilState(showNotificationSelctor); //상단 모달
 
 
 
@@ -112,7 +106,7 @@ const SSEcontrol = () => {
 
 
 
-            //연결 옿류 헨들러 
+            //연결 오류 헨들러 
             eventSource.current.onerror = (err) => {
                 console.log("SSE : ", err);
                 eventSource.current?.close();
@@ -145,8 +139,6 @@ const SSEcontrol = () => {
             if(eventSource.current){
                 eventSource.current?.close(); // 연결 종료
 				eventSource.current = null; //참조 제거
-                setAlarmPing((cur) => ({ ...cur, sseState: false }));
-                setChatPing((cur) => ({ ...cur, sseState: false }));
 				console.log("언마운트 이벤트 헨들러 종료");
             }
 
@@ -164,11 +156,11 @@ const SSEcontrol = () => {
 
     // return null;
     if(alarmMSG.sseState){
-        return <NotificationItem msg={"새로운 알림이 도착했습니다!"} />
+        return <NotificationItem msg={"새로운 알림이 도착했습니다!"} type={"alarm"}/>
     }
 
     if(chatMSG.sseState){
-        return <NotificationItem msg={"새로운 채팅이 도착했습니다!"} />
+        return <NotificationItem msg={"새로운 채팅이 도착했습니다!"} type={"chat"}/>
     }
 
     return null;

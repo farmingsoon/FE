@@ -12,10 +12,11 @@ import SockJS from "sockjs-client";
 import { useParams } from "next/navigation";
 
 import LocalStorage from "@/util/localstorage";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
 import { rotateRefresh } from "@/util/axiosCall";
 import axios from "axios";
+import { sseNotiAtomFamily } from "@/stores/sseNotiState";
 
 export interface message {
   message: string;
@@ -36,6 +37,7 @@ export default function Chat() {
   const [curDetailChatInfo, setDetailChatInfo] = useState<itemChatInfoTypes>();
   const [isConnected, setIsConnected] = useState(false);
   const [, setOpenTokenModal] = useRecoilState(tokenState);
+  const chatPING = useRecoilValue(sseNotiAtomFamily("chatPING"));
 
   const chatSocket = useRef<Stomp.Client | null>(null);
 
@@ -216,12 +218,16 @@ export default function Chat() {
       getChatRoomInfo();
     }
 
+    if(isLogin === "true" && chatPING.sseState ){
+      getList();
+    }
+
     if(isLogin === "false"){
       setOpenTokenModal({ tokenExpired: true })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.id]);
+  }, [params.id, chatPING.sseState, isLogin]);
 
   useEffect(() => {
     // console.log("새로고침", chatSocket);
