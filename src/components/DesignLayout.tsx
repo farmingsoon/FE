@@ -6,8 +6,8 @@ import { menuState } from '@/stores/NavMenuState'
 import { useRecoilValue } from 'recoil'
 import LoginTokenModal from './modal/LoginTokenModal';
 import { tokenState } from '@/stores/tokenModal';
-import NotificationItem from './sse/NotificationItem';
-import { showNotificationAtom } from '@/stores/showNotification';
+// import NotificationItem from './sse/NotificationItem';
+// import { showNotificationAtom } from '@/stores/showNotification';
 
 
 export default function DesignLayout({
@@ -21,14 +21,14 @@ export default function DesignLayout({
   const activeMenus = optionMenu.filter(el => el.onOff);
 
   //실시간 알림 상단 알림 바 
-  const showNotification = useRecoilValue(showNotificationAtom);
+  // const showNotification = useRecoilValue(showNotificationAtom);
 
   //token만료
   const isToken = useRecoilValue(tokenState);
 
   return (
     <main className="flex-1 py-8 px-5 min-h-screen overflow-y-auto">
-      {showNotification && <NotificationItem />}
+      {/* {showNotification && <NotificationItem />} */}
       {children}
       {activeMenus.map((el, idx) => {
       if(el.menu === "search") {

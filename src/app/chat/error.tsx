@@ -29,7 +29,7 @@ export default function Error({
 
     return(
         <div>
-            <h2>세션이 만료 되었습니다! 재로그인을 시도해주세요. </h2>
+            <h2>이런.. 에러가 발생했습니다. 재로그인을 시도해주세요. </h2>
             <button onClick={handleMove}>로그인 하러 가기</button>
         </div>
     )
