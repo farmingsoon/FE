@@ -4,9 +4,12 @@ import { EventSourcePolyfill } from "event-source-polyfill";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
 import LocalStorage from "@/util/localstorage";
-import { sseNotiSelector } from "@/stores/sseNotification";
-import { showNotificationSelctor } from "@/stores/showNotification";
-import { sseChattingSelector } from "@/stores/sseChatPingState";
+import { sseNotiSelectorFamily } from "@/stores/sseNotiState";
+import NotificationItem from "./NotificationItem";
+// import { sseNotiSelector } from "@/stores/sseNotification";
+// import { showNotificationSelctor } from "@/stores/showNotification";
+// import { sseChattingSelector } from "@/stores/sseChatPingState";
+
 
 
 const SSEcontrol = () => {
@@ -15,15 +18,23 @@ const SSEcontrol = () => {
     const localState = LocalStorage.getItem("loginState");
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
     const [retryCount, setRetryCount] = useState(-1);
-    const [, setGotMessage] = useRecoilState(sseNotiSelector);
-    const [, setGotChatMessage] = useRecoilState(sseChattingSelector)
-    const [, setShowNotification] = useRecoilState(showNotificationSelctor);
     const notificationTimeoutId = useRef<NodeJS.Timeout | null>(null);
+
+    //알림 관리
+    const [ , setAlarmPing ] = useRecoilState(sseNotiSelectorFamily("notiPING"));
+    const [ , setChatPing ] = useRecoilState(sseNotiSelectorFamily("chatPING"));
+    const [ alarmMSG, setAlarmMSG ] = useRecoilState(sseNotiSelectorFamily("notiMSG"));
+    const [ chatMSG, setChatMSG ] = useRecoilState(sseNotiSelectorFamily("chatMSG"));
+
+    // const [gotMessage, setGotMessage] = useRecoilState(sseNotiSelector); //알림 핑
+    // const [gotChatMessage, setGotChatMessage] = useRecoilState(sseChattingSelector); //채팅 핑
+    // const [, setShowNotification] = useRecoilState(showNotificationSelctor); //상단 모달
+
 
 
     useEffect(() => {
         const pageLocation = window.location.pathname;
-        console.log(pageLocation)
+        console.log("PAGE: ", pageLocation.includes("chat"));
 
 
         const connectSSE = () => {
@@ -33,12 +44,12 @@ const SSEcontrol = () => {
 
             //연결 성공 헨들러 - 접속이 이루어졌을 때 호출 
             eventSource.current.onopen = async (event) => {
-                console.log("이벤트 연결 성공 ", event);
+                console.log(" === 성공적인 연결 완료 === ", event);
             }
 
             //기본 메세지 받았을 때 
             eventSource.current.addEventListener("CONNECT", function (event){
-                console.log(" === 연결 메세지 === ")
+                console.log(" === 성공적인 첫 연결 메세지 === ")
                 const customEvent = event as MessageEvent;
                 console.log(customEvent.data);
                 // const parsedData = JSON.parse(event.data);
@@ -49,13 +60,15 @@ const SSEcontrol = () => {
                 console.log(" === 알림 메세지 === ");
                 const customEvent = event as MessageEvent;
                 console.log(customEvent.data);
-                setGotMessage(true);  // 메뉴 바 핑
-                //상단 알림모달
+
+                //알림 핑
+                setAlarmPing((cur) => ({ ...cur, sseState: true }));  
+                //알림 모달
                 if(pageLocation.includes("chat")){
-                    console.log("채팅방 페이지 열려있음")
-                    setShowNotification(false);  
+                    console.log("=== 채팅방 페이지 열려있음 ===")
+                    setAlarmMSG((cur) => ({ ...cur, sseState: false }));  
                 } else {
-                    setShowNotification(true);  
+                    setAlarmMSG((cur) => ({ ...cur, sseState: true }));
                 }
 
                 // clearTimeout을 호출할 때 useRef를 사용합니다.
@@ -65,7 +78,7 @@ const SSEcontrol = () => {
 
                 //setTimeout 호출
                 notificationTimeoutId.current = setTimeout(() => {
-                    setShowNotification(false);
+                    setAlarmMSG((cur) => ({ ...cur, sseState: false }));  
                     // useRef를 사용하기 때문에 null로 설정할 필요가 없습니다.
                 }, 2500)
             });
@@ -74,12 +87,15 @@ const SSEcontrol = () => {
                 console.log(" === 채팅 메세지 === ");
                 const customEvent = event as MessageEvent;
                 console.log(customEvent.data);
-                setGotChatMessage(true);  // 메뉴 바 핑
+
+                //채팅 핑
+                setChatPing((cur) => ({ ...cur, sseState: true })); 
+                //채팅 모달
                 if(pageLocation.includes("chat")){
                     console.log("채팅방 페이지 열려있음")
-                    setShowNotification(false);  
+                    setChatMSG((cur) => ({ ...cur, sseState: false }));   
                 } else {
-                    setShowNotification(true);  
+                    setChatMSG((cur) => ({ ...cur, sseState: true }));  
                 }
 
                 // clearTimeout을 호출할 때 useRef를 사용합니다.
@@ -89,7 +105,7 @@ const SSEcontrol = () => {
 
                 //setTimeout 호출
                 notificationTimeoutId.current = setTimeout(() => {
-                    setShowNotification(false);
+                    setChatMSG((cur) => ({ ...cur, sseState: false }));  
                     // useRef를 사용하기 때문에 null로 설정할 필요가 없습니다.
                 }, 2500)
             });
@@ -113,10 +129,11 @@ const SSEcontrol = () => {
 
         if(isLogin.tokenExpired === true || localState === "false"){
             //토큰 만료 시 연결 종료 
-            console.log(" == 토큰 만료 및 비로그인 상태라 연결 종료 == ")
             eventSource.current?.close(); // 연결 종료
             eventSource.current = null; //참조 제거
-            setGotMessage(false);
+            setAlarmPing((cur) => ({ ...cur, sseState: false }));
+            setChatPing((cur) => ({ ...cur, sseState: false }));
+            console.log(" == 토큰 만료 및 비로그인 상태라 연결 종료 == ")
         }
 
         if(isLogin.tokenExpired === false && localState === "true"){
@@ -128,7 +145,8 @@ const SSEcontrol = () => {
             if(eventSource.current){
                 eventSource.current?.close(); // 연결 종료
 				eventSource.current = null; //참조 제거
-                setGotMessage(false);
+                setAlarmPing((cur) => ({ ...cur, sseState: false }));
+                setChatPing((cur) => ({ ...cur, sseState: false }));
 				console.log("언마운트 이벤트 헨들러 종료");
             }
 
@@ -144,7 +162,18 @@ const SSEcontrol = () => {
     }, [isLogin.tokenExpired, retryCount, notificationTimeoutId]);
 
 
+    // return null;
+    if(alarmMSG.sseState){
+        return <NotificationItem msg={"새로운 알림이 도착했습니다!"} />
+    }
+
+    if(chatMSG.sseState){
+        return <NotificationItem msg={"새로운 채팅이 도착했습니다!"} />
+    }
+
     return null;
+
+
 }
 
 export default SSEcontrol;
