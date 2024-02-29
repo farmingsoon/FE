@@ -5,7 +5,7 @@ import SSEItem from "./SSEItem";
 import noAlarm  from "@/../public/svg/noAlarm.svg";
 import axios from "axios";
 import { useRecoilState } from "recoil";
-import { sseNotiSelector } from "@/stores/sseNotification";
+import { sseNotiSelectorFamily } from "@/stores/sseNotiState";
 
 export interface SSEDatasTypes {
     itemId: number;
@@ -15,7 +15,7 @@ export interface SSEDatasTypes {
 const SSEModal = () => {
     const [sseDatas, setSSEDatas ] = useState<SSEDatasTypes[]>([])
     const [mounted, setMounted] = useState(false);
-    const [, setGotNewNotification] = useRecoilState(sseNotiSelector);
+    const [ , setAlarmPing ] = useRecoilState(sseNotiSelectorFamily("notiPING"));
 
     const getSSEData = async () => {
         const url = "https://server.farmingsoon.site/api/notifications/me";
@@ -41,7 +41,7 @@ const SSEModal = () => {
             const res = await axios.patch(url, data, config);
             if(res.status === 200){
                 console.log("전체 읽음 처리 ")
-                setGotNewNotification(false);
+                setAlarmPing((cur) => ({ ...cur, sseState: false }))
             }
         } catch (err){
             console.log(err);

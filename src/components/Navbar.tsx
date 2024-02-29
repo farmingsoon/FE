@@ -16,7 +16,7 @@ import LOGO from "@/../public/img/Logo.png";
 import Image from "next/image";
 
 import { loginState } from "@/stores/loginState";
-import { sseNotiAtomFamily } from "@/stores/sseNotiState";
+import { sseNotiSelectorFamily } from "@/stores/sseNotiState";
 // import { sseNotiState } from "@/stores/sseNotification";
 // import { sseChattingPing } from "@/stores/sseChatPingState";
 
@@ -29,8 +29,8 @@ const Navbar = () => {
     const [ subDrop, setSubDrop ] = useState(false);
     // const gotNewNotification = useRecoilValue(sseNotiState);
     // const gotNewChatNotification = useRecoilValue(sseChattingPing);
-    const gotNewAlarm = useRecoilValue(sseNotiAtomFamily("notiPING"));
-    const gotNewChat = useRecoilValue(sseNotiAtomFamily("chatPING"));
+    const [gotNewAlarm ,  ] = useRecoilState(sseNotiSelectorFamily("notiPING"));
+    const [gotNewChat , setChatPing ] = useRecoilState(sseNotiSelectorFamily("chatPING"));
     const btnStyle = "flex flex-row items-center w-fit whitespace-nowrap mb-6";
 
     const handleClick = () => {
@@ -45,7 +45,7 @@ const Navbar = () => {
 
         if(menuTab === "alarm"){
             const newMenu = [{menu: "search", onOff: false }, {menu: "alarm", onOff: !menusState[1].onOff}];
-            setMenusState(newMenu)
+            setMenusState(newMenu);
         }
     };
 
@@ -63,6 +63,11 @@ const Navbar = () => {
 
     const handleSubOpen = () => {
         setSubDrop(!subDrop);
+    };
+
+    //알림 끄기 
+    const handleOffChatPing = () => {
+        setChatPing((cur) => ({ ...cur, sseState: false }))
     }
 
     useEffect(() => {
@@ -111,10 +116,10 @@ const Navbar = () => {
                 )}            
                 <li className="pt-4">
                     <Link href="/chat">
-                        <button className={btnStyle}>
+                        <button className={btnStyle} onClick={handleOffChatPing}>
                             <ChatSVG width={"12px"} height={"12px"} />
                             <span className="pl-2 hover:text-DEEP_MAIN">채팅</span>
-                            { gotNewAlarm.sseState && 
+                            { gotNewChat.sseState && 
                                 <span className="relative flex h-2 w-2 -top-2 -right-1">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-MAIN_COLOR opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-2 w-2 bg-MAIN_COLOR"></span>
@@ -127,7 +132,7 @@ const Navbar = () => {
                     <button className={btnStyle} onClick={() => handleOpenModal("alarm")}>
                         <BellSVG width={"12px"} height={"12px"}/>
                         <span className="pl-2 hover:text-DEEP_MAIN">알림</span>
-                        { gotNewChat.sseState && 
+                        { gotNewAlarm.sseState && 
                             <span className="relative flex h-2 w-2 -top-2 -right-1">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-MAIN_COLOR opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-MAIN_COLOR"></span>

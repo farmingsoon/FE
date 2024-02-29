@@ -112,7 +112,7 @@ const SSEcontrol = () => {
 
 
 
-            //연결 옿류 헨들러 
+            //연결 오류 헨들러 
             eventSource.current.onerror = (err) => {
                 console.log("SSE : ", err);
                 eventSource.current?.close();
@@ -145,8 +145,6 @@ const SSEcontrol = () => {
             if(eventSource.current){
                 eventSource.current?.close(); // 연결 종료
 				eventSource.current = null; //참조 제거
-                setAlarmPing((cur) => ({ ...cur, sseState: false }));
-                setChatPing((cur) => ({ ...cur, sseState: false }));
 				console.log("언마운트 이벤트 헨들러 종료");
             }
 
