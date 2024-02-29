@@ -67,7 +67,7 @@ const Navbar = () => {
 
     //알림 끄기 
     const handleOffChatPing = () => {
-        setChatPing((cur) => ({ ...cur, sseState: false }))
+        setChatPing((cur) => ({ ...cur, sseState: false }));
     }
 
     useEffect(() => {
