@@ -12,6 +12,9 @@ const config: Config = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        "loading-gradient": "linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(0,0,0,0.65) 100%);",
+        "loader-gradient" : "linear-gradient(to top, rgba(255,255,255,0) 0%,rgba(0,0,0,0.65) 100%);",
+        'overlay': 'rgba(0, 0, 0, 0.5)',
       },
       colors: {
         MAIN_COLOR: "#28CC9E",
@@ -23,7 +26,7 @@ const config: Config = {
         TEXT_BLACK: "#2B2B2B",
       },
       boxShadow: {
-        "custom-top" : " -5px -5px 20px 2px rgba(0,0,0,0.1)"
+        "custom-top" : " -5px -5px 20px 2px rgba(0,0,0,0.1)",
       },
       keyframes: {
         slideInAndOut: {

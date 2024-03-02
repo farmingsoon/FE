@@ -4,10 +4,10 @@ import NoData from "../../public/svg/NoData";
 import HomeItem from "@/components/HomeItem";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { searchState } from "@/stores/searchOptionState";
 import { axiosCall } from "@/util/axiosCall";
-import { tokenState } from "@/stores/tokenModal";
+import { useInfiniteScroll } from "@/util/useInfiniteScroll";
 
 export interface MerchanTypes {
   itemId: number;
@@ -30,8 +30,15 @@ export default function Home() {
   const [ searchOption,  ] = useRecoilState(searchState)
   const [ sortCode, setSortCode ] = useState("recent");
   const [ isCheckBox, setIsCheckBox ] = useState(false);
-  const recoilToken = useRecoilValue(tokenState);
-  console.log(recoilToken);
+  const [ pagination, setPagination ] = useState({
+    page: 0,
+    hasNext: false,
+    hasPrevious: true,
+    totalPageSize: 0,
+  });
+  const [ finishFetch, setFinishFetch ] = useState(false);
+  // const [ showLoading, setShowLoading ] = useState(true);
+  console.log(homeData);
 
   const handleSortCode = (e:any) => {
     setSortCode(e.target.value);
@@ -44,52 +51,100 @@ export default function Home() {
     setIsCheckBox(isCheck);
   }
 
-  const getHomeData = async () => {
+  const getHomeData = async (currentPage: number) => {
+    // console.log("CURPAGE: ", currentPage);
     try { 
-      //검색 
-      const categoryRes = `/api/items?sortCode=${sortCode}&category=${searchOption.option}&keyword=${searchOption.keyword}`;
-      const normalRes = `/api/items?sortCode=${sortCode}&keyword=${searchOption.keyword}`;
+      //검색 https://server.farmingsoon.site/api/items?sortCode=recent
+      const categoryRes = `/api/items?page=${currentPage}&sortCode=${sortCode}&category=${searchOption.option}&keyword=${searchOption.keyword}`;
+      const normalRes = `/api/items?page=${currentPage}&sortCode=${sortCode}&keyword=${searchOption.keyword}`;
       //일반 조회 
-      const originRes = `/api/items?sortCode=${sortCode}`;
+      const originRes = `/api/items?page=${currentPage}&sortCode=${sortCode}`;
 
 
       if( searchOption.keyword !== "" &&  searchOption.option === "category"){
         const res = await axiosCall(categoryRes, "GET");
-        console.log(res)
-        setHomeData(res.items);
+        const resPagination = res.pagination;
+        const resData = res.items;
+        setPagination({
+          page: currentPage,
+          hasNext: resPagination.hasNext,
+          hasPrevious: resPagination.hasPrevious,
+          totalPageSize: resPagination.totalPageSize,
+        });
+
+        return resData;
 
       } else if( searchOption.keyword !== "" &&  searchOption.option === "") {
         const res =  await axiosCall(normalRes, "GET");
-        console.log(res);
-        setHomeData(res.items);
-        
+        const resPagination = res.pagination;
+        const resData = res.items;
+        setPagination({
+          page: currentPage,
+          hasNext: resPagination.hasNext,
+          hasPrevious: resPagination.hasPrevious,
+          totalPageSize: resPagination.totalPageSize,
+        });
+
+        return resData;
+
       } else {
         const res = await axiosCall(originRes, "GET");
         console.log(res);
-        setHomeData(res.items);
+        const resPagination = res.pagination;
+        const resData = res.items;
+        setPagination({
+          page: currentPage,
+          hasNext: resPagination.hasNext,
+          hasPrevious: resPagination.hasPrevious,
+          totalPageSize: resPagination.totalPageSize,
+        });
 
+        return resData;
       }
-
-      // const res = await axios.get(`${BASE_URL}/api/items`);
-
     } catch(err){
-      console.log(`홈 상품 아이템 조회 ${err}`)
+      console.log(`홈 상품 아이템 조회 ${err}`);
+      return [];
     }
   };
 
-  useEffect(() => {
-    getHomeData();
-    
-    if(isCheckBox){
-      const parsedData = homeData.filter((el)=> {
-        el.itemStatus !== "판매완료"
-      });
+  const loadMoreItems = async () => {
+    if(pagination.totalPageSize === pagination.page ) {// 마지막 페이지 
+      setFinishFetch(true);
+      // setShowLoading(false);
+      return;
+    }; 
+    const nextPage = pagination.page + 1;
+    const moreItems = await getHomeData(nextPage);
+    setHomeData(curItems => [...curItems, ...moreItems]);
+  };
 
-      setHomeData(parsedData);
+  const observerRef = useInfiniteScroll(loadMoreItems);
+
+  useEffect(() => {
+
+    const fetchHomeData = async () => {
+      try { 
+        const curPage = pagination.page;
+        const initialDatas = await getHomeData(curPage);
+
+        if(isCheckBox){
+          const filteredItem = initialDatas.filter((el:any) => {
+            el.itemStatus !== "판매완료"
+          });
+          setHomeData(filteredItem);
+        } else {
+          setHomeData(initialDatas);
+        }
+      } catch (err){
+        console.log(err);
+      }
     }
+
+    fetchHomeData();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchOption.keyword, sortCode, isCheckBox])
+
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -123,10 +178,15 @@ export default function Home() {
         { homeData.length > 0 ? 
           <div className="w-full grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-10 gap-x-4 mt-10 mb-5">
              {homeData.map((item, idx) => (
-              <Link href={`/product/detail/${item.itemId}`} key={`link ${idx}`}>
-                <HomeItem key={idx} data={item} />
-              </Link>
+                <Link href={`/product/detail/${item.itemId}`} key={`link ${idx}`}>
+                  <HomeItem key={idx} data={item} />
+                </Link>              
             ))}
+
+          {!finishFetch && (<div ref={observerRef} className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center p-5 text-lg font-semibold text-gray-500 bg-gray-100 rounded-lg shadow animate-pulse">
+            ...Loading
+          </div>)}
+          {finishFetch && (<div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center text-lg text-gray-500 "> 마지막 페이지입니다. </div>)}
           </div> :
           <div className="flex justify-center flex-col items-center mt-20">
             <NoData width={"300px"} height={"300px"}/>
