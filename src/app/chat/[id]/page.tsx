@@ -40,7 +40,7 @@ export default function Chat() {
   const [currentMessage, setCurrentMessage] = useState("");
   const userId = Number(LocalStorage.getItem("memberId"));
   const isLogin = LocalStorage.getItem("loginState");
-  console.log(" >>> 채팅핑 SSE :: ", inChatRoomSSE);
+  // console.log(" >>> 채팅핑 SSE :: ", inChatRoomSSE);
 
   const connect = () => {
     console.log("connect함수", chatSocket.current);
