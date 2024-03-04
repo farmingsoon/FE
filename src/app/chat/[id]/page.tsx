@@ -218,7 +218,7 @@ export default function Chat() {
       const timer = setTimeout(() => {
         console.log(" === 1.5초 늦게 업데이트 === ")
         getList();
-        getHistoryChat();
+        // getHistoryChat();
       }, 1500);
 
       return () => clearTimeout(timer);
