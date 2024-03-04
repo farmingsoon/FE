@@ -221,6 +221,7 @@ export default function Chat() {
 
     if(isLogin === "true" && chatPING.sseState === true ){
       getList();
+      getHistoryChat();
     }
 
     if(isLogin === "false"){
