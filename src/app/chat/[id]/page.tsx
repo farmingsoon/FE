@@ -200,7 +200,9 @@ export default function Chat() {
       return;
     }; 
     const nextPage = pagination.page + 1;
-    await getHistoryChat(nextPage);
+    await getHistoryChat(nextPage).then(newMsg => {
+      setMessages(prev => [...prev, ...newMsg])
+    });
   };
 
   const observerRef = useInfiniteScroll(loadMoreItems);
@@ -247,7 +249,7 @@ export default function Chat() {
         getList();
         getHistoryChat(pagination.page).then(newMsg => {
           setMessages(prev => [...prev, ...newMsg])
-        }) ;
+        });
 
       }, 1500);
 
@@ -326,7 +328,7 @@ export default function Chat() {
                 : "채팅 방이 연결 중입니다."}
               채팅방 연결 갯수 {websocketCount}
           </p>
-        <div className="flex flex-col-reverse h-full px-2 bg-indigo-300 overflow-y-auto" >
+        <div className="flex flex-col h-full px-2 bg-indigo-300 overflow-y-auto" >
           <div ref={observerRef} className="h-1 m-0 p-0"></div>
           {messages.length > 0 ? (
             messages.map((message, idx) => (
