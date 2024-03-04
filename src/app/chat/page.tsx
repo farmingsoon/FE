@@ -81,11 +81,11 @@ export default function Chat() {
   }, []);
 
   useEffect(() => {
-    if(chatPING.sseState){
+    if(chatPING.sseState === true){
       getList();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[chatPING.sseState])
+  },[chatPING])
 
   return (
     <div className="flex h-screen">

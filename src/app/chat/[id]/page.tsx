@@ -219,7 +219,7 @@ export default function Chat() {
       getChatRoomInfo();
     }
 
-    if(isLogin === "true" && chatPING.sseState ){
+    if(isLogin === "true" && chatPING.sseState === true ){
       getList();
     }
 
@@ -228,7 +228,7 @@ export default function Chat() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.id, chatPING.sseState, isLogin]);
+  }, [params.id, chatPING, isLogin]);
 
   useEffect(() => {
     // console.log("새로고침", chatSocket);
@@ -321,7 +321,7 @@ export default function Chat() {
                   >
                     {message.message}
                   </p>
-                  {message.isRead !== false && message.senderId !== userId ?  <p className="text-[10px] font-light text-DEEP_MAIN ml-3">1</p> : null}
+                  {message.isRead !== false && message.senderId === userId ?  <p className="text-[10px] font-light text-DEEP_MAIN ml-3">1</p> : null}
                 </div>
               ))
             ) : (
