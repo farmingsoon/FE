@@ -1,27 +1,17 @@
 "use client";
-import ChatListItem from "@/components/chat/ChatListItem";
 import { useEffect, useState } from "react"; 
+import { useRecoilState, useRecoilValue } from "recoil";
+import axios from "axios";
 
 import { rotateRefresh } from "@/util/axiosCall";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { tokenState } from "@/stores/tokenModal";
-import axios from "axios";
 import LocalStorage from "@/util/localstorage";
+
+import { tokenState } from "@/stores/tokenModal";
 import { sseNotiAtomFamily } from "@/stores/sseNotiState";
+import { chatListTypes } from "@/types/chat";
 
-export interface message {
-  message: string;
-  senderId: number;
-  createdAt: string;
-}
+import ChatListItem from "@/components/chat/ChatListItem";
 
-export interface chatListTypes {
-  chatRoomId: number;
-  toUserName: string;
-  toUserProfileImage: string;
-  lastMessage: string;
-  lastChatTime: string;
-}
 
 export default function Chat() {
   const [, setOpenTokenModal] = useRecoilState(tokenState);
