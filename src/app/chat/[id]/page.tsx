@@ -61,9 +61,10 @@ export default function Chat() {
       const client = new Stomp.Client({
         webSocketFactory: () => socket,
         // brokerURL: "wss://server.farmingsoon.site/ws",
-        // connectHeaders: {
-        //   Authorization: `Bearer ${ACCES_TOKEN}`,
-        // },
+        connectHeaders: {
+          chatRoomId: params.id,
+          memberId: String(userId)
+        },
         debug: (str) => {
           console.log(`debg: ${str}`);
         },
