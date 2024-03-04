@@ -214,10 +214,10 @@ export default function Chat() {
   useEffect(() => {
     if(isLogin === "true" && inChatRoomSSE.sseState === true ){
       const timer = setTimeout(() => {
-        console.log(" === 5초 늦게 업데이트 === ")
+        console.log(" === 1.5초 늦게 업데이트 === ")
         getList();
         getHistoryChat();
-      }, 5000);
+      }, 1500);
 
       return () => clearTimeout(timer);
 
