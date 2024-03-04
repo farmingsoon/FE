@@ -47,7 +47,7 @@ export default function Chat() {
   const [currentMessage, setCurrentMessage] = useState("");
   const userId = Number(LocalStorage.getItem("memberId"));
   const isLogin = LocalStorage.getItem("loginState");
-  console.log(" >>> 채팅핑 SSE :: ", inChatRoomSSE);
+  // console.log(" >>> 채팅핑 SSE :: ", inChatRoomSSE);
 
   const connect = () => {
     console.log("connect함수", chatSocket.current);
@@ -83,12 +83,10 @@ export default function Chat() {
               const newMSG = JSON.parse(message.body);
               setMessages((chats) => [...chats, newMSG]);
               console.log("00 : ", newMSG.message);
-              getList();
-              getHistoryChat(pagination.page);
 
               //상대방 메세지 읽음 처리 
               if(newMSG.senderId !== userId ){
-                const readEndPoint = `pub/chat/read`;
+                const readEndPoint = `/pub/chat/read`;
                 chatSocket.current?.publish({
                   destination:readEndPoint,
                   body: JSON.stringify({
@@ -96,7 +94,8 @@ export default function Chat() {
                   }),
                 })
               }
-
+              console.log("SUB : -  목록 업데이트 -  ")
+              getList();
             }
           },
         );
@@ -249,6 +248,7 @@ export default function Chat() {
         getHistoryChat(pagination.page).then(newMsg => {
           setMessages(prev => [...prev, ...newMsg])
         }) ;
+
       }, 1500);
 
       return () => clearTimeout(timer);
