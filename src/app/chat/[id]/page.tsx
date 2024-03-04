@@ -195,7 +195,7 @@ export default function Chat() {
   };
 
   const loadMoreItems = async () => {
-    if(pagination.hasNext ) {// 마지막 페이지 
+    if(pagination.hasNext === false ) {// 마지막 페이지 
       // setShowLoading(false);
       return;
     }; 
@@ -326,7 +326,8 @@ export default function Chat() {
                 : "채팅 방이 연결 중입니다."}
               채팅방 연결 갯수 {websocketCount}
           </p>
-        <div className="flex flex-col-reverse h-full px-2 bg-indigo-300 overflow-y-auto" ref={observerRef}>
+        <div className="flex flex-col-reverse h-full px-2 bg-indigo-300 overflow-y-auto" >
+          <div ref={observerRef} className="h-1 m-0 p-0"></div>
           {messages.length > 0 ? (
             messages.map((message, idx) => (
               <div
