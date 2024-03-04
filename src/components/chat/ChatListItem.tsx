@@ -1,6 +1,7 @@
-import { chatListTypes } from "@/app/chat/page";
-import Img from "@/common/Img";
 import { useRouter } from "next/navigation";
+import Img from "@/common/Img";
+import { chatListTypes } from "@/types/chat";
+
 
 interface chatListItemTypes {
     list: chatListTypes
@@ -42,6 +43,10 @@ const ChatListItem = ( {list}:chatListItemTypes ) => {
             <div className="font-normal flex flex-col ml-3 w-60">
                 <div className="mb-1">{list.toUserName}</div>
                 <div className="font-light text-xs text-DARK_GRAY">{list.lastMessage}</div>
+                {list.unReadMessageCount > 0 
+                    ? <div className="p-1 text-xs rounded-full bg-POINT_RED text-white ml-2 font-light">{list.unReadMessageCount}</div>
+                    : null
+                }
             </div>
             <div className="font-light text-xs text-DARK_GRAY">{formatTime(list.lastChatTime)} 전</div>
         </div>

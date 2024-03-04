@@ -1,36 +1,27 @@
 "use client";
-import ChatListItem from "@/components/chat/ChatListItem";
-import ChatProductItem, {
-  itemChatInfoTypes,
-} from "@/components/chat/ChatProductItem";
-import Img from "@/common/Img";
-import SendButton from "@/../public/svg/SendButton";
 import { useEffect, useRef, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+
+import axios from "axios";
 
 import * as Stomp from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { useParams } from "next/navigation";
 
 import LocalStorage from "@/util/localstorage";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { tokenState } from "@/stores/tokenModal";
 import { rotateRefresh } from "@/util/axiosCall";
-import axios from "axios";
+
+import { tokenState } from "@/stores/tokenModal";
 import { sseNotiAtomFamily } from "@/stores/sseNotiState";
+import { chatListTypes, message } from "@/types/chat";
 
-export interface message {
-  message: string;
-  senderId: number;
-  createdAt: string;
-}
+import ChatListItem from "@/components/chat/ChatListItem";
+import ChatProductItem, {
+  itemChatInfoTypes,
+} from "@/components/chat/ChatProductItem";
+import Img from "@/common/Img";
+import SendButton from "@/../public/svg/SendButton";
 
-export interface chatListTypes {
-  chatRoomId: number;
-  toUserName: string;
-  toUserProfileImage: string;
-  lastMessage: string;
-  lastChatTime: string;
-}
 
 export default function Chat() {
   const [chatList, setChatList] = useState<chatListTypes[]>([]);
@@ -80,16 +71,24 @@ export default function Chat() {
         client.subscribe(
           `/sub/chat-room/${params.id}`,
           (message) => {
-            // console.log("[ 구독  ]: ", message);
             if (message.body) {
-              const msg = message.body;
-              console.log("00 : ", JSON.parse(msg).message);
-              setMessages((chats) => [...chats, JSON.parse(msg)]);
+              const newMSG = JSON.parse(message.body);
+              setMessages((chats) => [...chats, newMSG]);
+              console.log("00 : ", newMSG.message);
+
+              //상대방 메세지 읽음 처리 
+              if(newMSG.senderId !== userId ){
+                const readEndPoint = `pub/chat/read`;
+                chatSocket.current?.publish({
+                  destination:readEndPoint,
+                  body: JSON.stringify({
+                    chatRoomId: params.id,
+                  }),
+                })
+              }
+
             }
           },
-          // {
-          //   Authorization: `Bearer ${ACCES_TOKEN}`,
-          // }
         );
         //1번 채팅방 나갈 때 구독 끊기 .unsubscribe()
       };
@@ -109,7 +108,7 @@ export default function Chat() {
   };
 
   //채팅방 목록 && 채팅 리스트
-
+  //unReadMessageCount
   const getList = async () => {
     const url = "https://server.farmingsoon.site/api/chat-rooms/me";
     const config = { withCredentials: true };
@@ -260,9 +259,6 @@ export default function Chat() {
           senderId: userId,
           message: currentMessage,
         }),
-        // headers: {
-        //   Authorization: `Bearer ${ACCES_TOKEN}`,
-        // },
       });
       //입력 창 초기화
       setCurrentMessage("");
@@ -324,6 +320,7 @@ export default function Chat() {
                   >
                     {message.message}
                   </p>
+                  {message.isRead && message.senderId !== userId ?  <p className="text-[5px] font-light text-DEEP_MAIN">1</p> : null}
                 </div>
               ))
             ) : (
