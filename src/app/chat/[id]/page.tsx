@@ -79,7 +79,7 @@ export default function Chat() {
 
               //상대방 메세지 읽음 처리 
               if(newMSG.senderId !== userId ){
-                const readEndPoint = `pub/chat/read`;
+                const readEndPoint = `/pub/chat/read`;
                 chatSocket.current?.publish({
                   destination:readEndPoint,
                   body: JSON.stringify({
