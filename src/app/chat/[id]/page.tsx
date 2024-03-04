@@ -163,7 +163,7 @@ export default function Chat() {
         const history = res.data.result.chats;
         const resPagination = res.data.result.pagination;
         console.log(history);
-        setMessages([...history]);
+        setMessages((prev) => [ ...prev, ...history.reverse()]);
         setPagination({
           page: curPage,
           hasNext: resPagination.hasNext,
@@ -181,7 +181,11 @@ export default function Chat() {
         if(err.message === "기한이 만료된 AccessToken입니다."){
           //AT 만료 
           console.log("AcessToken 만료");
-          rotateRefresh();
+          rotateRefresh().catch((refreshErr) => {
+            if(refreshErr.message === "RefreshTokenUnauthorized"){
+                setOpenTokenModal({tokenExpired: true})
+            }
+        });
         }
 
         if(err.message === "기한이 만료된 RefreshToken입니다"){
@@ -247,9 +251,9 @@ export default function Chat() {
       const timer = setTimeout(() => {
         console.log(" === 1.5초 늦게 업데이트 === ")
         getList();
-        getHistoryChat(pagination.page).then(newMsg => {
-          setMessages(prev => [...prev, ...newMsg])
-        });
+        // getHistoryChat(pagination.page).then(newMsg => {
+        //   setMessages(prev => [...prev, ...newMsg])
+        // });
 
       }, 1500);
 
@@ -328,8 +332,8 @@ export default function Chat() {
                 : "채팅 방이 연결 중입니다."}
               채팅방 연결 갯수 {websocketCount}
           </p>
-        <div className="flex flex-col h-full px-2 bg-indigo-300 overflow-y-auto" >
-          <div ref={observerRef} className="h-1 m-0 p-0"></div>
+        <div className="flex flex-col h-full px-2 bg-zinc-200 overflow-y-auto" >
+          <div ref={observerRef} className="h-3 w-3 m-0 p-0 bg-black"></div>
           {messages.length > 0 ? (
             messages.map((message, idx) => (
               <div
