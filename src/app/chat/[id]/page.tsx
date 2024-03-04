@@ -40,6 +40,7 @@ export default function Chat() {
   const [currentMessage, setCurrentMessage] = useState("");
   const userId = Number(LocalStorage.getItem("memberId"));
   const isLogin = LocalStorage.getItem("loginState");
+  console.log(" >>> 채팅핑 SSE :: ", inChatRoomSSE);
 
   const connect = () => {
     console.log("connect함수", chatSocket.current);
@@ -75,6 +76,8 @@ export default function Chat() {
               const newMSG = JSON.parse(message.body);
               setMessages((chats) => [...chats, newMSG]);
               console.log("00 : ", newMSG.message);
+              getList();
+              getHistoryChat();
 
               //상대방 메세지 읽음 처리 
               if(newMSG.senderId !== userId ){
@@ -264,8 +267,6 @@ export default function Chat() {
       });
       //입력 창 초기화
       setCurrentMessage("");
-      console.log("메세지 모내고 나서 리스트 업데이트 ");
-      getList();
     }
   };
 
