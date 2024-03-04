@@ -148,13 +148,6 @@ export default function ProductDetail(  ) {
         }
 
         try { 
-            // const validToken = await axiosCall(validURL, "POST", validBody, config);
-            // if(validToken.status === 200){
-            //     const res = await axiosCall(chatRoomURL, "POST", chatRoomBody, config);
-            //     console.log("채팅방 생성 성공 ", res.data.result);
-            //     router.push(`/chat/${res.data.result}`)
-            // }
-
             const res = await axiosCall(chatRoomURL, "POST", chatRoomBody, config);
             if(res.status === 200){
                 console.log("채팅방 생성 성공 ", res.data.result);
@@ -163,6 +156,32 @@ export default function ProductDetail(  ) {
 
         } catch (err){
             console.log(`채팅 연결 ${err}`);
+
+            if(axios.isAxiosError(err) && err.response){
+                const status = err.response.status;
+                const errorMessage = err.response.data.message;
+
+                if(status === 401 && errorMessage === "기한이 만료된 AccessToken입니다."){
+                    //AT토큰 만료 
+                    console.log("AT만료+상품 등록 : ", err)
+                    rotateRefresh().catch((refreshErr) => {
+                        if(refreshErr.message === "RefreshTokenUnauthorized"){
+                            setIsToken({tokenExpired: true})
+                        }
+                    });
+                };
+
+                if(status === 401 && errorMessage === "기한이 만료된 RefreshToken입니다."){
+                    //RT토큰 만료 
+                    console.log("RT만료+상품 등록 : ", err);
+                    setIsToken({tokenExpired: true});
+                };
+
+                if(status === 403){
+                    //로그인 후 이용할 수 있습니다. 
+                    setIsToken({ tokenExpired: true });
+                };
+            };
         }
     }
 
