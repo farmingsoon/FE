@@ -220,8 +220,14 @@ export default function Chat() {
     }
 
     if(isLogin === "true" && chatPING.sseState === true ){
-      getList();
-      getHistoryChat();
+      const timer = setTimeout(() => {
+        console.log(" === 5초 늦게 업데이트 === ")
+        getList();
+        getHistoryChat();
+      }, 5000);
+
+      return () => clearTimeout(timer);
+
     }
 
     if(isLogin === "false"){
@@ -317,7 +323,7 @@ export default function Chat() {
                       </div>
                     </div>
                   )}
-                  {message.isRead !== false && message.senderId === userId ?  <p className="text-[10px] font-light text-DEEP_MAIN mr-3">1</p> : null}
+                  {message.isRead === false && message.senderId === userId ?  <p className="text-[10px] font-light text-DEEP_MAIN mr-3">1</p> : null}
                   <p
                     className={`px-2 my-2 py-3 rounded-lg w-fit ${message.senderId === userId ? "bg-indigo-400 text-white " : "bg-[#87dac2] text-white "}`}
                   >
