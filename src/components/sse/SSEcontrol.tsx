@@ -19,10 +19,11 @@ const SSEcontrol = () => {
 
     //알림 관리
     const [ , setAlarmPing ] = useRecoilState(sseNotiSelectorFamily("notiPING"));
-    const [ chatPING, setChatPing ] = useRecoilState(sseNotiSelectorFamily("chatPING"));
+    const [ , setChatPing ] = useRecoilState(sseNotiSelectorFamily("chatPING"));
     const [ alarmMSG, setAlarmMSG ] = useRecoilState(sseNotiSelectorFamily("notiMSG"));
     const [ chatMSG, setChatMSG ] = useRecoilState(sseNotiSelectorFamily("chatMSG"));
-    console.log(" >>> 채팅핑 SSE :: ", chatPING);
+    const [ inChatRoomSSE, setInChatRoomSSE ] = useRecoilState(sseNotiSelectorFamily("inChatRoomUpdate"));
+    console.log(" >>> 채팅핑 SSE :: ", inChatRoomSSE);
 
 
 
@@ -81,7 +82,9 @@ const SSEcontrol = () => {
                 console.log(customEvent.data);
 
                 //채팅 핑
-                setChatPing((cur) => ({ ...cur, sseState: true })); 
+                setChatPing((cur) => ({ ...cur, sseState: true }));
+                //채팅 업데이트 용 
+                setInChatRoomSSE((cur) => ({...cur, sseState: true})); 
                 //채팅 모달
                 if(pageLocation.includes("chat")){
                     setChatMSG((cur) => ({ ...cur, sseState: false }));
@@ -96,7 +99,8 @@ const SSEcontrol = () => {
 
                 //setTimeout 호출
                 notificationTimeoutId.current = setTimeout(() => {
-                    setChatMSG((cur) => ({ ...cur, sseState: false }));  
+                    setChatMSG((cur) => ({ ...cur, sseState: false }));
+                    setInChatRoomSSE((cur) => ({...cur, sseState: false}));  
                     // useRef를 사용하기 때문에 null로 설정할 필요가 없습니다.
                 }, 2500)
             });

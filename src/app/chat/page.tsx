@@ -16,7 +16,7 @@ import ChatListItem from "@/components/chat/ChatListItem";
 export default function Chat() {
   const [, setOpenTokenModal] = useRecoilState(tokenState);
   const [chatList, setChatList] = useState<chatListTypes[]>([]);
-  const chatPING = useRecoilValue(sseNotiAtomFamily("chatPING"));
+  const inChatRoomSSE = useRecoilValue(sseNotiAtomFamily("inChatRoomUpdate"));
 
   //채팅방 목록 && 채팅 리스트
 
@@ -81,11 +81,11 @@ export default function Chat() {
   }, []);
 
   useEffect(() => {
-    if(chatPING.sseState === true){
+    if(inChatRoomSSE.sseState === true){
       getList();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[chatPING])
+  },[inChatRoomSSE])
 
   return (
     <div className="flex h-screen">

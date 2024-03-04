@@ -28,7 +28,7 @@ export default function Chat() {
   const [curDetailChatInfo, setDetailChatInfo] = useState<itemChatInfoTypes>();
   const [isConnected, setIsConnected] = useState(false);
   const [, setOpenTokenModal] = useRecoilState(tokenState);
-  const chatPING = useRecoilValue(sseNotiAtomFamily("chatPING"));
+  const inChatRoomSSE = useRecoilValue(sseNotiAtomFamily("inChatRoomUpdate"));
 
   const chatSocket = useRef<Stomp.Client | null>(null);
 
@@ -219,7 +219,7 @@ export default function Chat() {
       getChatRoomInfo();
     }
 
-    if(isLogin === "true" && chatPING.sseState === true ){
+    if(isLogin === "true" && inChatRoomSSE.sseState === true ){
       const timer = setTimeout(() => {
         console.log(" === 5초 늦게 업데이트 === ")
         getList();
@@ -235,7 +235,7 @@ export default function Chat() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.id, chatPING, isLogin]);
+  }, [params.id, inChatRoomSSE, isLogin]);
 
   useEffect(() => {
     // console.log("새로고침", chatSocket);
