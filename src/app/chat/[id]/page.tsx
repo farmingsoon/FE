@@ -247,9 +247,9 @@ export default function Chat() {
       const timer = setTimeout(() => {
         console.log(" === 1.5초 늦게 업데이트 === ")
         getList();
-        getHistoryChat(pagination.page).then(newMsg => {
-          setMessages(prev => [...prev, ...newMsg])
-        });
+        // getHistoryChat(pagination.page).then(newMsg => {
+        //   setMessages(prev => [...prev, ...newMsg])
+        // });
 
       }, 1500);
 
