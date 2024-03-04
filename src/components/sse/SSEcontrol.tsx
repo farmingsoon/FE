@@ -22,8 +22,8 @@ const SSEcontrol = () => {
     const [ , setChatPing ] = useRecoilState(sseNotiSelectorFamily("chatPING"));
     const [ alarmMSG, setAlarmMSG ] = useRecoilState(sseNotiSelectorFamily("notiMSG"));
     const [ chatMSG, setChatMSG ] = useRecoilState(sseNotiSelectorFamily("chatMSG"));
-    const [ inChatRoomSSE, setInChatRoomSSE ] = useRecoilState(sseNotiSelectorFamily("inChatRoomUpdate"));
-    console.log(" >>> 채팅핑 SSE :: ", inChatRoomSSE);
+    const [ , setInChatRoomSSE ] = useRecoilState(sseNotiSelectorFamily("inChatRoomUpdate"));
+
 
 
 
