@@ -76,8 +76,6 @@ export default function Chat() {
               const newMSG = JSON.parse(message.body);
               setMessages((chats) => [...chats, newMSG]);
               console.log("00 : ", newMSG.message);
-              getList();
-              getHistoryChat();
 
               //상대방 메세지 읽음 처리 
               if(newMSG.senderId !== userId ){
