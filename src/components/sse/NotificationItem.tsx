@@ -23,7 +23,7 @@ const NotificationItem = ( {msg, type}: { msg: string, type: "alarm" | "chat" } 
     }
 
     return(
-        <div className="absolute top-10 right-10 rounded-lg shadow-lg p-5 text-sm fonr-normal bg-DEEP_MAIN animate-slide-in-and-out cursor-pointer"
+        <div className="absolute top-10 right-10 rounded-lg shadow-lg p-5 text-sm fonr-normal bg-DEEP_MAIN animate-slide-in-and-out cursor-pointer z-50"
             onClick={handleClose}>
             <div className="text-zinc-100 ">  
                 {msg}

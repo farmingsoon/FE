@@ -17,7 +17,7 @@ export const sseNotiAtomFamily = atomFamily<ModalInfo, ModalId>({
 
 export const sseNotiAtom = atom<ModalId[]>({
     key: "sseNotiAtom",
-    default : ["chatPING", "notiPING", "chatMSG", "notiMSG"],
+    default : ["chatPING", "notiPING", "chatMSG", "notiMSG", "inChatRoomUpdate"],
 });
 
 
