@@ -21,6 +21,7 @@ import ChatProductItem, {
 } from "@/components/chat/ChatProductItem";
 import Img from "@/common/Img";
 import SendButton from "@/../public/svg/SendButton";
+import { useInfiniteScroll } from "@/util/useInfiniteScroll";
 
 
 export default function Chat() {
@@ -29,6 +30,12 @@ export default function Chat() {
   const [isConnected, setIsConnected] = useState(false);
   const [, setOpenTokenModal] = useRecoilState(tokenState);
   const inChatRoomSSE = useRecoilValue(sseNotiAtomFamily("inChatRoomUpdate"));
+  const [ pagination, setPagination ] = useState({
+    page: 0,
+    hasNext: false,
+    hasPrevious: true,
+    totalPageSize: 0,
+  })
 
   const chatSocket = useRef<Stomp.Client | null>(null);
 
@@ -54,7 +61,7 @@ export default function Chat() {
         webSocketFactory: () => socket,
         // brokerURL: "wss://server.farmingsoon.site/ws",
         connectHeaders: {
-          chatRoomId: params.id,
+          chatRoomId: params.id, 
           memberId: String(userId)
         },
         debug: (str) => {
@@ -83,7 +90,7 @@ export default function Chat() {
                 chatSocket.current?.publish({
                   destination:readEndPoint,
                   body: JSON.stringify({
-                    chatRoomId: params.id,
+                    chatId: params.id, //요녀석 때문
                   }),
                 })
               }
@@ -147,15 +154,24 @@ export default function Chat() {
     }
   };
 
-  const getHistoryChat = async () => {
-    const url = `https://server.farmingsoon.site/api/chats/${params.id}`;
+  const getHistoryChat = async ( curPage: number ) => {
+    const url = `https://server.farmingsoon.site/api/chats/${params.id}?page=${curPage}`;
 
     try {
       const res = await axios.get(url, config);
       if(res.status === 200){
         const history = res.data.result.chats;
+        const resPagination = res.data.result.pagination;
         console.log(history);
         setMessages([...history]);
+        setPagination({
+          page: curPage,
+          hasNext: resPagination.hasNext,
+          hasPrevious: resPagination.hasPrevious,
+          totalPageSize: resPagination.totalPageSize,
+        });
+
+        return history;
       }
 
 
@@ -177,6 +193,17 @@ export default function Chat() {
 
     }
   };
+
+  const loadMoreItems = async () => {
+    if(pagination.hasNext ) {// 마지막 페이지 
+      // setShowLoading(false);
+      return;
+    }; 
+    const nextPage = pagination.page + 1;
+    await getHistoryChat(nextPage);
+  };
+
+  const observerRef = useInfiniteScroll(loadMoreItems);
 
   //디테일정보
   const getChatRoomInfo = async () => {
@@ -218,7 +245,10 @@ export default function Chat() {
       const timer = setTimeout(() => {
         console.log(" === 1.5초 늦게 업데이트 === ")
         getList();
-        // getHistoryChat();
+        getHistoryChat(pagination.page).then(newMsg => {
+          setMessages(prev => [...prev, ...newMsg])
+        }) ;
+
       }, 1500);
 
       return () => clearTimeout(timer);
@@ -236,7 +266,7 @@ export default function Chat() {
     if(isLogin === "true"){
       connect();
       getList();
-      getHistoryChat();
+      getHistoryChat(0);
       getChatRoomInfo();
     }
 
@@ -270,7 +300,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-full">
       <div className="w-[371px] border-r border-LINE_BORDER whitespace-nowrap ">
         <div className="flex flex-row justify-between px-3 items-cneter">
           <h1 className="font-semibold ">채팅</h1>
@@ -288,55 +318,53 @@ export default function Chat() {
       </div>
 
       {/* 채팅 방 섹션 fles-grow*/}
-      <div className="flex flex-col h-screen flex-grow ">
-        <ChatProductItem curDetailChatInfo={curDetailChatInfo} />
-        <div className="flex flex-col  justif-end overflow-y-auto px-2">
+      <div className="flex flex-col flex-grow ">
+          <ChatProductItem curDetailChatInfo={curDetailChatInfo} />
           <p className="text-POINT_RED font-normal text-center pt-1 text-sm">
-            {isConnected
-              ? "채팅 방이 연결 되었습니다. "
-              : "채팅 방이 연결 중입니다."}
-            채팅방 연결 갯수 {websocketCount}
+              {isConnected
+                ? "채팅 방이 연결 되었습니다. "
+                : "채팅 방이 연결 중입니다."}
+              채팅방 연결 갯수 {websocketCount}
           </p>
-          <div className="flex flex-col mb-12 h-screen justify-end">
-            {messages.length > 0 ? (
-              messages.map((message, idx) => (
-                <div
-                  className={`flex flex-row items-center ${message.senderId === userId ? "self-end" : "self-start"}`}
-                  key={idx}
-                >
-                  {message.senderId === userId ? null : (
-                    <div className="flex flex-col items-center mr-3">
-                      <p className="text-xs pb-1">
-                        {curDetailChatInfo?.toUsername}
-                      </p>
-                      <div className="">
-                        <Img
-                          type={"circle"}
-                          src={curDetailChatInfo?.toUserProfileImage}
-                          width={35}
-                          height={35}
-                        />
-                      </div>
+        <div className="flex flex-col-reverse h-full px-2 bg-indigo-300 overflow-y-auto" ref={observerRef}>
+          {messages.length > 0 ? (
+            messages.map((message, idx) => (
+              <div
+                className={`flex flex-row items-center ${message.senderId === userId ? "self-end" : "self-start"}`}
+                key={idx}
+              >
+                {message.senderId === userId ? null : (
+                  <div className="flex flex-col items-center mr-3">
+                    <p className="text-xs pb-1">
+                      {curDetailChatInfo?.toUsername}
+                    </p>
+                    <div className="">
+                      <Img
+                        type={"circle"}
+                        src={curDetailChatInfo?.toUserProfileImage}
+                        width={35}
+                        height={35}
+                      />
                     </div>
-                  )}
-                  {message.isRead === false && message.senderId === userId ?  <p className="text-[10px] font-light text-DEEP_MAIN mr-3">1</p> : null}
-                  <p
-                    className={`px-2 my-2 py-3 rounded-lg w-fit ${message.senderId === userId ? "bg-indigo-400 text-white " : "bg-[#87dac2] text-white "}`}
-                  >
-                    {message.message}
-                  </p>
-                  
-                </div>
-              ))
-            ) : (
-              <p className="my-3 text-indigo-400 text-center">
-                채팅 내역이 없습니다.{" "}
-              </p>
-            )}
-          </div>
+                  </div>
+                )}
+                {message.isRead === false && message.senderId === userId ?  <p className="text-[10px] font-light text-DEEP_MAIN mr-3">1</p> : null}
+                <p
+                  className={`px-2 my-2 py-3 rounded-lg w-fit ${message.senderId === userId ? "bg-indigo-400 text-white " : "bg-[#87dac2] text-white "}`}
+                >
+                  {message.message}
+                </p>
+                
+              </div>
+            ))
+          ) : (
+            <p className="my-3 text-indigo-400 text-center">
+              채팅 내역이 없습니다.{" "}
+            </p>
+          )}
         </div>
-        {/* relative mt-2 px-2 */}
-        <form className="sticky bottom-3 px-2 ">
+
+        <form className="relative bottom-0 px-2 ">
           <input
             type="text"
             className="border rounded-lg w-full h-11 px-3 py-1 text-sm font-normal text-TEXT_BLACK"

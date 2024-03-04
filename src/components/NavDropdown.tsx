@@ -1,4 +1,6 @@
 import { loginSelector } from "@/stores/loginState";
+import { tokenState } from "@/stores/tokenModal";
+import { rotateRefresh } from "@/util/axiosCall";
 import LocalStorage from "@/util/localstorage";
 import axios from "axios";
 import Link from "next/link";
@@ -11,6 +13,7 @@ interface DropDownTypes {
 
 const NavDropdown = ( {handleClick}:DropDownTypes ) => {
     const [ , setLogin ] = useRecoilState(loginSelector);
+    const [, setOpenTokenModal] = useRecoilState(tokenState);
     const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
     const router = useRouter();
     const btnStyle = "";
@@ -41,6 +44,13 @@ const NavDropdown = ( {handleClick}:DropDownTypes ) => {
 
         } catch (err){
             console.log(err);
+            rotateRefresh().then(() => {
+                axios.post(url, data, config);
+            }).catch((err) => {
+                if(err.message === "RefreshTokenUnauthorized"){
+                    setOpenTokenModal({tokenExpired: true})
+                }
+            })
         }
     };
 
