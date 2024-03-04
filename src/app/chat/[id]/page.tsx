@@ -212,13 +212,6 @@ export default function Chat() {
   };
 
   useEffect(() => {
-
-    if(isLogin === "true"){
-      getList();
-      getHistoryChat();
-      getChatRoomInfo();
-    }
-
     if(isLogin === "true" && inChatRoomSSE.sseState === true ){
       const timer = setTimeout(() => {
         console.log(" === 5초 늦게 업데이트 === ")
@@ -235,12 +228,14 @@ export default function Chat() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.id, inChatRoomSSE, isLogin]);
+  }, [inChatRoomSSE]);
 
   useEffect(() => {
-    // console.log("새로고침", chatSocket);
     if(isLogin === "true"){
       connect();
+      getList();
+      getHistoryChat();
+      getChatRoomInfo();
     }
 
     return () => {
