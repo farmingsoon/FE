@@ -321,7 +321,7 @@ export default function Chat() {
                   >
                     {message.message}
                   </p>
-                  {message.isRead !== false && message.senderId !== userId ?  <p className="text-[10px] font-light text-DEEP_MAIN ml-3">1</p> : null}
+                  {message.isRead !== false && message.senderId === userId ?  <p className="text-[10px] font-light text-DEEP_MAIN ml-3">1</p> : null}
                 </div>
               ))
             ) : (
