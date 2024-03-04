@@ -81,7 +81,7 @@ export default function Chat() {
           (message) => {
             if (message.body) {
               const newMSG = JSON.parse(message.body);
-              setMessages((chats) => [...chats, newMSG.reverse()]);
+              setMessages((chats) => [...chats, newMSG]);
               console.log("00 : ", newMSG.message);
 
               //상대방 메세지 읽음 처리 
@@ -163,7 +163,7 @@ export default function Chat() {
         const history = res.data.result.chats;
         const resPagination = res.data.result.pagination;
         console.log(history);
-        setMessages((prev) => [ ...prev, ...history.reverse()]);
+        // setMessages((prev) => [ ...prev, ...history]);
         setPagination({
           page: curPage,
           hasNext: resPagination.hasNext,
@@ -333,6 +333,7 @@ export default function Chat() {
               채팅방 연결 갯수 {websocketCount}
           </p>
         <div className="flex flex-col h-full px-2 bg-zinc-200 overflow-y-auto" >
+          <div ref={observerRef} className="h-3 w-full m-0 p-1 bg-black">L:oading</div>
           {messages.length > 0 ? (
             messages.map((message, idx) => (
               <div
@@ -368,7 +369,6 @@ export default function Chat() {
               채팅 내역이 없습니다.{" "}
             </p>
           )}
-          <div ref={observerRef} className="h-3 w-full m-0 p-1 bg-black">L:oading</div>
         </div>
 
         <form className="relative bottom-0 px-2 ">
