@@ -87,7 +87,8 @@ export default function Chat() {
                   }),
                 })
               }
-
+              console.log("SUB : -  목록 업데이트 -  ")
+              getList();
             }
           },
         );
@@ -265,7 +266,6 @@ export default function Chat() {
       });
       //입력 창 초기화
       setCurrentMessage("");
-      getList();
     }
   };
 
