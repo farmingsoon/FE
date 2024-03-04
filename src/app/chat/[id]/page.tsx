@@ -217,7 +217,7 @@ export default function Chat() {
       const timer = setTimeout(() => {
         console.log(" === 1.5초 늦게 업데이트 === ")
         getList();
-    // getHistoryChat();
+        getHistoryChat();
       }, 1500);
 
       return () => clearTimeout(timer);
@@ -265,6 +265,7 @@ export default function Chat() {
       });
       //입력 창 초기화
       setCurrentMessage("");
+      getList();
     }
   };
 
