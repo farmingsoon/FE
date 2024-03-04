@@ -214,10 +214,10 @@ export default function Chat() {
   useEffect(() => {
     if(isLogin === "true" && inChatRoomSSE.sseState === true ){
       const timer = setTimeout(() => {
-        console.log(" === 5초 늦게 업데이트 === ")
+        console.log(" === 1.5초 늦게 업데이트 === ")
         getList();
         getHistoryChat();
-      }, 5000);
+      }, 1500);
 
       return () => clearTimeout(timer);
 
@@ -253,7 +253,6 @@ export default function Chat() {
     }
 
     if (isConnected) {
-      console.log("메세지 보내기 ");
       const destination = `/pub/chat/message`;
       chatSocket.current?.publish({
         destination,
@@ -265,6 +264,8 @@ export default function Chat() {
       });
       //입력 창 초기화
       setCurrentMessage("");
+      console.log("메세지 모내고 나서 리스트 업데이트 ");
+      getList();
     }
   };
 
