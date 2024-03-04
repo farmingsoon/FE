@@ -42,11 +42,13 @@ const ChatListItem = ( {list}:chatListItemTypes ) => {
             <div className="overflow-hidden rounded-full "><Img type={"circle"} src={list.toUserProfileImage} width={40} height={40} /></div>
             <div className="font-normal flex flex-col ml-3 w-60">
                 <div className="mb-1">{list.toUserName}</div>
-                <div className="font-light text-xs text-DARK_GRAY">{list.lastMessage}</div>
-                {list.unReadMessageCount > 0 
-                    ? <div className="p-1 text-xs rounded-full bg-POINT_RED text-white ml-2 font-light">{list.unReadMessageCount}</div>
-                    : null
-                }
+                <div className="font-light text-xs text-DARK_GRAY flex flex-row items-center">
+                    <div>{list.lastMessage}</div>
+                    {list.unReadMessageCount > 0 
+                        ? <div className="w-4 h-4 text-center items-center text-[10px] rounded-full bg-POINT_RED text-white ml-2 font-light">{list.unReadMessageCount}</div>
+                        : null
+                    }
+                </div>
             </div>
             <div className="font-light text-xs text-DARK_GRAY">{formatTime(list.lastChatTime)} 전</div>
         </div>

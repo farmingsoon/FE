@@ -26,7 +26,7 @@ export default function Chat() {
     const isLogin = LocalStorage.getItem("loginState");
 
     if(isLogin === "true"){
-      console.log("채팅방 === 함수 실행 : ", isLogin)
+      console.log("  >>> 목록 업데이트 함수 실행 <<< ")
       try {
         const res = await axios.get(url, config);
         if(res.status === 200){

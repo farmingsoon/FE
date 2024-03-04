@@ -114,6 +114,7 @@ export default function Chat() {
     const config = { withCredentials: true };
 
     try {
+      console.log("  >>> 목록 업데이트 함수 실행 <<< ")
       const res = await axios.get(url, config);
       setChatList(res.data.result);
 
@@ -320,7 +321,7 @@ export default function Chat() {
                   >
                     {message.message}
                   </p>
-                  {message.isRead && message.senderId !== userId ?  <p className="text-[5px] font-light text-DEEP_MAIN">1</p> : null}
+                  {message.isRead !== false && message.senderId !== userId ?  <p className="text-[10px] font-light text-DEEP_MAIN ml-3">1</p> : null}
                 </div>
               ))
             ) : (

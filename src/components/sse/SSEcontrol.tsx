@@ -19,10 +19,10 @@ const SSEcontrol = () => {
 
     //알림 관리
     const [ , setAlarmPing ] = useRecoilState(sseNotiSelectorFamily("notiPING"));
-    const [ , setChatPing ] = useRecoilState(sseNotiSelectorFamily("chatPING"));
+    const [ chatPING, setChatPing ] = useRecoilState(sseNotiSelectorFamily("chatPING"));
     const [ alarmMSG, setAlarmMSG ] = useRecoilState(sseNotiSelectorFamily("notiMSG"));
     const [ chatMSG, setChatMSG ] = useRecoilState(sseNotiSelectorFamily("chatMSG"));
-
+    console.log(" >>> 채팅핑 SSE :: ", chatPING);
 
 
 
@@ -43,11 +43,9 @@ const SSEcontrol = () => {
 
             //기본 메세지 받았을 때 
             eventSource.current.addEventListener("CONNECT", function (event){
-                console.log(" === 성공적인 첫 연결 메세지 === ")
                 const customEvent = event as MessageEvent;
-                console.log(customEvent.data);
-                // const parsedData = JSON.parse(event.data);
-                // console.log("기본 메세지", parsedData);
+                console.log("SSE[첫 연결] : ", customEvent.data);
+
             });
 
             eventSource.current.addEventListener("NOTIFICATION", function(event){
@@ -59,8 +57,8 @@ const SSEcontrol = () => {
                 setAlarmPing((cur) => ({ ...cur, sseState: true }));  
                 //알림 모달
                 if(pageLocation.includes("chat")){
-                    console.log("=== 채팅방 페이지 열려있음 ===")
-                    setAlarmMSG((cur) => ({ ...cur, sseState: false }));  
+                    // console.log("=== 채팅방 페이지 열려있음 ===")
+                    setAlarmMSG((cur) => ({ ...cur, sseState: false })); 
                 } else {
                     setAlarmMSG((cur) => ({ ...cur, sseState: true }));
                 }
@@ -86,8 +84,7 @@ const SSEcontrol = () => {
                 setChatPing((cur) => ({ ...cur, sseState: true })); 
                 //채팅 모달
                 if(pageLocation.includes("chat")){
-                    console.log("채팅방 페이지 열려있음")
-                    setChatMSG((cur) => ({ ...cur, sseState: false }));   
+                    setChatMSG((cur) => ({ ...cur, sseState: false }));
                 } else {
                     setChatMSG((cur) => ({ ...cur, sseState: true }));  
                 }
