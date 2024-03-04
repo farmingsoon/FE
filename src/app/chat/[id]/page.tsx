@@ -220,8 +220,14 @@ export default function Chat() {
     }
 
     if(isLogin === "true" && chatPING.sseState === true ){
-      getList();
-      getHistoryChat();
+      const timer = setTimeout(() => {
+        console.log(" === 5초 늦게 업데이트 === ")
+        getList();
+        getHistoryChat();
+      }, 5000);
+
+      return () => clearTimeout(timer);
+
     }
 
     if(isLogin === "false"){
