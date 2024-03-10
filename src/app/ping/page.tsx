@@ -3,58 +3,57 @@
 import { useState } from "react";
 import SendButton from "../../../public/svg/SendButton";
 
-export const dummyData = [
-    {
-        senderId: 1,
-        message: "도착 전에 연락 줘",
-        isRead: false
-    },
-    {
-        senderId: 1,
-        message: "얍얍 알겠습니다",
-        isRead: false
-    },
-    {
-        senderId: 2,
-        message: "내일 만나요",
-        isRead: true
-    },
-    {
-        senderId: 2,
-        message: "ㄱㄱ하시져",
-        isRead: true
-    },
-    {
-        senderId: 1,
-        message: "서울 거래 부탁합니다.",
-        isRead: true
-    },
-    {
-        senderId: 2,
-        message: "예",
-        isRead: true
-    },
-    {
-        senderId: 1,
-        message: "판매하시나요?",
-        isRead: true
-    },
-    ,
-    {
-        senderId: 2,
-        message: "안녕",
-        isRead: true
-    },
-    {
-        senderId: 1,
-        message: "안녕하세요",
-        isRead: true
-    }
-]
-
 export default function TestChatPage (){
     const userId = 1;
     const [ wholeRead, setWholeRead ] = useState(false);
+    const dummyData = [
+        {
+            senderId: 1,
+            message: "도착 전에 연락 줘",
+            isRead: false
+        },
+        {
+            senderId: 1,
+            message: "얍얍 알겠습니다",
+            isRead: false
+        },
+        {
+            senderId: 2,
+            message: "내일 만나요",
+            isRead: true
+        },
+        {
+            senderId: 2,
+            message: "ㄱㄱ하시져",
+            isRead: true
+        },
+        {
+            senderId: 1,
+            message: "서울 거래 부탁합니다.",
+            isRead: true
+        },
+        {
+            senderId: 2,
+            message: "예",
+            isRead: true
+        },
+        {
+            senderId: 1,
+            message: "판매하시나요?",
+            isRead: true
+        },
+        ,
+        {
+            senderId: 2,
+            message: "안녕",
+            isRead: true
+        },
+        {
+            senderId: 1,
+            message: "안녕하세요",
+            isRead: true
+        }
+    ]
 
 
     const handleWholeRead = (e: any) => {
