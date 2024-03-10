@@ -22,7 +22,7 @@ const SSEcontrol = () => {
     const [ , setChatPing ] = useRecoilState(sseNotiSelectorFamily("chatPING"));
     const [ alarmMSG, setAlarmMSG ] = useRecoilState(sseNotiSelectorFamily("notiMSG"));
     const [ chatMSG, setChatMSG ] = useRecoilState(sseNotiSelectorFamily("chatMSG"));
-    const [ , setInChatRoomSSE ] = useRecoilState(sseNotiSelectorFamily("inChatRoomUpdate"));
+    const [  , setInChatRoomSSE ] = useRecoilState(sseNotiSelectorFamily("inChatRoomUpdate"));
 
 
 
@@ -77,7 +77,7 @@ const SSEcontrol = () => {
             });
 
             eventSource.current.addEventListener("NEW_CHAT", function(event){
-                console.log(" === 채팅 메세지 === ");
+                console.log("NEW_CHAT 키워드");
                 const customEvent = event as MessageEvent;
                 console.log(customEvent.data);
 
@@ -106,6 +106,8 @@ const SSEcontrol = () => {
             });
 
             eventSource.current.addEventListener("CHATROOM_UPDATE", function(){
+                console.log("CHATROOM_UPDATE 키워드");
+                
                 //채팅방 목록 업데이트 용 
                 setInChatRoomSSE((cur) => ({...cur, sseState: true})); 
 
@@ -179,6 +181,10 @@ const SSEcontrol = () => {
     if(chatMSG.sseState){
         return <NotificationItem msg={"새로운 채팅이 도착했습니다!"} type={"chat"}/>
     }
+
+    // if(inChatRoomSSE.sseState) {
+    //     return <NotificationItem msg={"새로운 채팅이 도착했습니다!"} type={"chat"}/>
+    // }
 
     return null;
 
