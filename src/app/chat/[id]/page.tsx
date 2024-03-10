@@ -48,7 +48,7 @@ export default function Chat() {
   const userId = Number(LocalStorage.getItem("memberId"));
   const isLogin = LocalStorage.getItem("loginState");
 
-
+console.log(messages);
   const connect = () => {
     if (chatSocket.current === null) {
       const socket = new SockJS("https://server.farmingsoon.site/ws", null, {
@@ -325,43 +325,45 @@ export default function Chat() {
                 : "채팅 방이 연결 중입니다."}
               채팅방 연결 갯수 {websocketCount}
           </p>
-        <div className="flex flex-col-reverse h-full px-2 bg-zinc-200 overflow-y-auto" >
-          <div ref={observerRef} className="w-fit m-0 p-2 bg-black">L:oading</div>
-          {messages.length > 0 ? (
-            messages.map((message, idx) => (
-              <div
-                className={`flex flex-row items-center ${message.senderId === userId ? "self-end" : "self-start"}`}
-                key={idx}
-              >
-                {message.senderId === userId ? null : (
-                  <div className="flex flex-col items-center mr-3">
-                    <p className="text-xs pb-1">
-                      {curDetailChatInfo?.toUsername}
-                    </p>
-                    <div className="">
-                      <Img
-                        type={"circle"}
-                        src={curDetailChatInfo?.toUserProfileImage}
-                        width={35}
-                        height={35}
-                      />
-                    </div>
-                  </div>
-                )}
-                {message.isRead === false && message.senderId === userId ?  <p className="text-[10px] font-light text-DEEP_MAIN mr-3">1</p> : null}
-                <p
-                  className={`px-2 my-2 py-3 rounded-lg w-fit ${message.senderId === userId ? "bg-indigo-400 text-white " : "bg-[#87dac2] text-white "}`}
+        <div className="h-full flex flex-col px-2 bg-zinc-200 overflow-y-auto" >
+          <div ref={observerRef} className="w-fit self-start mx-auto my-1 p-2 bg-pink-500">L:oading</div>
+          <div className="flex flex-col justify-end h-full bg-pink-500 ">
+            {messages.length > 0 ? (
+              messages.map((message, idx) => (
+                <div
+                  className={`flex flex-row items-center ${message.senderId === userId ? "self-end" : "self-start"}`}
+                  key={idx}
                 >
-                  {message.message}
-                </p>
-                
-              </div>
-            ))
-          ) : (
-            <p className="my-3 text-indigo-400 text-center">
-              채팅 내역이 없습니다.{" "}
-            </p>
-          )}
+                  {message.senderId === userId ? null : (
+                    <div className="flex flex-col items-center mr-3">
+                      <p className="text-xs pb-1">
+                        {curDetailChatInfo?.toUsername}
+                      </p>
+                      <div className="">
+                        <Img
+                          type={"circle"}
+                          src={curDetailChatInfo?.toUserProfileImage}
+                          width={35}
+                          height={35}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  {message.isRead === false && message.senderId === userId ?  <p className="text-[10px] font-light text-DEEP_MAIN mr-3">1</p> : null}
+                  <p
+                    className={`px-2 my-2 py-3 rounded-lg w-fit ${message.senderId === userId ? "bg-indigo-400 text-white " : "bg-[#87dac2] text-white "}`}
+                  >
+                    {message.message}
+                  </p>
+                  
+                </div>
+              ))
+            ) : (
+              <p className="my-3 text-indigo-400 text-center">
+                채팅 내역이 없습니다.{" "}
+              </p>
+            )}
+          </div>
         </div>
 
         <form className="relative bottom-0 px-2 ">
