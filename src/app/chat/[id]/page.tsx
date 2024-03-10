@@ -150,8 +150,9 @@ console.log(messages);
     }
   };
 
-  const getHistoryChat = async ( curPage: number ) => {
-    const url = `https://server.farmingsoon.site/api/chats/${params.id}?page=${curPage}`;
+  const getHistoryChat = async ( curPage: number | null ) => {
+    const isFisrtPage = curPage === null ? "" : `?page=${curPage}`
+    const url = `https://server.farmingsoon.site/api/chats/${params.id}${isFisrtPage}`;
 
     try {
       console.log("getHistory함수 : ", curPage)
@@ -160,7 +161,7 @@ console.log(messages);
         const history = res.data.result.chats;
         const resPagination = res.data.result.pagination;
         setPagination({
-          page: curPage,
+          page: curPage as number,
           hasNext: resPagination.hasNext,
           hasPrevious: resPagination.hasPrevious,
           totalPageSize: resPagination.totalPageSize,
@@ -199,10 +200,14 @@ console.log(messages);
       // setShowLoading(false);
       return;
     }; 
-    const nextPage = pagination.page + 1;
-    await getHistoryChat(nextPage).then(newMsg => {
-      setMessages(prev => [...prev, ...newMsg])
-    });
+
+    if(pagination.page !== null){
+      const nextPage = pagination.page - 1;
+      await getHistoryChat(nextPage).then(newMsg => {
+        setMessages(prev => [...newMsg, ...prev])
+      });
+    }
+    
   };
 
   const observerRef = useInfiniteScroll(loadMoreItems);
@@ -266,7 +271,7 @@ console.log(messages);
     if(isLogin === "true"){
       connect();
       getList();
-      getHistoryChat(0);
+      getHistoryChat(null);
       getChatRoomInfo();
     }
 
@@ -325,9 +330,9 @@ console.log(messages);
                 : "채팅 방이 연결 중입니다."}
               채팅방 연결 갯수 {websocketCount}
           </p>
-        <div className="h-full flex flex-col px-2 bg-zinc-200 overflow-y-auto" >
-          <div ref={observerRef} className="w-fit self-start mx-auto my-1 p-2 bg-pink-500">L:oading</div>
-          <div className="flex flex-col justify-end h-full bg-pink-500 ">
+        <div className="h-full flex flex-col px-2overflow-y-auto" >
+          <div ref={observerRef} className="w-fit self-start mx-auto my-1 p-2 bg-pink-500 rounded-lg">L:oading</div>
+          <div className="flex flex-col justify-end h-full bg-zinc-200  ">
             {messages.length > 0 ? (
               messages.map((message, idx) => (
                 <div
