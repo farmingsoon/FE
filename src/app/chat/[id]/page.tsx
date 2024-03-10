@@ -77,8 +77,8 @@ export default function Chat() {
           `/sub/chat-room/${params.id}`,
           (message) => {
             if (message.body) {
-              console.log(message);
               const newMSG = JSON.parse(message.body);
+              console.log(newMSG);
               setMessages((chats) => [...chats, newMSG]);
 
               // //상대방 메세지 읽음 처리 
@@ -165,7 +165,7 @@ export default function Chat() {
           hasPrevious: resPagination.hasPrevious,
           totalPageSize: resPagination.totalPageSize,
         });
-
+        setMessages([...history])
         return history;
       }
 
@@ -194,6 +194,7 @@ export default function Chat() {
   };
 
   const loadMoreItems = async () => {
+    console.log("무한스크롤 데이터 저장 ")
     if(pagination.hasNext === false ) {// 마지막 페이지 
       // setShowLoading(false);
       return;
@@ -243,13 +244,14 @@ export default function Chat() {
 
   useEffect(() => {
     if(isLogin === "true" && inChatRoomSSE.sseState === true ){
-      const timer = setTimeout(() => {
-        console.log(" === 1.5초 늦게 업데이트 === ")
-        getList();
+      getList();
+      // const timer = setTimeout(() => {
+      //   console.log(" === 1.5초 늦게 업데이트 === ")
+      //   getList();
 
-      }, 1500);
+      // }, 1500);
 
-      return () => clearTimeout(timer);
+      // return () => clearTimeout(timer);
 
     }
 
@@ -323,8 +325,8 @@ export default function Chat() {
                 : "채팅 방이 연결 중입니다."}
               채팅방 연결 갯수 {websocketCount}
           </p>
-        <div className="flex flex-col h-full px-2 bg-zinc-200 overflow-y-auto" >
-          <div ref={observerRef} className="h-3 w-full m-0 p-1 bg-black">L:oading</div>
+        <div className="flex flex-col-reverse h-full px-2 bg-zinc-200 overflow-y-auto" >
+          <div ref={observerRef} className="w-fit m-0 p-2 bg-black">L:oading</div>
           {messages.length > 0 ? (
             messages.map((message, idx) => (
               <div

@@ -92,7 +92,6 @@ export default function Chat() {
       <div className="w-[371px] border-r border-LINE_BORDER whitespace-nowrap">
         <div className="flex flex-row justify-between px-3 items-cneter">
           <h1 className="font-semibold ">채팅</h1>
-          {/* <NewWrite width={"20px"} height={"20px"} /> */}
         </div>
         <div className="overflow-y-auto max-h-full h-fit mt-12 border-t border-LINE_BORDER  ">
           {chatList && chatList.length > 0 ? (
