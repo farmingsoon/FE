@@ -1,11 +1,68 @@
 "use client";
 
+import { useState } from "react";
 import SendButton from "../../../public/svg/SendButton";
 
+export const dummyData = [
+    {
+        senderId: 1,
+        message: "도착 전에 연락 줘",
+        isRead: false
+    },
+    {
+        senderId: 1,
+        message: "얍얍 알겠습니다",
+        isRead: false
+    },
+    {
+        senderId: 2,
+        message: "내일 만나요",
+        isRead: true
+    },
+    {
+        senderId: 2,
+        message: "ㄱㄱ하시져",
+        isRead: true
+    },
+    {
+        senderId: 1,
+        message: "서울 거래 부탁합니다.",
+        isRead: true
+    },
+    {
+        senderId: 2,
+        message: "예",
+        isRead: true
+    },
+    {
+        senderId: 1,
+        message: "판매하시나요?",
+        isRead: true
+    },
+    ,
+    {
+        senderId: 2,
+        message: "안녕",
+        isRead: true
+    },
+    {
+        senderId: 1,
+        message: "안녕하세요",
+        isRead: true
+    }
+]
 
 export default function TestChatPage (){
+    const userId = 1;
+    const [ wholeRead, setWholeRead ] = useState(false);
 
 
+    const handleWholeRead = (e: any) => {
+        e.preventDefault();
+        setWholeRead(!wholeRead);
+    };
+
+   console.log(wholeRead)
 
     return (
         <div className="flex h-full">
@@ -35,48 +92,21 @@ export default function TestChatPage (){
                 <p className="text-POINT_RED font-normal text-center pt-1 text-sm">
                         채팅방 연결 갯수 
                 </p>
-                <div className="flex flex-col-reverse h-full px-2 bg-indigo-300 overflow-y-auto">
-             
-                    <p className="my-3 text-white text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-                    <p className="my-3 text-indigo-400 text-center ">채팅 내역이 없습니다.</p>
-
-
-
-
+                <div className="flex flex-col-reverse h-full px-2 bg-zinc-100 overflow-y-auto">
+                    {dummyData.map((el, idx) => (
+                        <div key={idx} className={`flex flex-row items-center ${el?.senderId === userId ? "self-end" : "self-start"}`} >
+                            <p className={`text-[10px] font-light text-POINT_RED mr-3 ${wholeRead ? "invisible" : ""}`}>
+                                {el?.isRead === false && el.senderId === userId || wholeRead === false && el?.senderId === userId && el?.isRead === false ? 1 : null}
+                                
+                            </p>
+                            <p key={idx} className={`my-3 text-white text-center p-1 rounded-md ${el?.senderId === userId ? "bg-indigo-400" : "bg-black"} `} >{el?.message}</p>
+                        </div>
+                    ))}
+                    
+                    {/* <p className="my-3 text-white text-center p-1 rounded-md bg-indigo-400">채팅 내역이 없습니다.</p>
+                    <p className="my-3 text-white text-center p-1 rounded-md bg-indigo-400">채팅 내역이 없습니다.</p>
+                    <p className="my-3 text-white text-center p-1 rounded-md bg-indigo-400">채팅 내역이 없습니다.</p>
+                    <p className="my-3 text-white text-center p-1 rounded-md bg-indigo-400">채팅 내역이 없습니다.</p> */}
                 </div>
                 {/* relative mt-2 px-2 */}
                 <form className="relative bottom-0 px-2 ">
@@ -89,11 +119,8 @@ export default function TestChatPage (){
                     />
                     <button
                         type="submit"
-                        onClick={(e) => {
-                        console.log("버튼은 눌림");
-
-                        }}
                         className="absolute right-3 top-2"
+                        onClick={handleWholeRead}
                     >
                         <SendButton width={"30px"} height={"30px"} />
                     </button>

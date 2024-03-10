@@ -47,12 +47,10 @@ export default function Chat() {
   const [currentMessage, setCurrentMessage] = useState("");
   const userId = Number(LocalStorage.getItem("memberId"));
   const isLogin = LocalStorage.getItem("loginState");
-  // console.log(" >>> 채팅핑 SSE :: ", inChatRoomSSE);
+
 
   const connect = () => {
-    console.log("connect함수", chatSocket.current);
     if (chatSocket.current === null) {
-      console.log(">>>  첫 연결 시도 ");
       const socket = new SockJS("https://server.farmingsoon.site/ws", null, {
         transports: ["websocket", "xhr-streaming", "xhr-polling"],
       });
@@ -74,27 +72,25 @@ export default function Chat() {
 
       client.onConnect = () => {
         setWebsocketCount((prev) => prev + 1);
-        console.log("=== connect Success === ");
         setIsConnected(true);
         client.subscribe(
           `/sub/chat-room/${params.id}`,
           (message) => {
             if (message.body) {
+              console.log(message);
               const newMSG = JSON.parse(message.body);
               setMessages((chats) => [...chats, newMSG]);
-              console.log("00 : ", newMSG.message);
 
-              //상대방 메세지 읽음 처리 
-              if(newMSG.senderId !== userId ){
-                const readEndPoint = `/pub/chat/read`;
-                chatSocket.current?.publish({
-                  destination:readEndPoint,
-                  body: JSON.stringify({
-                    chatId: params.id, //요녀석 때문
-                  }),
-                })
-              }
-              console.log("SUB : -  목록 업데이트 -  ")
+              // //상대방 메세지 읽음 처리 
+              // if(newMSG.senderId !== userId ){
+              //   const readEndPoint = `/pub/chat/read`;
+              //   chatSocket.current?.publish({
+              //     destination:readEndPoint,
+              //     body: JSON.stringify({
+              //       chatId: params.id, //요녀석 때문
+              //     }),
+              //   })
+              // }
               getList();
             }
           },
@@ -123,7 +119,7 @@ export default function Chat() {
     const config = { withCredentials: true };
 
     try {
-      console.log("  >>> 목록 업데이트 함수 실행 <<< ")
+      console.log(">>> 목록 업데이트 함수 실행 <<< ")
       const res = await axios.get(url, config);
       setChatList(res.data.result);
 
@@ -158,12 +154,11 @@ export default function Chat() {
     const url = `https://server.farmingsoon.site/api/chats/${params.id}?page=${curPage}`;
 
     try {
+      console.log("getHistory함수 : ", curPage)
       const res = await axios.get(url, config);
       if(res.status === 200){
         const history = res.data.result.chats;
         const resPagination = res.data.result.pagination;
-        console.log(history);
-        // setMessages((prev) => [ ...prev, ...history]);
         setPagination({
           page: curPage,
           hasNext: resPagination.hasNext,
@@ -251,9 +246,6 @@ export default function Chat() {
       const timer = setTimeout(() => {
         console.log(" === 1.5초 늦게 업데이트 === ")
         getList();
-        // getHistoryChat(pagination.page).then(newMsg => {
-        //   setMessages(prev => [...prev, ...newMsg])
-        // });
 
       }, 1500);
 
@@ -310,7 +302,6 @@ export default function Chat() {
       <div className="w-[371px] border-r border-LINE_BORDER whitespace-nowrap ">
         <div className="flex flex-row justify-between px-3 items-cneter">
           <h1 className="font-semibold ">채팅</h1>
-          {/* <NewWrite width={"20px"} height={"20px"} /> */}
         </div>
         <div className="overflow-y-auto max-h-full h-fit mt-12 border-t border-LINE_BORDER  ">
           {chatList && chatList.length > 0 ? (
