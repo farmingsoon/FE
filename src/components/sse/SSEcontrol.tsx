@@ -29,7 +29,7 @@ const SSEcontrol = () => {
 
     useEffect(() => {
         const pageLocation = window.location.pathname;
-        console.log("PAGE: ", pageLocation.includes("chat"));
+        // console.log("PAGE: ", pageLocation.includes("chat"));
 
 
         const connectSSE = () => {
