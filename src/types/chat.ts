@@ -1,8 +1,10 @@
 export interface message {
     message: string;
+    chatId: number;
     senderId: number;
     createdAt: string;
     isRead: boolean;
+    type: string;
   }
   
 export interface chatListTypes {

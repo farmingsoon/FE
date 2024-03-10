@@ -76,15 +76,15 @@ const SSEcontrol = () => {
                 }, 2500)
             });
 
-            eventSource.current.addEventListener("CHATTING", function(event){
+            eventSource.current.addEventListener("NEW_CHAT", function(event){
                 console.log(" === 채팅 메세지 === ");
                 const customEvent = event as MessageEvent;
                 console.log(customEvent.data);
 
                 //채팅 핑
                 setChatPing((cur) => ({ ...cur, sseState: true }));
-                //채팅 업데이트 용 
-                setInChatRoomSSE((cur) => ({...cur, sseState: true})); 
+                setInChatRoomSSE((cur) => ({...cur, sseState: false})); 
+                
                 //채팅 모달
                 if(pageLocation.includes("chat")){
                     setChatMSG((cur) => ({ ...cur, sseState: false }));
@@ -104,6 +104,22 @@ const SSEcontrol = () => {
                     // useRef를 사용하기 때문에 null로 설정할 필요가 없습니다.
                 }, 2500)
             });
+
+            eventSource.current.addEventListener("CHATROOM_UPDATE", function(){
+                //채팅방 목록 업데이트 용 
+                setInChatRoomSSE((cur) => ({...cur, sseState: true})); 
+
+                // clearTimeout을 호출할 때 useRef를 사용합니다.
+                if (notificationTimeoutId.current) {
+                    clearTimeout(notificationTimeoutId.current);
+                }
+
+                //setTimeout 호출
+                notificationTimeoutId.current = setTimeout(() => {
+                    setInChatRoomSSE((cur) => ({...cur, sseState: false}));  
+                    // useRef를 사용하기 때문에 null로 설정할 필요가 없습니다.
+                }, 2500)
+            })
 
 
 
