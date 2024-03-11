@@ -9,17 +9,27 @@ export default function TestChatPage (){
     const dummyData = [
         {
             senderId: 1,
-            message: "01: 안녕하세요",
+            message: "09: 도착 전에 연락 줘",
+            isRead: false
+        },
+        {
+            senderId: 1,
+            message: "08: 얍얍 알겠습니다",
+            isRead: false
+        },
+        {
+            senderId: 2,
+            message: "07: 내일 만나요",
             isRead: true
         },
         {
             senderId: 2,
-            message: "02: 안녕",
+            message: "06: ㄱㄱ하시져",
             isRead: true
         },
         {
             senderId: 1,
-            message: "03: 판매하시나요?",
+            message: "05: 서울 거래 부탁합니다.",
             isRead: true
         },
         {
@@ -28,28 +38,19 @@ export default function TestChatPage (){
             isRead: true
         },
         {
+            senderId: 1,
+            message: "03: 판매하시나요?",
+            isRead: true
+        },
+        ,
+        {
             senderId: 2,
-            message: "05: ㄱㄱ하시져",
+            message: "02: 안녕",
             isRead: true
         },
         {
-            senderId: 2,
-            message: "06: 내일 만나요",
-            isRead: true
-        },
-        {
             senderId: 1,
-            message: "07: 얍얍 알겠습니다",
-            isRead: false
-        },
-        {
-            senderId: 1,
-            message: "08: 도착 전에 연락 줘",
-            isRead: false
-        },
-        {
-            senderId: 1,
-            message: "09: 서울 거래 부탁합니다.",
+            message: "01: 안녕하세요",
             isRead: true
         }
     ]
@@ -93,8 +94,10 @@ export default function TestChatPage (){
 
                 <div className=" h-full flex flex-col px-2 bg-zinc-200 overflow-y-auto">
                     {dummyData.length > 0 ? 
-                        <div className="flex flex-col bg-pink-500">
-                            <div className="w-fit mx-auto my-1 p-2 bg-black">Loading...</div>
+                        <>
+                        <div className="w-fit mx-auto my-1 p-2 bg-black">Loading...</div>
+                        <div className="flex flex-col-reverse bg-pink-500 h-full">
+                            
                             {dummyData.map((el, idx) => (
                             <div key={idx} className={`flex flex-row items-center ${el?.senderId === userId ? "self-end" : "self-start"}`} >
                                 <p className={`text-[10px] font-light text-POINT_RED mr-3 ${wholeRead ? "invisible" : ""}`}>
@@ -105,7 +108,7 @@ export default function TestChatPage (){
                             </div>
                         ))}
 
-                        </div>
+                        </div></>
                         
                     : null }
                 </div>

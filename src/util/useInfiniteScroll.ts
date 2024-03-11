@@ -1,15 +1,24 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export const useInfiniteScroll = (fetchMoreFunc:() => void) => {
     const observerRef = useRef<HTMLDivElement | null>(null);
+    const [lastScrollTop, setLastScrollTop] = useState(0);
 
     useEffect(() => {
         if(typeof window === "undefined"){
             return;
         };
+
+        const handleScroll = () => {
+            setLastScrollTop(window.scrollY);
+        }
+
+        window.addEventListener('scroll', handleScroll);
+
         const observer = new IntersectionObserver((entries) => {
             const firstEntry = entries[0];
-            if(firstEntry.isIntersecting){
+            const isScrollingUp = window.scrollY < lastScrollTop;
+            if(firstEntry.isIntersecting && isScrollingUp){
                 fetchMoreFunc();
     
             }
@@ -23,13 +32,14 @@ export const useInfiniteScroll = (fetchMoreFunc:() => void) => {
         };
 
         return () => {
+            window.removeEventListener('scroll', handleScroll)
             if(currentRef){
                 observer.unobserve(currentRef)
             }
         };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetchMoreFunc])
+    }, [fetchMoreFunc, lastScrollTop])
 
 
     return observerRef;
