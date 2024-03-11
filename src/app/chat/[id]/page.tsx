@@ -31,7 +31,7 @@ export default function Chat() {
     const [, setOpenTokenModal] = useRecoilState(tokenState);
     const inChatRoomSSE = useRecoilValue(sseNotiAtomFamily("inChatRoomUpdate"));
     const [ pagination, setPagination ] = useState({
-        page: 0,
+        page: -1,
         hasNext: false,
         hasPrevious: true,
         totalPageSize: 0,
@@ -144,9 +144,9 @@ export default function Chat() {
         }
     };
 
-    const getHistoryChat = async ( curPage: number | null ) => {
-        const isFisrtPage = curPage === null ? "" : `?page=${curPage}`
-        const url = `https://server.farmingsoon.site/api/chats/${params.id}${isFisrtPage}`;
+    const getHistoryChat = async ( curPage: number ) => {
+        // const isFisrtPage = curPage === null ? "" : `?page=${curPage}`
+        const url = `https://server.farmingsoon.site/api/chats/${params.id}?page=${curPage}`;
 
         try {
             console.log("getHistory함수 : ", curPage)
@@ -155,7 +155,7 @@ export default function Chat() {
                 const history = res.data.result.chats;
                 const resPagination = res.data.result.pagination;
                 setPagination({
-                page: curPage as number,
+                page: resPagination.page as number,
                 hasNext: resPagination.hasNext,
                 hasPrevious: resPagination.hasPrevious,
                 totalPageSize: resPagination.totalPageSize,
@@ -189,18 +189,17 @@ export default function Chat() {
     };
 
   const loadMoreItems = async () => {
-    console.log("무한스크롤 데이터 저장 ")
     if(pagination.hasNext === false ) {// 마지막 페이지 
       // setShowLoading(false);
       return;
     }; 
 
-    if(pagination.page !== null){
-      const nextPage = pagination.page + 1;
-      await getHistoryChat(nextPage).then(newMsg => {
+    const nextPage = pagination.page + 1;
+    console.log("무한스크롤 작동", nextPage)
+    await getHistoryChat(nextPage).then(newMsg => {
         setMessages(prev => [...prev, ...newMsg])
-      });
-    }
+    });
+
     
   };
 
@@ -254,7 +253,7 @@ export default function Chat() {
         if(isLogin === "true"){
             connect();
             getList();
-            getHistoryChat(null);
+            getHistoryChat(0);
             getChatRoomInfo();
         }
 
@@ -315,8 +314,9 @@ export default function Chat() {
             </p>
             <div className="h-full flex flex-col px-2 bg-zinc-200 overflow-y-auto">
                 {messages.length > 0 ? 
-                    <div className="flex flex-col bg-zinc-500">
-                        <div ref={observerRef} className="w-fit mx-auto my-1 p-2 bg-pink-500 rounded-lg">L:oading</div>
+                    <>
+                    <div ref={observerRef} className="w-fit mx-auto my-1 p-2 bg-pink-500 rounded-lg">L:oading</div>
+                    <div className="flex flex-col-reverse bg-zinc-500 h-full">   
                         {messages.map((message, idx) => (
                             <div className={`flex flex-row items-center ${message.senderId === userId ? "self-end" : "self-start"}`} key={idx} >
                                 {message.senderId === userId ? null : (
@@ -341,6 +341,7 @@ export default function Chat() {
                             </div>
                         ))}
                     </div>
+                    </>
                 : (
                     <p className="my-3 text-indigo-400 text-center">
                         채팅 내역이 없습니다.{" "}
