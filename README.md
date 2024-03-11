@@ -26,11 +26,11 @@ FarmingSoon.site
 #### 01. 로그인, 회원가입 
 
 <p >
-<img src="https://github.com/farmingsoon/FE/assets/110151638/53ff8f73-7788-473f-8c28-9646a6d12a77" width="100%">
+<img src="https://github.com/farmingsoon/FE/assets/110151638/49852d7c-3056-4ece-86c2-5b48a1975c35" width="100%">
 </p>
 
 #### 02. 상품 등록
 
 <p >
-<img src="https://github.com/farmingsoon/FE/assets/110151638/4f53f6b9-eba8-40be-9e69-3669c02f3145" width="100%">
+<img src="https://github.com/farmingsoon/FE/assets/110151638/a296aaff-bddb-4fff-adc3-c544f8525915" width="100%">
 </p>
