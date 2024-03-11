@@ -92,10 +92,10 @@ export default function TestChatPage (){
                 </p>
 
                 <div className=" h-full flex flex-col px-2 bg-zinc-200 overflow-y-auto">
-                    <div className="w-fit self-start mx-auto my-1 p-2 bg-black">Loading...</div>
-
-                    <div className="flex flex-col justify-end h-full bg-pink-500 ">
-                        {dummyData.map((el, idx) => (
+                    {dummyData.length > 0 ? 
+                        <div className="flex flex-col bg-pink-500">
+                            <div className="w-fit mx-auto my-1 p-2 bg-black">Loading...</div>
+                            {dummyData.map((el, idx) => (
                             <div key={idx} className={`flex flex-row items-center ${el?.senderId === userId ? "self-end" : "self-start"}`} >
                                 <p className={`text-[10px] font-light text-POINT_RED mr-3 ${wholeRead ? "invisible" : ""}`}>
                                     {el?.isRead === false && el.senderId === userId || wholeRead === false && el?.senderId === userId && el?.isRead === false ? 1 : null}
@@ -104,8 +104,10 @@ export default function TestChatPage (){
                                 <p key={idx} className={`my-3 text-white text-center p-1 rounded-md ${el?.senderId === userId ? "bg-indigo-400" : "bg-black"} `} >{el?.message}</p>
                             </div>
                         ))}
-                    </div>
 
+                        </div>
+                        
+                    : null }
                 </div>
 
                 <form className="relative bottom-0 ">
