@@ -126,11 +126,11 @@ export default function Login() {
                     </button>
                 </form>
                 <div className="flex flex-row justify-end pb-3 mt-3 border-b border-LINE_BORDER text-sm font-light">
-                    <button className="pl-4 hover:text-DEEP_MAIN">아이디(이메일)찾기</button>
-                    <button className="pl-4 hover:text-DEEP_MAIN">비밀번호 찾기</button>
+                    {/* <button className="pl-4 hover:text-DEEP_MAIN">아이디(이메일)찾기</button>
+                    <button className="pl-4 hover:text-DEEP_MAIN">비밀번호 찾기</button> */}
                 </div>
 
-                <div className="font-semibold text-2xl text-center mt-5">SNS</div>
+                {/* <div className="font-semibold text-2xl text-center mt-5">SNS</div> */}
 
                 <div className="mt-5 text-center">
                     <span className="text-xs ">회원가입하고 나에게 필요한 물건을 구해보세요!</span>
