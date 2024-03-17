@@ -315,8 +315,8 @@ export default function Chat() {
             <div className="h-full flex flex-col px-2 bg-zinc-200 overflow-y-auto">
                 {messages.length > 0 ? 
                     <>
-                    <div ref={observerRef} className="w-fit mx-auto my-1 p-2 bg-pink-500 rounded-lg">L:oading</div>
-                    <div className="flex flex-col-reverse bg-zinc-500 h-full">   
+                    <div ref={observerRef} className="w-fit mx-auto my-1 p-2 bg-zinc-200 rounded-lg text-LINE_BORDER text-sm">L:oading</div>
+                    <div className="flex flex-col-reverse bg-[#e1f8ea] h-full">   
                         {messages.map((message, idx) => (
                             <div className={`flex flex-row items-center ${message.senderId === userId ? "self-end" : "self-start"}`} key={idx} >
                                 {message.senderId === userId ? null : (
