@@ -27,9 +27,7 @@ const NavDropdown = ( {handleClick}:DropDownTypes ) => {
 
         try {
             const res = await axios.post(url, data, config);
-
             if(res.status === 200){
-                handleClick();
                 setLogin((prev) => ({
                     ...prev,
                     isLogin: false,
@@ -39,7 +37,8 @@ const NavDropdown = ( {handleClick}:DropDownTypes ) => {
                 localStorage.removeItem("loginState");
                 LocalStorage.setItem("loginState", String(false));
                 router.push("/");
-            }
+            };
+            handleClick();
 
 
         } catch (err){
