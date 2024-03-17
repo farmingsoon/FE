@@ -21,7 +21,7 @@ import ChatProductItem, {
 } from "@/components/chat/ChatProductItem";
 import Img from "@/common/Img";
 import SendButton from "@/../public/svg/SendButton";
-import { useInfiniteScroll } from "@/util/useInfiniteScroll";
+import { useChatScroll } from "@/util/useChatScroll";
 
 
 export default function Chat() {
@@ -188,22 +188,35 @@ export default function Chat() {
         }
     };
 
-  const loadMoreItems = async () => {
-    if(pagination.hasNext === false ) {// 마지막 페이지 
-      // setShowLoading(false);
-      return;
-    }; 
+    const messageListRef = useRef<HTMLDivElement>(null);
+    const scrollToBottom = () => {
+        const messageList = messageListRef.current;
+        if(messageList){
+            messageList.scrollTop = messageList.scrollHeight;
+        }
+    };
 
-    const nextPage = pagination.page + 1;
-    console.log("무한스크롤 작동", nextPage)
-    await getHistoryChat(nextPage).then(newMsg => {
-        setMessages(prev => [...prev, ...newMsg])
-    });
+    useEffect (() => {
+        if(messages.length > 0){
+            scrollToBottom();
+        }
+    },[messages]);
+    const loadMoreItems = async () => {
+        if(pagination.hasNext === false ) {// 마지막 페이지 
+        // setShowLoading(false);
+        return;
+        }; 
 
-    
-  };
+        const nextPage = pagination.page + 1;
+        console.log("무한스크롤 작동", nextPage)
+        await getHistoryChat(nextPage).then(newMsg => {
+            setMessages(prev => [...prev, ...newMsg])
+        });
 
-  const observerRef = useInfiniteScroll(loadMoreItems);
+        
+    };
+
+    const observerRef = useChatScroll(loadMoreItems);
 
   //디테일정보
     const getChatRoomInfo = async () => {
@@ -314,34 +327,34 @@ export default function Chat() {
             </p>
             <div className="h-full flex flex-col px-2 bg-zinc-200 overflow-y-auto">
                 {messages.length > 0 ? 
-                    <>
-                    <div ref={observerRef} className="w-fit mx-auto my-1 p-2 bg-zinc-200 rounded-lg text-LINE_BORDER text-sm">L:oading</div>
-                    <div className="flex flex-col-reverse bg-[#e1f8ea] h-full">   
-                        {messages.map((message, idx) => (
-                            <div className={`flex flex-row items-center ${message.senderId === userId ? "self-end" : "self-start"}`} key={idx} >
-                                {message.senderId === userId ? null : (
-                                <div className="flex flex-col items-center mr-3">
-                                    <p className="text-xs pb-1"> {curDetailChatInfo?.toUsername} </p>
-                                    <div className="">
-                                    <Img
-                                        type={"circle"}
-                                        src={curDetailChatInfo?.toUserProfileImage}
-                                        width={35}
-                                        height={35}
-                                    />
+                    <div className="h-full ">
+                        <div ref={observerRef} className="w-fit mx-auto my-1 p-2 bg-zinc-200 rounded-lg text-LINE_BORDER text-sm">L:oading</div>
+                        <div className="flex flex-col-reverse bg-[#e1f8ea] h-full">   
+                            {messages.map((message, idx) => (
+                                <div className={`flex flex-row items-center ${message.senderId === userId ? "self-end" : "self-start"}`} key={idx} >
+                                    {message.senderId === userId ? null : (
+                                    <div className="flex flex-col items-center mr-3">
+                                        <p className="text-xs pb-1"> {curDetailChatInfo?.toUsername} </p>
+                                        <div className="">
+                                        <Img
+                                            type={"circle"}
+                                            src={curDetailChatInfo?.toUserProfileImage}
+                                            width={35}
+                                            height={35}
+                                        />
+                                        </div>
                                     </div>
+                                    )}
+                                    <p className={`text-[10px] font-light text-POINT_RED mr-3 ${wholeRead ? "invisible" : ""}`}>
+                                        { message?.isRead === false && message.senderId === userId || wholeRead === false && message?.senderId === userId && message?.isRead === false ? 1 : null }
+                                    </p>
+                                    <p className={`px-2 my-2 py-3 rounded-lg w-fit ${message.senderId === userId ? "bg-indigo-400 text-white " : "bg-[#87dac2] text-white "}`} >
+                                        {message.message}
+                                    </p>     
                                 </div>
-                                )}
-                                <p className={`text-[10px] font-light text-POINT_RED mr-3 ${wholeRead ? "invisible" : ""}`}>
-                                    { message?.isRead === false && message.senderId === userId || wholeRead === false && message?.senderId === userId && message?.isRead === false ? 1 : null }
-                                </p>
-                                <p className={`px-2 my-2 py-3 rounded-lg w-fit ${message.senderId === userId ? "bg-indigo-400 text-white " : "bg-[#87dac2] text-white "}`} >
-                                    {message.message}
-                                </p>     
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
-                    </>
                 : (
                     <p className="my-3 text-indigo-400 text-center">
                         채팅 내역이 없습니다.{" "}
