@@ -37,7 +37,6 @@ export default function Home() {
     totalPageSize: 0,
   });
   const [ finishFetch, setFinishFetch ] = useState(false);
-  // const [ showLoading, setShowLoading ] = useState(true);
   console.log(homeData);
 
   const handleSortCode = (e:any) => {
@@ -52,9 +51,7 @@ export default function Home() {
   }
 
   const getHomeData = async (currentPage: number) => {
-    // console.log("CURPAGE: ", currentPage);
     try { 
-      //검색 https://server.farmingsoon.site/api/items?sortCode=recent
       const categoryRes = `/api/items?page=${currentPage}&sortCode=${sortCode}&category=${searchOption.option}&keyword=${searchOption.keyword}`;
       const normalRes = `/api/items?page=${currentPage}&sortCode=${sortCode}&keyword=${searchOption.keyword}`;
       //일반 조회 

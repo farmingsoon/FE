@@ -129,16 +129,21 @@ const Navbar = () => {
                     </Link>
                 </li>
                 <li>
-                    <button className={btnStyle} onClick={() => handleOpenModal("alarm")}>
-                        <BellSVG width={"12px"} height={"12px"}/>
-                        <span className="pl-2 hover:text-DEEP_MAIN">알림</span>
-                        { gotNewAlarm.sseState && 
-                            <span className="relative flex h-2 w-2 -top-2 -right-1">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-MAIN_COLOR opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-MAIN_COLOR"></span>
-                            </span>
-                        }
-                    </button>
+                    { mounted && isLogin.isLogin ? 
+                        (<button className={btnStyle} onClick={() => handleOpenModal("alarm")}>
+                                <BellSVG width={"12px"} height={"12px"}/>
+                                <span className="pl-2 hover:text-DEEP_MAIN">알림</span>
+                                { gotNewAlarm.sseState && 
+                                    <span className="relative flex h-2 w-2 -top-2 -right-1">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-MAIN_COLOR opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-MAIN_COLOR"></span>
+                                    </span>
+                                }
+                        </button>)
+                        : null
+
+                    }
+                    
                 </li>
                 <li>
                     <Link href="/product/edit">

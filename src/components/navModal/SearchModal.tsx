@@ -1,22 +1,31 @@
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import Search from "../Search";
 import RecentSearchItem from "./RecentSearchItem";
 import { recentKeywordState } from "@/stores/recentKeywordState";
 import LocalStorage from "@/util/localstorage";
+import Close from "../../../public/svg/Close";
+import { menuState } from "@/stores/NavMenuState";
 
 
 const SearchModal = () => {
     const recentKeyword = useRecoilValue(recentKeywordState);
+    const [ , setCloseModal] = useRecoilState(menuState);
 
     //낙관적 업데이트 적용.. 
     const handleDeleteAll = (e:any) => {
         e.preventDefault();
         LocalStorage.removeItem("recentKeyword");
-    }
+    };
+
+    const handleClose = () => {
+        const newMenu = [{menu: "search", onOff: false }, {menu: "alarm", onOff: false}];
+        setCloseModal(newMenu)
+    };
 
 
     return(
         <div className="absolute top-0 left-52 w-[371px] border-r border-LINE_BORDER whitespace-nowrap bg-white shadow-md z-50 py-10 min-h-screen">
+            <div className="absolute top-0 right-0 p-3 hover:bg-zinc-200 rounded-lg" onClick={handleClose}><Close width={"18px"} height={"18px"} /></div>
             <h1 className="font-semibold pb-5 px-5 ">검색</h1>
             <div className="mx-auto w-11/12 relative"><Search /></div>
             <div className="relative top-10  h-full">
