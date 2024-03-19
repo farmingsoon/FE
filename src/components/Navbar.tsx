@@ -17,8 +17,8 @@ import Image from "next/image";
 
 import { loginState } from "@/stores/loginState";
 import { sseNotiSelectorFamily } from "@/stores/sseNotiState";
-// import { sseNotiState } from "@/stores/sseNotification";
-// import { sseChattingPing } from "@/stores/sseChatPingState";
+import { useRouter } from "next/navigation";
+
 
 const Navbar = () => {
     const [openDrop, setOpenDrop] = useState(false);
@@ -27,8 +27,8 @@ const Navbar = () => {
     const isLogin = useRecoilValue(loginState);
     const [ mounted, setMounted ] = useState<boolean>(false);
     const [ subDrop, setSubDrop ] = useState(false);
-    // const gotNewNotification = useRecoilValue(sseNotiState);
-    // const gotNewChatNotification = useRecoilValue(sseChattingPing);
+    const router = useRouter();
+
     const [gotNewAlarm ,  ] = useRecoilState(sseNotiSelectorFamily("notiPING"));
     const [gotNewChat , setChatPing ] = useRecoilState(sseNotiSelectorFamily("chatPING"));
     const btnStyle = "flex flex-row items-center w-fit whitespace-nowrap mb-6";
@@ -49,16 +49,19 @@ const Navbar = () => {
         }
     };
 
-    const handleNavCategory = ( selectMenu: string ) => {
+    //맨 처음 페이지로 초기화 이동
+    const resetHome = () => {
+        setSearchOption({option: "", keyword: ""})
+        router.push("/");
+    }
 
+    const handleNavCategory = ( selectMenu: string ) => {
         if(selectMenu){
             setSearchOption({
                 option: "category",
                 keyword: selectMenu,
             }) 
         };
-
-
     };
 
     const handleSubOpen = () => {
@@ -76,15 +79,13 @@ const Navbar = () => {
 
     return(
         <nav className="flex flex-col shadow-lg w-52 pt-8 sticky top-0 h-screen ">
-            <Link href="/"><Image src={LOGO} width={180} alt="logo image" style={{margin: "auto"}}/></Link>
+            <Image src={LOGO} width={180} alt="logo image" style={{margin: "auto", cursor: "pointer" }} onClick={resetHome}/>
             <ul className="flex-1 px-3 mt-10">
                 <li>
-                    <Link href="/">
-                        <button className={btnStyle}>
-                            <HomeSVG width={"12px"} height={"12px"}/>
-                            <span className="pl-2 hover:text-DEEP_MAIN">홈</span>
-                        </button>
-                    </Link>
+                    <button className={btnStyle} onClick={resetHome}>
+                        <HomeSVG width={"12px"} height={"12px"}/>
+                        <span className="pl-2 hover:text-DEEP_MAIN">홈</span>
+                    </button>
                 </li>
                 <li>
                     <button className={btnStyle} onClick={() => handleOpenModal("search")}>

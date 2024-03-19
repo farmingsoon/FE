@@ -31,7 +31,7 @@ export default function Home() {
   const [ homeData, setHomeData ] = useState<MerchanTypes[]>([]);
   const [ searchOption,  ] = useRecoilState(searchState)
   const [ sortCodeState,  ] = useRecoilState(sortCodeAtom);
-  console.log(sortCodeState)
+  console.log(searchOption)
   const [ pagination, setPagination ] = useState({
     page: 0,
     hasNext: false,
@@ -44,7 +44,7 @@ export default function Home() {
 
   const getHomeData = async (currentPage: number) => {
     try { 
-      const categoryRes = `/api/items?page=${currentPage}&sortCode=${sortCodeState.sortCode}&category=${searchOption.option}&keyword=${searchOption.keyword}`;
+      const categoryRes = `/api/items?page=${currentPage}&sortCode=${sortCodeState.sortCode}&category=${searchOption.keyword}`; //ok
       const normalRes = `/api/items?page=${currentPage}&sortCode=${sortCodeState.sortCode}&keyword=${searchOption.keyword}`;
       //일반 조회 
       const originRes = `/api/items?page=${currentPage}&sortCode=${sortCodeState.sortCode}`;
