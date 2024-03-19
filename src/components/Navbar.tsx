@@ -19,6 +19,8 @@ import { loginState } from "@/stores/loginState";
 import { sseNotiSelectorFamily } from "@/stores/sseNotiState";
 import { useRouter } from "next/navigation";
 import { amendMenuSelector } from "@/stores/selectMenu";
+import ArrowDown from "../../public/svg/ArrowDown";
+import ArrowUp from "../../public/svg/\bArrowUp";
 
 
 const Navbar = () => {
@@ -32,7 +34,7 @@ const Navbar = () => {
 
     const [gotNewAlarm ,  ] = useRecoilState(sseNotiSelectorFamily("notiPING"));
     const [gotNewChat , setChatPing ] = useRecoilState(sseNotiSelectorFamily("chatPING"));
-    const btnStyle = "flex flex-row items-center w-fit whitespace-nowrap mb-6";
+    const btnStyle = "flex flex-row items-center w-fit whitespace-nowrap mb-6 cursor-pointer";
     const [ menuTab, setMenuTab ] = useRecoilState(amendMenuSelector);
     const clickStyle = `text-DEEP_MAIN `;
 
@@ -59,11 +61,15 @@ const Navbar = () => {
     const resetHome = () => {
         setMenuTab("home");
         setSearchOption({option: "", keyword: ""})
+        const newMenu = [{menu: "search", onOff: false }, {menu: "alarm", onOff: false}];
+        setMenusState(newMenu)
         router.push("/");
-    }
+    };
 
     const handleNavCategory = ( selectMenu: string ) => {
         setMenuTab(selectMenu);
+        const newMenu = [{menu: "search", onOff: false }, {menu: "alarm", onOff: false}];
+        setMenusState(newMenu);
         if(selectMenu){
             setSearchOption({
                 option: "category",
@@ -71,6 +77,13 @@ const Navbar = () => {
             }) 
         };
     };
+
+    const clickSoldItem = () => {
+        const newMenu = [{menu: "search", onOff: false }, {menu: "alarm", onOff: false}];
+        setMenusState(newMenu);
+        setMenuTab("soldItem");
+        router.push("/product/edit");
+    }
 
     const handleSubOpen = () => {
         setSubDrop(!subDrop);
@@ -85,6 +98,7 @@ const Navbar = () => {
     useEffect(() => {
         setMounted(true);
         setMenuTab("home");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return(
@@ -109,7 +123,8 @@ const Navbar = () => {
                         onClick={handleSubOpen}
                         >
                         <CategorySVG width={"12px"} height={"12px"}/>
-                        <span className="pl-2 ">카테고리</span>
+                        <span className="pl-2 pr-5">카테고리</span>
+                        {subDrop ? <ArrowDown width={"13px"} height={"13px"} /> : <ArrowUp width={"13px"} height={"13px"} />}
                     </button>
                 </li>
                 {subDrop && (
@@ -152,17 +167,13 @@ const Navbar = () => {
                                 }
                         </button>)
                         : null
-
                     }
-                    
                 </li>
                 <li className={menuTab === "soldItem" ? clickStyle : ""}>
-                    <Link href="/product/edit">
-                        <button className={btnStyle} onClick={() => setMenuTab("soldItem")}>
-                            <TagSVG width={"12px"} height={"12px"}/>
-                            <span className="pl-2 hover:text-DEEP_MAIN">판매하기</span>
-                        </button>
-                    </Link>
+                    <button className={btnStyle} onClick={clickSoldItem}>
+                        <TagSVG width={"12px"} height={"12px"}/>
+                        <span className="pl-2 hover:text-DEEP_MAIN">판매하기</span>
+                    </button>
                 </li>
             </ul>
             <div className="bg-white sticky bottom-0 shadow-custom-top">
