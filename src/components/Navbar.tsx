@@ -18,6 +18,7 @@ import Image from "next/image";
 import { loginState } from "@/stores/loginState";
 import { sseNotiSelectorFamily } from "@/stores/sseNotiState";
 import { useRouter } from "next/navigation";
+import { amendMenuSelector } from "@/stores/selectMenu";
 
 
 const Navbar = () => {
@@ -32,12 +33,17 @@ const Navbar = () => {
     const [gotNewAlarm ,  ] = useRecoilState(sseNotiSelectorFamily("notiPING"));
     const [gotNewChat , setChatPing ] = useRecoilState(sseNotiSelectorFamily("chatPING"));
     const btnStyle = "flex flex-row items-center w-fit whitespace-nowrap mb-6";
+    const [ menuTab, setMenuTab ] = useRecoilState(amendMenuSelector);
+    const clickStyle = `text-DEEP_MAIN `;
+
+
 
     const handleClick = () => {
         setOpenDrop(!openDrop)
     };
 
     const handleOpenModal = ( menuTab: string ) => {
+        setMenuTab(menuTab);
         if(menuTab === "search"){
             const newMenu = [{menu: "search", onOff: !menusState[0].onOff }, {menu: "alarm", onOff: false}];
             setMenusState(newMenu)
@@ -51,11 +57,13 @@ const Navbar = () => {
 
     //맨 처음 페이지로 초기화 이동
     const resetHome = () => {
+        setMenuTab("home");
         setSearchOption({option: "", keyword: ""})
         router.push("/");
     }
 
     const handleNavCategory = ( selectMenu: string ) => {
+        setMenuTab(selectMenu);
         if(selectMenu){
             setSearchOption({
                 option: "category",
@@ -70,30 +78,32 @@ const Navbar = () => {
 
     //알림 끄기 
     const handleOffChatPing = () => {
+        setMenuTab("chatRoom")
         setChatPing((cur) => ({ ...cur, sseState: false }));
     }
 
     useEffect(() => {
         setMounted(true);
+        setMenuTab("home");
     }, [])
 
     return(
         <nav className="flex flex-col shadow-lg w-52 pt-8 sticky top-0 h-screen ">
             <Image src={LOGO} width={180} alt="logo image" style={{margin: "auto", cursor: "pointer" }} onClick={resetHome}/>
             <ul className="flex-1 px-3 mt-10">
-                <li>
+                <li className={menuTab === "home" ? clickStyle : ""}>
                     <button className={btnStyle} onClick={resetHome}>
                         <HomeSVG width={"12px"} height={"12px"}/>
                         <span className="pl-2 hover:text-DEEP_MAIN">홈</span>
                     </button>
                 </li>
-                <li>
+                <li className={menuTab === "search" ? clickStyle : ""}>
                     <button className={btnStyle} onClick={() => handleOpenModal("search")}>
                         <SearchSVG width={"12px"} height={"12px"}/>
                         <span className="pl-2 hover:text-DEEP_MAIN">검색</span>
                     </button>
                 </li>
-                <li>
+                <li >
                     <button 
                         className="flex flex-row items-center w-fit whitespace-nowrap mb-2"
                         onClick={handleSubOpen}
@@ -104,18 +114,18 @@ const Navbar = () => {
                 </li>
                 {subDrop && (
                 <ul className="px-8 grid gap-y-3 whitespace-nowrap mb-6">               
-                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("의류")} >- 의류</button></li>
-                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("신발")} >- 신발</button></li>
-                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("악세사리")} >- 악세사리</button></li>
-                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("가구")} >- 가구</button></li>
-                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("전자제품")} >- 전자제품</button></li>
-                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("앨범")} >- 앨범</button></li>
-                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("악기")} >- 악기</button></li>
-                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("펫용품")} >- 펫용품</button></li>
-                    <li><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("기타")} >- 기타</button></li>
+                    <li className={menuTab === "의류" ? clickStyle : ""}><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("의류")} >- 의류</button></li>
+                    <li className={menuTab === "신발" ? clickStyle : ""}><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("신발")} >- 신발</button></li>
+                    <li className={menuTab === "악세사리" ? clickStyle : ""}><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("악세사리")} >- 악세사리</button></li>
+                    <li className={menuTab === "가구" ? clickStyle : ""}><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("가구")} >- 가구</button></li>
+                    <li className={menuTab === "전자제품" ? clickStyle : ""}><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("전자제품")} >- 전자제품</button></li>
+                    <li className={menuTab === "앨범" ? clickStyle : ""}><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("앨범")} >- 앨범</button></li>
+                    <li className={menuTab === "악기" ? clickStyle : ""}><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("악기")} >- 악기</button></li>
+                    <li className={menuTab === "펫용품" ? clickStyle : ""}><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("펫용품")} >- 펫용품</button></li>
+                    <li className={menuTab === "기타" ? clickStyle : ""}><button className="pl-2 font-normal text-sm hover:text-DEEP_MAIN" onClick={() => handleNavCategory("기타")} >- 기타</button></li>
                 </ul>    
                 )}            
-                <li className="pt-4">
+                <li className={menuTab === "chatRoom" ? clickStyle + "pt-4" : "pt-4"}>
                     <Link href="/chat">
                         <button className={btnStyle} onClick={handleOffChatPing}>
                             <ChatSVG width={"12px"} height={"12px"} />
@@ -129,7 +139,7 @@ const Navbar = () => {
                         </button>
                     </Link>
                 </li>
-                <li>
+                <li className={menuTab === "alarm" ? clickStyle : ""}>
                     { mounted && isLogin.isLogin ? 
                         (<button className={btnStyle} onClick={() => handleOpenModal("alarm")}>
                                 <BellSVG width={"12px"} height={"12px"}/>
@@ -146,9 +156,9 @@ const Navbar = () => {
                     }
                     
                 </li>
-                <li>
+                <li className={menuTab === "soldItem" ? clickStyle : ""}>
                     <Link href="/product/edit">
-                        <button className={btnStyle}>
+                        <button className={btnStyle} onClick={() => setMenuTab("soldItem")}>
                             <TagSVG width={"12px"} height={"12px"}/>
                             <span className="pl-2 hover:text-DEEP_MAIN">판매하기</span>
                         </button>
