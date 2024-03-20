@@ -37,7 +37,6 @@ export const axiosCall = async (url: string, method:string, data = {}, options =
     try { 
         if(method === "GET") {
             const res = await axios.get(baseURL, config );
-            // console.log(options);
             if(res.status === 200){
                 // console.log("get 요청 성공")
                 return res.data.result;

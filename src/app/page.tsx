@@ -39,7 +39,7 @@ export default function Home() {
   });
   const [ finishFetch, setFinishFetch ] = useState(false);
   console.log(homeData);
-  console.log(sortCodeState);
+  //console.log(sortCodeState);
 
 
   const getHomeData = async (currentPage: number) => {
@@ -51,7 +51,7 @@ export default function Home() {
       const options = { withCredentials: true }
 
       if( searchOption.keyword !== "" &&  searchOption.option === "category"){
-        const res = await axiosCall(categoryRes, "GET", options);
+        const res = await axiosCall(categoryRes, "GET", {}, options);
         const resPagination = res.pagination;
         const resData = res.items;
         setPagination({
@@ -64,7 +64,7 @@ export default function Home() {
         return resData;
 
       } else if( searchOption.keyword !== "" &&  searchOption.option === "") {
-        const res =  await axiosCall(normalRes, "GET", options);
+        const res =  await axiosCall(normalRes, "GET", {}, options);
         const resPagination = res.pagination;
         const resData = res.items;
         setPagination({
@@ -77,7 +77,7 @@ export default function Home() {
         return resData;
 
       } else {
-        const res = await axiosCall(originRes, "GET", );
+        const res = await axiosCall(originRes, "GET", {}, options);
         const resPagination = res.pagination;
         const resData = res.items;
         setPagination({
