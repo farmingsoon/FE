@@ -25,6 +25,8 @@ const FilteringCode = () => {
 
     return(
         <div className="ml-5 whitespace-nowrap pt-5">
+            <input type="checkbox" />
+            <label className="px-2 mr-3 outline-none">경매중인 상품</label>
             <input type="checkbox" onChange={handleCheckBox}/>
             <label className="px-2 outline-none">판매 완료된 상품</label>
             {sortCodeState.isCheckBox === "SOLDOUT" 
