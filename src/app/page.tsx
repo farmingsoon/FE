@@ -39,7 +39,7 @@ export default function Home() {
   });
   const [ finishFetch, setFinishFetch ] = useState(false);
   console.log(homeData);
-  //console.log(sortCodeState);
+  console.log(sortCodeState);
 
 
   const getHomeData = async (currentPage: number) => {
