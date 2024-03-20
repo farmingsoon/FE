@@ -2,7 +2,7 @@ import { atom, selector } from "recoil";
 
 interface sortCodeAtom {
     sortCode: string;
-    isCheckBox: "BIDDING" | "SOLDOUT";
+    isCheckBox: "BIDDING" | "SOLDOUT" | null;
 }
 
 export const sortCodeAtom = atom<sortCodeAtom>({
