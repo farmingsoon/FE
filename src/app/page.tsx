@@ -101,11 +101,11 @@ export default function Home() {
   };
 
   const loadMoreItems = async () => {
-    if(pagination.totalPageSize === homePage.page ) {// 마지막 페이지 
+    if(pagination.totalPageSize -1 <= homePage.page ) {// 마지막 페이지 
       setFinishFetch(true);
       // setShowLoading(false);
       return;
-    }; 
+    } 
     const nextPage = homePage.page + 1;
     const moreItems = await getHomeData(nextPage);
     setHomePage({page : nextPage})
@@ -118,7 +118,7 @@ export default function Home() {
 
     const fetchHomeData = async () => {
       try { 
-        const curPage = homePage.page;
+        const curPage = 0;
         const initialDatas = await getHomeData(curPage);
         setHomeData(initialDatas);
 

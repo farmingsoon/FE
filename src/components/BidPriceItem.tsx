@@ -37,7 +37,8 @@ const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
         setCheck(!check);
     }
 
-    const formatPrice = (price: number) => {
+    const formatPrice = (price: number | null) => {
+        if(price == null) return 0;
         return String(price).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
