@@ -1,53 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SendButton from "../../../public/svg/SendButton";
 
 export default function TestChatPage (){
     const userId = 1;
     const [ wholeRead, setWholeRead ] = useState(false);
     const dummyData = [
-        // {
-        //     senderId: 1,
-        //     message: "09: 도착 전에 연락 줘",
-        //     isRead: false
-        // },
-        // {
-        //     senderId: 1,
-        //     message: "08: 얍얍 알겠습니다",
-        //     isRead: false
-        // },
-        // {
-        //     senderId: 2,
-        //     message: "07: 내일 만나요",
-        //     isRead: true
-        // },
-        // {
-        //     senderId: 2,
-        //     message: "06: ㄱㄱ하시져",
-        //     isRead: true
-        // },
-        // {
-        //     senderId: 1,
-        //     message: "05: 서울 거래 부탁합니다.",
-        //     isRead: true
-        // },
-        // {
-        //     senderId: 2,
-        //     message: "04: 예",
-        //     isRead: true
-        // },
-        // {
-        //     senderId: 1,
-        //     message: "03: 판매하시나요?",
-        //     isRead: true
-        // },
-        // ,
-        // {
-        //     senderId: 2,
-        //     message: "02: 안녕",
-        //     isRead: true
-        // },
+        {
+            senderId: 1,
+            message: "09: 도착 전에 연락 줘",
+            isRead: false
+        },
+        {
+            senderId: 1,
+            message: "08: 얍얍 알겠습니다",
+            isRead: false
+        },
+        {
+            senderId: 2,
+            message: "07: 내일 만나요",
+            isRead: true
+        },
+        {
+            senderId: 2,
+            message: "06: ㄱㄱ하시져",
+            isRead: true
+        },
+        {
+            senderId: 1,
+            message: "05: 서울 거래 부탁합니다.",
+            isRead: true
+        },
+        {
+            senderId: 2,
+            message: "04: 예",
+            isRead: true
+        },
+        {
+            senderId: 1,
+            message: "03: 판매하시나요?",
+            isRead: true
+        },
+        ,
+        {
+            senderId: 2,
+            message: "02: 안녕",
+            isRead: true
+        },
         {
             senderId: 1,
             message: "01: 안녕하세요",
@@ -61,7 +61,26 @@ export default function TestChatPage (){
         setWholeRead(!wholeRead);
     };
 
-   console.log(wholeRead)
+    const chatBottomRef = useRef<HTMLDivElement>(null);
+
+    //클라이언트 사이드에서만 동작
+    useEffect(() => {
+        const scrollState = window.document.querySelector("#chatInside");
+        if(scrollState){
+            scrollState.scrollTop = scrollState.scrollHeight;
+        } 
+        
+        // scrollState?.addEventListener("scroll", function () {
+        //     console.log(scrollState.scrollTop)
+        // }) //43.75
+
+    }, []);
+
+    useEffect(() => {
+        if(chatBottomRef.current){
+            chatBottomRef.current.scrollIntoView({ behavior: "smooth" })
+        }
+    }, [wholeRead])
 
     return (
         <div className="flex h-full">
@@ -92,12 +111,12 @@ export default function TestChatPage (){
                         채팅방 연결 갯수 
                 </p>
 
-                <div className="h-full flex flex-col px-2  overflow-y-auto bg-lime-200">
+                <div id="chatInside" className="h-full flex flex-col px-2  overflow-y-auto bg-lime-200" >
                     {dummyData.length > 0 ? 
                         <div className="bg-blue-300 h-full">
                             <div className="w-fit mx-auto my-1 p-2 bg-zinc-200 rounded-lg text-LINE_BORDER text-sm">Loading...</div>
-                            <div className="flex flex-col-reverse bg-pink-600 h-full">
-                                
+                            <div className="flex flex-col-reverse pb-3 bg-pink-600 h-full"   >
+                                <div ref={chatBottomRef}></div>
                                 {dummyData.map((el, idx) => (
                                 <div key={idx} className={`flex flex-row items-center ${el?.senderId === userId ? "self-end" : "self-start"}`} >
                                     <p className={`text-[10px] font-light text-POINT_RED mr-3 ${wholeRead ? "invisible" : ""}`}>

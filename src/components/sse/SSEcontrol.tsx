@@ -25,12 +25,8 @@ const SSEcontrol = () => {
     const [  , setInChatRoomSSE ] = useRecoilState(sseNotiSelectorFamily("inChatRoomUpdate"));
 
 
-
-
     useEffect(() => {
         const pageLocation = window.location.pathname;
-        // console.log("PAGE: ", pageLocation.includes("chat"));
-
 
         const connectSSE = () => {
             eventSource.current = new EventSourcePolyfill(`${BASE_URL}/api/notifications/subscribe`, {
@@ -39,20 +35,19 @@ const SSEcontrol = () => {
 
             //연결 성공 헨들러 - 접속이 이루어졌을 때 호출 
             eventSource.current.onopen = async (event) => {
-                console.log(" === 성공적인 연결 완료 === ", event);
+                console.log("SSE: 성공적인 연결 완료 ", event);
             }
 
             //기본 메세지 받았을 때 
             eventSource.current.addEventListener("CONNECT", function (event){
                 const customEvent = event as MessageEvent;
-                console.log("SSE[첫 연결] : ", customEvent.data);
+                console.log("SSE: ", customEvent.data);
 
             });
 
-            eventSource.current.addEventListener("NOTIFICATION", function(event){
-                console.log(" === 알림 메세지 === ");
-                const customEvent = event as MessageEvent;
-                console.log(customEvent.data);
+            eventSource.current.addEventListener("NOTIFICATION", function(){
+                // const customEvent = event as MessageEvent;
+                // console.log(customEvent.data);
 
                 //알림 핑
                 setAlarmPing((cur) => ({ ...cur, sseState: true }));  
@@ -77,7 +72,7 @@ const SSEcontrol = () => {
             });
 
             eventSource.current.addEventListener("NEW_CHAT", function(event){
-                console.log("NEW_CHAT 키워드");
+                console.log("SSE: NEW_CHAT 키워드");
                 const customEvent = event as MessageEvent;
                 console.log(customEvent.data);
 
@@ -106,7 +101,7 @@ const SSEcontrol = () => {
             });
 
             eventSource.current.addEventListener("CHATROOM_UPDATE", function(){
-                console.log("CHATROOM_UPDATE 키워드");
+                console.log("SSE: CHATROOM_UPDATE 키워드");
                 
                 //채팅방 목록 업데이트 용 
                 setInChatRoomSSE((cur) => ({...cur, sseState: true})); 
@@ -129,7 +124,7 @@ const SSEcontrol = () => {
             eventSource.current.onerror = (err) => {
                 console.log("SSE : ", err);
                 eventSource.current?.close();
-
+                console.log("SSESSE: 재시도 횟수 - ", retryCount)
                 if(retryCount < 3){
                     setTimeout(() => {
                         connectSSE();
@@ -146,12 +141,18 @@ const SSEcontrol = () => {
             eventSource.current = null; //참조 제거
             setAlarmPing((cur) => ({ ...cur, sseState: false }));
             setChatPing((cur) => ({ ...cur, sseState: false }));
-            console.log(" == 토큰 만료 및 비로그인 상태라 연결 종료 == ")
+            console.log("SSE: 토큰 만료 및 비로그인 상태라 연결 종료")
         }
 
         if(isLogin.tokenExpired === false && localState === "true"){
-            console.log(" == 로그인 상태라 연결  == ")
+            console.log("SSE: 로그인 상태라 연결 ")
             connectSSE();
+        }
+
+        if(retryCount >= 3 ) {
+            eventSource.current?.close(); // 연결 종료
+            eventSource.current = null; //참조 제거
+            console.log("SSE: 에러 시도 3회 이상으로 연결 종료")
         }
 
         return () => {
