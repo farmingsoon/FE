@@ -31,7 +31,6 @@ export default function Home() {
   const [ homeData, setHomeData ] = useState<MerchanTypes[]>([]);
   const [ searchOption,  ] = useRecoilState(searchState)
   const [ sortCodeState,  ] = useRecoilState(sortCodeAtom);
-  console.log(searchOption)
   const [ pagination, setPagination ] = useState({
     page: 0,
     hasNext: false,
@@ -40,18 +39,19 @@ export default function Home() {
   });
   const [ finishFetch, setFinishFetch ] = useState(false);
   console.log(homeData);
+  console.log(sortCodeState);
 
 
   const getHomeData = async (currentPage: number) => {
     try { 
-      const categoryRes = `/api/items?page=${currentPage}&sortCode=${sortCodeState.sortCode}&category=${searchOption.keyword}`; //ok
-      const normalRes = `/api/items?page=${currentPage}&sortCode=${sortCodeState.sortCode}&keyword=${searchOption.keyword}`;
+      const categoryRes = `/api/items?page=${currentPage}&itemStatus=${sortCodeState.isCheckBox}&sortCode=${sortCodeState.sortCode}&category=${searchOption.keyword}`; //ok
+      const normalRes = `/api/items?page=${currentPage}&itemStatus=${sortCodeState.isCheckBox}&sortCode=${sortCodeState.sortCode}&keyword=${searchOption.keyword}`;
       //일반 조회 
-      const originRes = `/api/items?page=${currentPage}&sortCode=${sortCodeState.sortCode}`;
-
+      const originRes = `/api/items?page=${currentPage}&itemStatus=${sortCodeState.isCheckBox}&sortCode=${sortCodeState.sortCode}`;
+      const options = { withCredentials: true }
 
       if( searchOption.keyword !== "" &&  searchOption.option === "category"){
-        const res = await axiosCall(categoryRes, "GET");
+        const res = await axiosCall(categoryRes, "GET", options);
         const resPagination = res.pagination;
         const resData = res.items;
         setPagination({
@@ -64,7 +64,7 @@ export default function Home() {
         return resData;
 
       } else if( searchOption.keyword !== "" &&  searchOption.option === "") {
-        const res =  await axiosCall(normalRes, "GET");
+        const res =  await axiosCall(normalRes, "GET", options);
         const resPagination = res.pagination;
         const resData = res.items;
         setPagination({
@@ -77,7 +77,7 @@ export default function Home() {
         return resData;
 
       } else {
-        const res = await axiosCall(originRes, "GET");
+        const res = await axiosCall(originRes, "GET", );
         const resPagination = res.pagination;
         const resData = res.items;
         setPagination({
@@ -114,15 +114,15 @@ export default function Home() {
       try { 
         const curPage = pagination.page;
         const initialDatas = await getHomeData(curPage);
-
-        if(sortCodeState.isCheckBox === true){
-          const filteredItem = initialDatas.filter((el:any) => {
-            el.itemStatus === "판매완료"
-          });
-          setHomeData(filteredItem);
-        } else {
-          setHomeData(initialDatas);
-        }
+        setHomeData(initialDatas);
+        // if(sortCodeState.isCheckBox === true){
+        //   const filteredItem = initialDatas.filter((el:any) => {
+        //     el.itemStatus === "판매완료"
+        //   });
+        //   setHomeData(filteredItem);
+        // } else {
+        //   setHomeData(initialDatas);
+        // }
       } catch (err){
         console.log(err);
       }

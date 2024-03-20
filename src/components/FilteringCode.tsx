@@ -8,9 +8,10 @@ const FilteringCode = () => {
     const handleCheckBox = (e:any) => {
         const isCheck = e.target.checked;
         // console.log("체크박스 유무 : " , isCheck);
+        const checkStatus = isCheck ? "SOLDOUT" : "BIDDING"
         setSortCodeState((prev) => ({
             ...prev,
-            isCheckBox: isCheck
+            isCheckBox: checkStatus
         }));
     };
 
@@ -26,7 +27,7 @@ const FilteringCode = () => {
         <div className="ml-5 whitespace-nowrap pt-5">
             <input type="checkbox" onChange={handleCheckBox}/>
             <label className="px-2 outline-none">판매 완료된 상품</label>
-            {sortCodeState.isCheckBox === true 
+            {sortCodeState.isCheckBox === "SOLDOUT" 
                 ? 
                 <select
                     className="bg-zinc-200 rounded-md w-24 text-sm py-1 ml-5 outline-none"

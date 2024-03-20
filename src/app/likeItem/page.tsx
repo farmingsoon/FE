@@ -1,5 +1,8 @@
 "use client";
 import MineItem from "@/components/MineItem";
+import BiddingModal from "@/components/modal/BiddingModal";
+import SellerBidModal from "@/components/modal/SellerBidModal";
+import { mineItemSelector } from "@/stores/mineItem";
 import { tokenState } from "@/stores/tokenModal";
 import { rotateRefresh } from "@/util/axiosCall";
 import LocalStorage from "@/util/localstorage";
@@ -24,9 +27,11 @@ export interface MypageTypes {
 
 }
 
-export default function Login() {
+export default function LikeItemPage() {
     const [ likeData, setLikeData ] = useState<MypageTypes[]>([]);
     const [, setOpenTokenModal] = useRecoilState(tokenState);
+    const [ mounted, setMounted ] = useState<boolean>(false);
+    const [ mineClick, setMineClick ] = useRecoilState(mineItemSelector);
     const isLogin = LocalStorage.getItem("loginState");
 
     const handleGetMine = async () => {
@@ -75,6 +80,7 @@ export default function Login() {
     useEffect(() => {
         if(isLogin === "true"){
             handleGetMine();
+            setMounted(true);
         }
 
         if(isLogin === "false"){
@@ -82,7 +88,23 @@ export default function Login() {
         }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []);
+
+    const handleOpen = (type: string) => {
+        if(type === "seller"){
+            setMineClick((prev) => ({
+                ...prev,
+                sellerBidOpen: !mineClick.sellerBidOpen
+            }));
+        };
+
+        if(type === "buyer"){
+            setMineClick((prev) => ({
+                ...prev,
+                sellerBidOpen: !mineClick.buyerBidOpen
+            }));
+        }
+    };
 
     return(
         <div className="flex min-h-screen flex-col">
@@ -97,6 +119,21 @@ export default function Login() {
                     }
                 </div>
             </div>
+            {mounted && mineClick.sellerBidOpen 
+                && <SellerBidModal 
+                        handleOpen={ () => handleOpen("seller") } 
+                        itemId={String(mineClick.itemId)} 
+                        priceData={[mineClick.highestPrice, mineClick.lowestPrice]}
+                        itemStatus={ likeData.find(el => el.itemId === mineClick.itemId)?.itemStatus }
+                        
+                    />
+            }
+            {mounted && mineClick.buyerBidOpen 
+                && <BiddingModal 
+                    handleOpen={ () => handleOpen("buyer") } 
+                    itemId={String(mineClick.itemId)}
+                    itemStatus={ likeData.find(el => el.itemId === mineClick.itemId)?.itemStatus }
+            />}
         </div>
     )
 }

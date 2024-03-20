@@ -2,14 +2,14 @@ import { atom, selector } from "recoil";
 
 interface sortCodeAtom {
     sortCode: string;
-    isCheckBox: boolean;
+    isCheckBox: "BIDDING" | "SOLDOUT";
 }
 
 export const sortCodeAtom = atom<sortCodeAtom>({
     key: "sortCodeAtom",
     default: {
         sortCode: "recent", 
-        isCheckBox: false,
+        isCheckBox: "BIDDING",
     }
 });
 
