@@ -9,6 +9,7 @@ import CheckBox from "../../public/svg/CheckBox";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { tokenState } from "@/stores/tokenModal";
+import LocalStorage from "@/util/localstorage";
 
 
 interface BidPriceTypes {
@@ -22,6 +23,7 @@ const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
     const [ checkState, setCheckState ] = useRecoilState(bidCheckState);
     const [, setOpenTokenModal] = useRecoilState(tokenState);
     const [check, setCheck] = useState(false);
+    const userId = Number(LocalStorage.getItem("memberId"))
     const router = useRouter();
     const btnStyle = "bg-white border border-LINE_BORDER rounded-md px-3 mx-1.5 py-1 font-semibold text-sm my-3 hover:bg-zinc-200";
     const checkBoxStyle = check ? `bg-POINT_RED relative` : ``;
@@ -30,6 +32,7 @@ const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
         setCheckState({
             isCheck: !checkState.isCheck,
             buyerId: data.bidderId,
+            awardPrice: data.price,
         });
         setCheck(!check);
     }
@@ -83,7 +86,7 @@ const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
             const url = "/api/chat-rooms";
             const body = {
                 buyerId: buyerId,
-                itemId: itemId,
+                itemId: checkState.awardPrice,
             };
             const config = { withCredentials: true }
 
@@ -129,7 +132,7 @@ const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
     };
 
     return(
-        <div className="py-2 my-0.5 font-semibold text-sm flex flex-row items-center">
+        <div className="py-3 my-1 font-semibold text-sm flex flex-row items-center border-b border-LINE_BORDER">
             <div className="overflow-hidden rounded-full">
                 <Img type={"circle"} src={data.bidderProfileUrl} width={40} height={40} />
             </div>
@@ -145,7 +148,7 @@ const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
                     </div>
                     <div className="">
                         {type === "seller" ?  <button className={btnStyle} onClick={() => handleChatting( checkState.buyerId, itemId)} >채팅</button> : null}
-                        {type === "buyer" ?  <button className={btnStyle} onClick={(e) => {e.preventDefault(); handleDelete(data.bidId)}}>삭제</button> : null}
+                        {type === "buyer" && data.bidderId === userId ?  <button className={btnStyle} onClick={(e) => {e.preventDefault(); handleDelete(data.bidId)}}>삭제</button> : null}
                     </div>
                 </>
 

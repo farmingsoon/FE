@@ -3,11 +3,8 @@ import { useEffect, useState } from "react";
 import { axiosCall } from "@/util/axiosCall";
 import { ModalTypes } from "@/types/Modal";
 
-// import LocalStorage from "@/util/localstorage";
 import { 
-    // useRecoilState, 
     useRecoilValue } from "recoil";
-// import { tokenSelector } from "@/stores/tokenModal";
 import { bidCheckState } from "@/stores/bidCheckState";
 import Close from "../../../public/svg/Close";
 import BidPriceItem from "../BidPriceItem";
@@ -31,10 +28,9 @@ export interface BidRecordItemTypes {
 
 const SellerBidModal = ({handleOpen, itemId, priceData, itemStatus}: SellerBidModalTypes) => {
     const [ bidRecord, setBidRecord ] = useState<BidRecordItemTypes[]>([])
-    // const [ , setOpenTokenModal ] = useRecoilState(tokenSelector);
     const checkState = useRecoilValue(bidCheckState);
     //priceData[0] : 최고가 , priceData[1] : 최저가 
-
+    console.log(checkState)
 
     const formatPrice = (price: number | undefined) => {
         if(price === undefined){
@@ -73,11 +69,12 @@ const SellerBidModal = ({handleOpen, itemId, priceData, itemStatus}: SellerBidMo
     };
 
     const handleSoldOut = async (itemId: number, buyerId: number) => {
-        const url = `/api/items/${itemId}/sold-out?buyerId=${buyerId}`;
+        const url = `/api/items/${itemId}/sold-out`;
         const config = { withCredentials: true };
+        const soldBody = { buyerId: buyerId, awardPrice:  checkState.awardPrice}
 
         try { 
-            const res = await axiosCall(url, "PATCH", {}, config);
+            const res = await axiosCall(url, "PATCH", soldBody, config);
 
             if(res.status === 200){
                 handleOpen();
@@ -86,7 +83,7 @@ const SellerBidModal = ({handleOpen, itemId, priceData, itemStatus}: SellerBidMo
         } catch (err){
             console.log(err);
         }
-    }
+    };
     
     useEffect(() => {
         getBidRecord();
