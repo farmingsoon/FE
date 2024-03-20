@@ -94,7 +94,16 @@ export default function Signup() {
                 }
     
             } catch(error) {
-                console.log(`회원가입 에러 ${error}`)
+
+                if(axios.isAxiosError(error) && error.response){
+                    const status = error.response.status;
+                    const errorMessage = error.response.data.message;
+
+                    if(status === 409 && errorMessage === "이미 존재하는 회원입니다."){
+                        setErr("이미 존재하는 회원입니다. ")
+                    };
+                    console.log(`회원가입 에러 ${error}`);
+                }
             }
         }
 
