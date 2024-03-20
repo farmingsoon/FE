@@ -109,8 +109,8 @@ const SellerBidModal = ({handleOpen, itemId, priceData, itemStatus}: SellerBidMo
                 </div>
                 <div className="my-3 border-b border-LINE_BORDER"></div>
                 <div className="divide-x-2 text-xs font-light my-5">
-                    <button className={`pr-2`}>고가순</button>
-                    <button className={`pl-2`}>저가순</button>
+                    {/* <button className={`pr-2 ${isHighest ? "text-DEEP_MAIN" : ""}`} onClick={() => setIsHighest(true)} >고가순</button>
+                    <button className={`pl-2 ${isHighest ? "" : "text-DEEP_MAIN"}`} onClick={() => setIsHighest(false)} >저가순</button> */}
                 </div>
                 <div className="flex flex-col mb-8">
                     { bidRecord && bidRecord.length > 0 
