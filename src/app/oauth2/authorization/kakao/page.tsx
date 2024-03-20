@@ -1,6 +1,6 @@
 "use client"
 import { 
-    useParams, 
+    // useParams, 
     // useRouter, 
     useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -12,10 +12,10 @@ import { useEffect } from "react";
 export default function RedirectKakao () {
     // const [, setLogin] = useRecoilState(loginSelector);
     // const router = useRouter();
-    const oauthCode = useParams<{ code: string; }>();
+    // const oauthCode = useParams<{ code: string; }>();
     const searchParams = useSearchParams ();
     const tempQuery = searchParams.get("code");
-    console.log("카카오 OAUTH : ", oauthCode); 
+    // console.log("카카오 OAUTH : ", oauthCode); 
     console.log("카카오 파람 : ", tempQuery);
 
     useEffect(() => {
