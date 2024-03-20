@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import debounce from 'lodash.debounce';
 
 import { tokenState } from "@/stores/tokenModal";
-import { likeSelector } from "@/stores/likeItemState";
+// import { likeSelector } from "@/stores/likeItemState";
 
 import BookmarkSVG from "../../public/svg/BookmarkSVG"
 import PersonSVG from "../../public/svg/PersonSVG"
@@ -19,7 +19,7 @@ interface LikeItemTypes {
 
 const LikeItem = ({bidCount, likeCount, itemId, likeStatus}: LikeItemTypes) => {
     const [, setOpenTokenModal] = useRecoilState(tokenState);
-    const [  , setLikeItemColor ] = useRecoilState(likeSelector);
+    // const [  , setLikeItemColor ] = useRecoilState(likeSelector);
     const isLogin = LocalStorage.getItem("loginState");
 
     console.log("북마크 - ", itemId," : " , likeStatus)
@@ -30,9 +30,9 @@ const LikeItem = ({bidCount, likeCount, itemId, likeStatus}: LikeItemTypes) => {
 
         try { 
             if(!likeStatus){
-                setLikeItemColor((prev) => (
-                    [...prev, String(itemId) ]
-                ));
+                // setLikeItemColor((prev) => (
+                //     [...prev, String(itemId) ]
+                // ));
                 
                 const likeRes = await axiosCall( `/api/likeable-items/${itemId}`, "POST", {}, config )
 
@@ -43,9 +43,9 @@ const LikeItem = ({bidCount, likeCount, itemId, likeStatus}: LikeItemTypes) => {
             };
 
             if(likeStatus){
-                setLikeItemColor((prev) => (
-                    prev.filter(item => item !== String(itemId))
-                ));
+                // setLikeItemColor((prev) => (
+                //     prev.filter(item => item !== String(itemId))
+                // ));
 
                 
                 // const cancelRes = await axiosCall( `/api/likeable-items/${itemId}`, "DELETE", config );

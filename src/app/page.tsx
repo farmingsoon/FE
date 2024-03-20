@@ -41,7 +41,7 @@ export default function Home() {
     totalPageSize: 0,
   });
   const [ finishFetch, setFinishFetch ] = useState(false);
-  console.log(homePage.page);
+  // console.log(homePage.page);
 
 
   const getHomeData = async (currentPage: number) => {
