@@ -73,9 +73,6 @@ export default function ProductDetail(  ) {
 
     const getDetailData = async (userId: number) => {
         const url = `https://server.farmingsoon.site/api/items/${params.id}`;
-        // const options = {
-        //     withCredentials: true
-        // }
 
         try { 
             const res = await axios.get(url);
@@ -88,15 +85,7 @@ export default function ProductDetail(  ) {
 
 
         } catch (err){
-            console.log(`디테일 페이지 ${err}`)
-            // if(axios.isAxiosError(err) && err.status === 401){
-            //     const res =  await axios.get(url);
-            //     if(userId === res.data.result.sellerId){
-            //         setAmIuser(res.data.result);
-            //     }
-            //     setDetailData(res.data.result);
-            // }
-            
+            console.log(`디테일 페이지 ${err}`)   
         }
     };
 
@@ -136,12 +125,8 @@ export default function ProductDetail(  ) {
 
     const handleChatClick = async () => {
         console.log("채팅하기 버튼 클릭 ");
-        //const validURL = `/api/chat-rooms/${params.id}/auth`;
         const chatRoomURL = "/api/chat-rooms";
         const config =  { withCredentials: true }
-        // const validBody = {
-        //     userId: userId
-        // }
         const chatRoomBody = {
             buyerId: userId,
             itemId: params.id,
@@ -254,7 +239,7 @@ export default function ProductDetail(  ) {
                         itemId={Number(params.id)} 
                         bidCount={detailData && detailData.bidCount} 
                         likeCount={detailData && detailData.likeCount} 
-                        // likeStatus={detailData && detailData.likeStatus} 
+                        likeStatus={detailData && detailData.likeStatus} 
                     />
                 </div>
                 <div className="flex flex-row justify-between text-xl mt-2">

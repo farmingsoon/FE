@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { amendMenuSelector } from "@/stores/selectMenu";
 import ArrowDown from "../../public/svg/ArrowDown";
 import ArrowUp from "../../public/svg/\bArrowUp";
+import { homePageSelector } from "@/stores/homePage";
 
 
 const Navbar = () => {
@@ -36,8 +37,8 @@ const Navbar = () => {
     const [gotNewChat , setChatPing ] = useRecoilState(sseNotiSelectorFamily("chatPING"));
     const btnStyle = "flex flex-row items-center w-fit whitespace-nowrap mb-6 cursor-pointer";
     const [ menuTab, setMenuTab ] = useRecoilState(amendMenuSelector);
+    const [ , setHomePage ] = useRecoilState(homePageSelector);
     const clickStyle = `text-DEEP_MAIN `;
-
 
 
     const handleClick = () => {
@@ -60,6 +61,7 @@ const Navbar = () => {
     //맨 처음 페이지로 초기화 이동
     const resetHome = () => {
         setMenuTab("home");
+        setHomePage({page: 0});
         setSearchOption({option: "", keyword: ""})
         const newMenu = [{menu: "search", onOff: false }, {menu: "alarm", onOff: false}];
         setMenusState(newMenu)
@@ -67,6 +69,7 @@ const Navbar = () => {
     };
 
     const handleNavCategory = ( selectMenu: string ) => {
+        setHomePage({page: 0});
         setMenuTab(selectMenu);
         const newMenu = [{menu: "search", onOff: false }, {menu: "alarm", onOff: false}];
         setMenusState(newMenu);

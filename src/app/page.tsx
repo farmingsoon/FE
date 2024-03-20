@@ -10,6 +10,7 @@ import { axiosCall } from "@/util/axiosCall";
 import { useInfiniteScroll } from "@/util/useInfiniteScroll";
 import { sortCodeAtom } from "@/stores/sortCodeState";
 import FilteringCode from "@/components/FilteringCode";
+import { homePageSelector } from "@/stores/homePage";
 
 export interface MerchanTypes {
   itemId: number;
@@ -24,6 +25,7 @@ export interface MerchanTypes {
   bidCount: number;
   viewCount: number;
   likeCount: number;
+  likeStatus: boolean;
 }
 
 
@@ -31,15 +33,15 @@ export default function Home() {
   const [ homeData, setHomeData ] = useState<MerchanTypes[]>([]);
   const [ searchOption,  ] = useRecoilState(searchState)
   const [ sortCodeState,  ] = useRecoilState(sortCodeAtom);
+  const [ homePage, setHomePage ] = useRecoilState(homePageSelector);
   const [ pagination, setPagination ] = useState({
-    page: 0,
+    // page: 0,
     hasNext: false,
     hasPrevious: true,
     totalPageSize: 0,
   });
   const [ finishFetch, setFinishFetch ] = useState(false);
-  console.log(homeData);
-  console.log(sortCodeState);
+  console.log(homePage.page);
 
 
   const getHomeData = async (currentPage: number) => {
@@ -54,8 +56,9 @@ export default function Home() {
         const res = await axiosCall(categoryRes, "GET", {}, options);
         const resPagination = res.pagination;
         const resData = res.items;
+        setHomePage({page: currentPage});
         setPagination({
-          page: currentPage,
+          // page: currentPage,
           hasNext: resPagination.hasNext,
           hasPrevious: resPagination.hasPrevious,
           totalPageSize: resPagination.totalPageSize,
@@ -67,8 +70,9 @@ export default function Home() {
         const res =  await axiosCall(normalRes, "GET", {}, options);
         const resPagination = res.pagination;
         const resData = res.items;
+        setHomePage({page: currentPage});
         setPagination({
-          page: currentPage,
+          // page: currentPage,
           hasNext: resPagination.hasNext,
           hasPrevious: resPagination.hasPrevious,
           totalPageSize: resPagination.totalPageSize,
@@ -80,8 +84,9 @@ export default function Home() {
         const res = await axiosCall(originRes, "GET", {}, options);
         const resPagination = res.pagination;
         const resData = res.items;
+        setHomePage({page: currentPage});
         setPagination({
-          page: currentPage,
+          // page: currentPage,
           hasNext: resPagination.hasNext,
           hasPrevious: resPagination.hasPrevious,
           totalPageSize: resPagination.totalPageSize,
@@ -96,13 +101,14 @@ export default function Home() {
   };
 
   const loadMoreItems = async () => {
-    if(pagination.totalPageSize === pagination.page ) {// 마지막 페이지 
+    if(pagination.totalPageSize -1 <= homePage.page ) {// 마지막 페이지 
       setFinishFetch(true);
       // setShowLoading(false);
       return;
-    }; 
-    const nextPage = pagination.page + 1;
+    } 
+    const nextPage = homePage.page + 1;
     const moreItems = await getHomeData(nextPage);
+    setHomePage({page : nextPage})
     setHomeData(curItems => [...curItems, ...moreItems]);
   };
 
@@ -112,17 +118,10 @@ export default function Home() {
 
     const fetchHomeData = async () => {
       try { 
-        const curPage = pagination.page;
+        const curPage = 0;
         const initialDatas = await getHomeData(curPage);
         setHomeData(initialDatas);
-        // if(sortCodeState.isCheckBox === true){
-        //   const filteredItem = initialDatas.filter((el:any) => {
-        //     el.itemStatus === "판매완료"
-        //   });
-        //   setHomeData(filteredItem);
-        // } else {
-        //   setHomeData(initialDatas);
-        // }
+
       } catch (err){
         console.log(err);
       }

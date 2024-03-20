@@ -9,7 +9,7 @@ export const sortCodeAtom = atom<sortCodeAtom>({
     key: "sortCodeAtom",
     default: {
         sortCode: "recent", 
-        isCheckBox: "BIDDING",
+        isCheckBox: null,
     }
 });
 
