@@ -1,3 +1,4 @@
+"use client"
 import KAKAO from "@/../public/img/KAKAO.png";
 import Image from "next/image";
 import { useEffect } from "react";

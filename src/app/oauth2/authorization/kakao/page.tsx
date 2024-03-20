@@ -1,21 +1,22 @@
-import { 
-    useParams, 
+"use client"
+// import { 
+    // useParams, 
     // useRouter, 
-    useSearchParams } from "next/navigation";
+    // useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 // import LocalStorage from "@/util/localstorage";
 // import { useRecoilState } from "recoil";
 // import { loginSelector } from "@/stores/loginState";
 
-export default function RedirectKakao () {
+export default function RedirectKakao ({searchParams}: {searchParams: {code: string}}) {
     // const [, setLogin] = useRecoilState(loginSelector);
     // const router = useRouter();
-    const oauthCode = useParams<{ code: string; }>();
-    const searchParams = useSearchParams ();
-    const tempQuery = searchParams.get("code");
-    console.log("카카오 OAUTH : ", oauthCode); 
-    console.log("카카오 파람 : ", tempQuery);
+    // const oauthCode = useParams<{ code: string; }>();
+    // const searchParams = useSearchParams ();
+    // const tempQuery = searchParams.get("code");
+    // console.log("카카오 OAUTH : ", oauthCode); 
+    console.log("카카오 파람 : ", searchParams.code);
 
     useEffect(() => {
         //백엔드 전달 코드 
