@@ -83,10 +83,9 @@ export default function Chat() {
                             }
 
                             if(newMSG.type === "CONNECT"){
+                                console.log("상대방 입장 ")
                                 setWholeRead(true);
                             }
-
-                            // getList();
                         }
                     },
                 );
@@ -263,11 +262,15 @@ export default function Chat() {
     }, [inChatRoomSSE]);
 
     useEffect(() => {
-        if(isLogin === "true"){
+        //스크롤 위치 하단 고정 
+        const scrollState = window.document.querySelector("#chatScroll");
+
+        if(isLogin === "true" && scrollState){
             connect();
             getList();
             getHistoryChat(0);
             getChatRoomInfo();
+            scrollState.scrollTop = scrollState.scrollHeight;
         }
 
         return () => {
@@ -276,6 +279,15 @@ export default function Chat() {
         
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    //메세지 새로 입력하면 하단으로 이동 
+    const chatBottomRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if(chatBottomRef.current){
+            chatBottomRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages]);
 
   //메세지 보내기
     const sendMessage = async (e: any) => {
@@ -325,11 +337,12 @@ export default function Chat() {
                 : "채팅 방이 연결 중입니다."}
                 채팅방 연결 갯수 {websocketCount}
             </p>
-            <div className="h-full flex flex-col px-2 bg-zinc-200 overflow-y-auto">
+            <div id="chatScroll" className="h-full flex flex-col px-2 bg-zinc-200 overflow-y-auto">
                 {messages.length > 0 ? 
                     <div className="h-full ">
                         <div ref={observerRef} className="w-fit mx-auto my-1 p-2 bg-zinc-200 rounded-lg text-LINE_BORDER text-sm">L:oading</div>
                         <div className="flex flex-col-reverse bg-[#e1f8ea] h-full">   
+                            <div ref={chatBottomRef}></div>
                             {messages.map((message, idx) => (
                                 <div className={`flex flex-row items-center ${message.senderId === userId ? "self-end" : "self-start"}`} key={idx} >
                                     {message.senderId === userId ? null : (
