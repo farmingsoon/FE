@@ -78,6 +78,7 @@ export default function Chat() {
                     (message) => {
                         if (message.body) {
                             const newMSG = JSON.parse(message.body);
+                            console.log(message.body);
                             if(newMSG.type === "SEND"){
                                 setMessages((chats) => [...chats, newMSG])
                             }
