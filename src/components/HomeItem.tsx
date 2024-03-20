@@ -48,13 +48,13 @@ const HomeItem = ({data}: HomeItemTypes) => {
                         <span className="ml-1">{data.bidCount}</span>
                     </div>
                     <div className="flex flex-row items-center ml-2">
-                        <BookmarkSVG width={"12px"} height={"12px"} itemId={data.itemId}/>
+                        <BookmarkSVG width={"12px"} height={"12px"} itemId={data.itemId} likeStatus={data.likeStatus}/>
                         <span className="ml-1">{data.likeCount}</span>
                     </div>
                 </div>
             </div>
             <div className="text-sm">
-                <StatusPrice bidStatus={data.itemStatus} highestPrice={data.highestPrice} hopePrice={data.hopePrice}/>
+                <StatusPrice bidStatus={data.itemStatus} highestPrice={data.highestPrice} hopePrice={data.hopePrice} />
             </div>
             <div className="text-sm font-light mt-2">{formatDate(data.expiredAt)}남음</div>
         </div>

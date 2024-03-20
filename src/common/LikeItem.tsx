@@ -14,20 +14,22 @@ interface LikeItemTypes {
     itemId: number;
     bidCount?: number;
     likeCount?: number;
+    likeStatus?: boolean;
 }
 
-const LikeItem = ({bidCount, likeCount, itemId}: LikeItemTypes) => {
+const LikeItem = ({bidCount, likeCount, itemId, likeStatus}: LikeItemTypes) => {
     const [, setOpenTokenModal] = useRecoilState(tokenState);
-    const [ likeItemColor , setLikeItemColor ] = useRecoilState(likeSelector);
+    const [  , setLikeItemColor ] = useRecoilState(likeSelector);
     const isLogin = LocalStorage.getItem("loginState");
 
-
+    console.log("북마크 - ", itemId," : " , likeStatus)
     const handleLikeItem = debounce(async () => {
-        const isLikedItem = likeItemColor.includes(String(itemId));
+        // const isLikedItem = likeItemColor.includes(String(itemId));
+
         const config = { withCredentials: true };
 
         try { 
-            if(!isLikedItem){
+            if(!likeStatus){
                 setLikeItemColor((prev) => (
                     [...prev, String(itemId) ]
                 ));
@@ -40,7 +42,7 @@ const LikeItem = ({bidCount, likeCount, itemId}: LikeItemTypes) => {
                 }
             };
 
-            if(isLikedItem){
+            if(likeStatus){
                 setLikeItemColor((prev) => (
                     prev.filter(item => item !== String(itemId))
                 ));
@@ -98,7 +100,7 @@ const LikeItem = ({bidCount, likeCount, itemId}: LikeItemTypes) => {
             <PersonSVG width={"18px"} height={"18px"}/>
             <span className="ml-3 mr-5">{bidCount}</span>
             <button onClick={() =>  handleClick()} className=" p-2 hover:bg-purple-300 z-10">
-                <BookmarkSVG width={"15px"} height={"15px"} itemId={itemId}/>
+                <BookmarkSVG width={"15px"} height={"15px"} itemId={itemId} likeStatus={likeStatus}/>
             </button>
             <span className="ml-1">{likeCount}</span>
         </div>
