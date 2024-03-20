@@ -73,9 +73,9 @@ export default function ProductDetail(  ) {
 
     const getDetailData = async (userId: number) => {
         const url = `https://server.farmingsoon.site/api/items/${params.id}`;
-
+        const config = { withCredentials: true }
         try { 
-            const res = await axios.get(url);
+            const res = await axios.get(url, config);
             console.log(res.data.result);
 
             if(userId === res.data.result.sellerId){

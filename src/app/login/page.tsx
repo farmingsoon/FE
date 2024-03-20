@@ -1,4 +1,5 @@
 "use client";
+import KakaoLogin from "@/components/KakaoLogin";
 import { loginSelector } from "@/stores/loginState";
 import { rotateRefresh } from "@/util/axiosCall";
 import LocalStorage from "@/util/localstorage";
@@ -7,8 +8,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
-import KAKAO from "@/../public/img/KAKAO.png";
-import Image from "next/image";
 
 export default function Login() {
     const inputStyle = "border rounded-md border-LINE_BORDER px-3 h-11 my-1 w-full font-light text-sm";
@@ -108,7 +107,8 @@ export default function Login() {
             }
 
         }
-    }
+    };
+
 
     return (
         <div className="flex justify-center mt-12">
@@ -133,8 +133,7 @@ export default function Login() {
                 </div>
 
                 <div className="font-semibold text-2xl text-center mt-5">SNS</div>
-                <div className="mx-auto mt-5 cursor-pointer hover:scale-105 ease-in-out duration-500"><Image src={KAKAO} alt={"kakao LOGO"} /></div>
-
+                <KakaoLogin />
                 <div className="mt-5 text-center ">
                     <span className="text-xs ">회원가입하고 나에게 필요한 물건을 구해보세요!</span>
                     <Link href="/signup"><button className="border border-LINE_BORDER rounded-lg py-2 mt-3 text-sm w-full h-11 hover:bg-LINE_BORDER">간편 회원가입하기</button></Link>
