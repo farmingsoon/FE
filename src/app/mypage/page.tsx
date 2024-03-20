@@ -28,7 +28,7 @@ export interface MypageTypes {
 
 }
 
-export default function Login() {
+export default function Mypage() {
     const userProfile = LocalStorage.getItem("userProfileImg");
     const userName = LocalStorage.getItem("userName");
     const isLogin = LocalStorage.getItem("loginState");
@@ -151,7 +151,7 @@ export default function Login() {
                     handleOpen={ () => handleOpen("buyer") } 
                     itemId={String(mineClick.itemId)}
                     itemStatus={ biddingData.find(el => el.itemId === mineClick.itemId)?.itemStatus }
-                />}
+            />}
         </div>
     )
 }

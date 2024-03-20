@@ -8,6 +8,8 @@ import { useRecoilState } from "recoil";
 import { searchState } from "@/stores/searchOptionState";
 import { axiosCall } from "@/util/axiosCall";
 import { useInfiniteScroll } from "@/util/useInfiniteScroll";
+import { sortCodeAtom } from "@/stores/sortCodeState";
+import FilteringCode from "@/components/FilteringCode";
 
 export interface MerchanTypes {
   itemId: number;
@@ -28,8 +30,7 @@ export interface MerchanTypes {
 export default function Home() {
   const [ homeData, setHomeData ] = useState<MerchanTypes[]>([]);
   const [ searchOption,  ] = useRecoilState(searchState)
-  const [ sortCode, setSortCode ] = useState("recent");
-  const [ isCheckBox, setIsCheckBox ] = useState(false);
+  const [ sortCodeState,  ] = useRecoilState(sortCodeAtom);
   const [ pagination, setPagination ] = useState({
     page: 0,
     hasNext: false,
@@ -37,32 +38,20 @@ export default function Home() {
     totalPageSize: 0,
   });
   const [ finishFetch, setFinishFetch ] = useState(false);
-  // const [ showLoading, setShowLoading ] = useState(true);
   console.log(homeData);
+  //console.log(sortCodeState);
 
-  const handleSortCode = (e:any) => {
-    setSortCode(e.target.value);
-
-  }
-
-  const handleCheckBox = (e:any) => {
-    const isCheck = e.target.checked;
-    console.log(isCheck)
-    setIsCheckBox(isCheck);
-  }
 
   const getHomeData = async (currentPage: number) => {
-    // console.log("CURPAGE: ", currentPage);
     try { 
-      //검색 https://server.farmingsoon.site/api/items?sortCode=recent
-      const categoryRes = `/api/items?page=${currentPage}&sortCode=${sortCode}&category=${searchOption.option}&keyword=${searchOption.keyword}`;
-      const normalRes = `/api/items?page=${currentPage}&sortCode=${sortCode}&keyword=${searchOption.keyword}`;
+      const categoryRes = `/api/items?page=${currentPage}&itemStatus=${sortCodeState.isCheckBox}&sortCode=${sortCodeState.sortCode}&category=${searchOption.keyword}`; //ok
+      const normalRes = `/api/items?page=${currentPage}&itemStatus=${sortCodeState.isCheckBox}&sortCode=${sortCodeState.sortCode}&keyword=${searchOption.keyword}`;
       //일반 조회 
-      const originRes = `/api/items?page=${currentPage}&sortCode=${sortCode}`;
-
+      const originRes = `/api/items?page=${currentPage}&itemStatus=${sortCodeState.isCheckBox}&sortCode=${sortCodeState.sortCode}`;
+      const options = { withCredentials: true }
 
       if( searchOption.keyword !== "" &&  searchOption.option === "category"){
-        const res = await axiosCall(categoryRes, "GET");
+        const res = await axiosCall(categoryRes, "GET", {}, options);
         const resPagination = res.pagination;
         const resData = res.items;
         setPagination({
@@ -75,7 +64,7 @@ export default function Home() {
         return resData;
 
       } else if( searchOption.keyword !== "" &&  searchOption.option === "") {
-        const res =  await axiosCall(normalRes, "GET");
+        const res =  await axiosCall(normalRes, "GET", {}, options);
         const resPagination = res.pagination;
         const resData = res.items;
         setPagination({
@@ -88,8 +77,7 @@ export default function Home() {
         return resData;
 
       } else {
-        const res = await axiosCall(originRes, "GET");
-        console.log(res);
+        const res = await axiosCall(originRes, "GET", {}, options);
         const resPagination = res.pagination;
         const resData = res.items;
         setPagination({
@@ -126,15 +114,15 @@ export default function Home() {
       try { 
         const curPage = pagination.page;
         const initialDatas = await getHomeData(curPage);
-
-        if(isCheckBox){
-          const filteredItem = initialDatas.filter((el:any) => {
-            el.itemStatus !== "판매완료"
-          });
-          setHomeData(filteredItem);
-        } else {
-          setHomeData(initialDatas);
-        }
+        setHomeData(initialDatas);
+        // if(sortCodeState.isCheckBox === true){
+        //   const filteredItem = initialDatas.filter((el:any) => {
+        //     el.itemStatus === "판매완료"
+        //   });
+        //   setHomeData(filteredItem);
+        // } else {
+        //   setHomeData(initialDatas);
+        // }
       } catch (err){
         console.log(err);
       }
@@ -143,13 +131,15 @@ export default function Home() {
     fetchHomeData();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchOption.keyword, sortCode, isCheckBox])
+  }, [searchOption.keyword, sortCodeState ])
 
 
   return (
     <div className="flex min-h-screen flex-col">
       <div className="flex flex-col text-left ">
-        <p className="text-xs pb-2 font-light">다양한 중고 상품들을 <span className="font-semibold text-MAIN_COLOR">파밍순</span>에서 겟!</p>
+        <p className="text-xs pb-2 font-light">다양한 중고 상품들을 
+          <span className="font-semibold text-MAIN_COLOR">파밍순</span>에서 겟!
+        </p>
         <h1 className="pb-2">필요한 물건부터</h1>
         <h1 className="pb-2">구하지 못했던 한정 상품까지</h1>
       </div>
@@ -158,20 +148,7 @@ export default function Home() {
         <div className="w-3/6 relative">
           <Search />
         </div>
-        <div className="ml-5 whitespace-nowrap pt-5">
-          <input type="checkbox" onChange={handleCheckBox}/>
-          <label className="px-2 outline-none">판매 중인 상품</label>
-          <select 
-            className="bg-zinc-200 rounded-md w-24 text-sm py-1 ml-5 outline-none"
-            value={sortCode}
-            onChange={handleSortCode}
-            >
-            <option className="pl-2" value="recent" >최신순</option>
-            <option className="pl-2" value="hot" >인기순</option>
-            <option className="pl-2" value="highest" >고가순</option>
-            <option className="pl-2" value="lowest" >저가순</option>
-          </select>
-        </div>
+        <FilteringCode />
       </div>
 
       <div className="w-full">

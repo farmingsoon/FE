@@ -112,7 +112,7 @@ const BiddingModal = ({handleOpen, itemId, itemStatus}: BiddingModalTypes ) => {
                     </button>
                 </form>
                 <div className="mt-5">입찰 내역</div>
-                <div className="mb-5 overflow-y-scroll max-h-60 py-5 ">
+                <div className="mb-5 overflow-y-scroll max-h-60 py-5">
                     {bidRecord && bidRecord.map((item:BidRecordItemTypes , idx) => (
                         <BidPriceItem key={idx} data={item} type={"buyer"} itemId={Number(itemId)} itemStatus={itemStatus}/>
                     ))

@@ -37,9 +37,8 @@ export const axiosCall = async (url: string, method:string, data = {}, options =
     try { 
         if(method === "GET") {
             const res = await axios.get(baseURL, config );
-            console.log(options);
             if(res.status === 200){
-                console.log("get 요청 성공")
+                // console.log("get 요청 성공")
                 return res.data.result;
             }
         }
@@ -47,7 +46,7 @@ export const axiosCall = async (url: string, method:string, data = {}, options =
         if(method === "POST") {
             const res = await axios.post(baseURL, data, config);
             if(res.status === 200) {
-                console.log("post 요청 성공");
+                // console.log("post 요청 성공");
                 return res;
             }
         }
@@ -55,7 +54,7 @@ export const axiosCall = async (url: string, method:string, data = {}, options =
         if(method === "PATCH"){
             const res = await axios.patch(baseURL, data, config);
             if(res.status === 200){
-                console.log("patch 요청 성공");
+                // console.log("patch 요청 성공");
                 return res;
             }
         }
@@ -63,7 +62,7 @@ export const axiosCall = async (url: string, method:string, data = {}, options =
         if(method === "DELETE"){
             const res = await axios.delete(baseURL, config);
             if(res.status === 200) {
-                console.log("delete 요청 성공");
+                // console.log("delete 요청 성공");
                 return res;
             }
         }

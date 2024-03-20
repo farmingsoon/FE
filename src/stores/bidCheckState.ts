@@ -3,6 +3,7 @@ import { atom, selector } from "recoil";
 interface bidCheckAtomTypes {
     isCheck : boolean;
     buyerId: number;
+    awardPrice: number;
 }
 
 export const bidCheckState = atom<bidCheckAtomTypes>({
@@ -10,6 +11,7 @@ export const bidCheckState = atom<bidCheckAtomTypes>({
     default : {
         isCheck: false,
         buyerId: 0,
+        awardPrice: 0,
     }
 });
 
