@@ -78,7 +78,6 @@ export default function Chat() {
                     (message) => {
                         if (message.body) {
                             const newMSG = JSON.parse(message.body);
-                            console.log(message.body);
                             if(newMSG.type === "SEND"){
                                 setMessages((chats) => [newMSG, ...chats, ])
                             }
@@ -201,6 +200,8 @@ export default function Chat() {
             scrollToBottom();
         }
     },[messages]);
+
+    console.log(pagination);
 
     const loadMoreItems = async () => {
         if(pagination.hasNext === false ) {// 마지막 페이지 
@@ -330,7 +331,7 @@ export default function Chat() {
         </div>
 
       {/* 채팅 방 섹션 fles-grow*/}
-        <div className="flex flex-col flex-grow max-w-[800px]">
+        <div className="flex flex-col flex-grow min-w-[600px] max-w-[800px]">
             <ChatProductItem curDetailChatInfo={curDetailChatInfo} />
             <p className="text-POINT_RED font-normal text-center pt-1 text-sm">
                 {isConnected
@@ -338,7 +339,7 @@ export default function Chat() {
                 : "채팅 방이 연결 중입니다."}
                 채팅방 연결 갯수 {websocketCount}
             </p>
-            <div id="chatScroll" className="h-full flex flex-col px-2 bg-zinc-200 overflow-y-auto">
+            <div id="chatScroll" className="h-full flex flex-col px-2 overflow-y-auto">
                 {messages.length > 0 ? 
                     <div className="h-full ">
                         <div ref={observerRef} className="w-fit mx-auto my-1 p-2 bg-zinc-200 rounded-lg text-LINE_BORDER text-sm">L:oading</div>
