@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 export const useChatScroll = (fetchMoreFunc:any ) => {
     const observerRef = useRef<HTMLDivElement | null>(null);
-    const [isFetching, setIsFetching] = useState(false);
+    // const [isFetching, setIsFetching] = useState(false);
+    console.log("채팅 무한 스크롤 발동")
 
     useEffect(() => {
         if(typeof window === "undefined"){
@@ -10,14 +11,15 @@ export const useChatScroll = (fetchMoreFunc:any ) => {
         };
 
         const observer = new IntersectionObserver(entries => {
-            if(entries[0].isIntersecting && !isFetching)
+            if(entries[0].isIntersecting)
             {
-                setIsFetching(true);
-                fetchMoreFunc().then(() => {
-                    setIsFetching(false)
-                })
+                // setIsFetching(true);
+                // fetchMoreFunc().then(() => {
+                //     setIsFetching(false)
+                // })
+                fetchMoreFunc();
             }
-        }, { threshold: 0 });
+        }, { threshold: 1.0 });
 
 
         const currentRef = observerRef.current;
@@ -34,14 +36,7 @@ export const useChatScroll = (fetchMoreFunc:any ) => {
         };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isFetching]);
-
-    // useEffect(() => {
-    //     if(!isFetching) return;
-    //     fetchMoreFunc().then(() => setIsFetching(false))
-
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [isFetching]);
+    }, [fetchMoreFunc]);
 
 
     return observerRef

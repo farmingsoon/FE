@@ -29,8 +29,7 @@ const SSEcontrol = () => {
 
     useEffect(() => {
         const pageLocation = window.location.pathname;
-        console.log("SSE: ", isTokenInValid.tokenExpired, localState, recoilLoginState.isLogin)
-
+        
         const connectSSE = () => {
             eventSource.current = new EventSourcePolyfill(`${BASE_URL}/api/notifications/subscribe`, {
                 withCredentials: true
@@ -162,7 +161,7 @@ const SSEcontrol = () => {
 
         
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isTokenInValid.tokenExpired, notificationTimeoutId]);
+    }, [isTokenInValid.tokenExpired, recoilLoginState.isLogin, notificationTimeoutId]);
 
 
     // return null;
