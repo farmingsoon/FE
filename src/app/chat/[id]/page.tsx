@@ -62,9 +62,9 @@ export default function Chat() {
                 chatRoomId: params.id, 
                 memberId: String(userId)
                 },
-                debug: (str) => {
-                console.log(`debg: ${str}`);
-                },
+                // debug: (str) => {
+                // console.log(`debg: ${str}`);
+                // },
                 reconnectDelay: 5000, //자동 재 연결
                 heartbeatIncoming: 10000,
                 heartbeatOutgoing: 10000,
@@ -83,7 +83,7 @@ export default function Chat() {
                             }
 
                             if(newMSG.type === "CONNECT"){
-                                console.log("상대방 입장 ")
+                                // console.log("상대방 입장 ")
                                 setWholeRead(true);
                             }
                         }
