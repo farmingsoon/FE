@@ -12,7 +12,7 @@ import { loginSelector } from "@/stores/loginState";
 
 const SSEcontrol = () => {
     const eventSource = useRef<EventSourcePolyfill | null | undefined>();
-    const isLogin = useRecoilValue(tokenState);
+    const isTokenInValid = useRecoilValue(tokenState);
     const recoilLoginState = useRecoilValue(loginSelector);
     const localState = LocalStorage.getItem("loginState");
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -29,6 +29,7 @@ const SSEcontrol = () => {
 
     useEffect(() => {
         const pageLocation = window.location.pathname;
+        console.log("SSE: ", isTokenInValid.tokenExpired, localState, recoilLoginState.isLogin)
 
         const connectSSE = () => {
             eventSource.current = new EventSourcePolyfill(`${BASE_URL}/api/notifications/subscribe`, {
@@ -126,18 +127,11 @@ const SSEcontrol = () => {
             eventSource.current.onerror = (err) => {
                 console.log("SSE : ", err);
                 eventSource.current?.close();
-                // console.log("SSE: 재시도 횟수 - ", retryCount)
-                // if(retryCount < 3){
-                //     setTimeout(() => {
-                //         connectSSE();
-                //         setRetryCount((currentRetryCount) => currentRetryCount + 1);
-                //     }, 5000);
-                // }
             }
         };
 
 
-        if(isLogin.tokenExpired === true || localState === "false"){
+        if(isTokenInValid.tokenExpired === true || localState === "false"){
             //토큰 만료 시 연결 종료 
             eventSource.current?.close(); // 연결 종료
             eventSource.current = null; //참조 제거
@@ -146,16 +140,11 @@ const SSEcontrol = () => {
             console.log("SSE: 토큰 만료 및 비로그인 상태라 연결 종료")
         }
 
-        if(isLogin.tokenExpired === false && localState === "true" && recoilLoginState.isLogin === true ){
-            console.log("SSE: 로그인 상태라 연결 ", localState, recoilLoginState.isLogin)
+        if(isTokenInValid.tokenExpired === false && localState === "true" && recoilLoginState.isLogin === true ){
+            console.log("SSE: 로그인 상태라 연결 ")
             connectSSE();
         }
 
-        // if(retryCount >= 3 ) {
-        //     eventSource.current?.close(); // 연결 종료
-        //     eventSource.current = null; //참조 제거
-        //     console.log("SSE: 에러 시도 3회 이상으로 연결 종료")
-        // }
 
         return () => {
             if(eventSource.current){
@@ -173,7 +162,7 @@ const SSEcontrol = () => {
 
         
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isLogin.tokenExpired, notificationTimeoutId]);
+    }, [isTokenInValid.tokenExpired, notificationTimeoutId]);
 
 
     // return null;

@@ -33,6 +33,7 @@ export default function Home() {
   const [ homeData, setHomeData ] = useState<MerchanTypes[]>([]);
   const [ searchOption,  ] = useRecoilState(searchState)
   const [ sortCodeState,  ] = useRecoilState(sortCodeAtom);
+  const [ , setSelectOption ] = useRecoilState(searchState);
   const [ homePage, setHomePage ] = useRecoilState(homePageSelector);
   const [ pagination, setPagination ] = useState({
     // page: 0,
@@ -63,6 +64,7 @@ export default function Home() {
           hasPrevious: resPagination.hasPrevious,
           totalPageSize: resPagination.totalPageSize,
         });
+        setSelectOption({ option : "" , keyword: ""}) // 검색 후 초기화 
 
         return resData;
 
@@ -77,6 +79,7 @@ export default function Home() {
           hasPrevious: resPagination.hasPrevious,
           totalPageSize: resPagination.totalPageSize,
         });
+        setSelectOption({ option : "" , keyword: ""})
 
         return resData;
 
@@ -91,6 +94,7 @@ export default function Home() {
           hasPrevious: resPagination.hasPrevious,
           totalPageSize: resPagination.totalPageSize,
         });
+        setSelectOption({ option : "" , keyword: ""})
 
         return resData;
       }

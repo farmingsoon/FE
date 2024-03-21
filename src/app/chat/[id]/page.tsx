@@ -201,10 +201,10 @@ export default function Chat() {
             scrollToBottom();
         }
     },[messages]);
+
     const loadMoreItems = async () => {
         if(pagination.hasNext === false ) {// 마지막 페이지 
-        // setShowLoading(false);
-        return;
+            return;
         }; 
 
         const nextPage = pagination.page + 1;
