@@ -31,7 +31,7 @@ export default function Chat() {
     const [, setOpenTokenModal] = useRecoilState(tokenState);
     const inChatRoomSSE = useRecoilValue(sseNotiAtomFamily("inChatRoomUpdate"));
     const [ pagination, setPagination ] = useState({
-        page: -1,
+        page: 0,
         hasNext: false,
         hasPrevious: true,
         totalPageSize: 0,
@@ -112,7 +112,7 @@ export default function Chat() {
         const config = { withCredentials: true };
 
         try {
-            console.log(">>> 목록 업데이트 함수 실행 <<< ")
+            // console.log(">>> 목록 업데이트 함수 실행 <<< ")
             const res = await axios.get(url, config);
             setChatList(res.data.result);
 
@@ -154,10 +154,10 @@ export default function Chat() {
                 const history = res.data.result.chats;
                 const resPagination = res.data.result.pagination;
                 setPagination({
-                page: resPagination.page as number,
-                hasNext: resPagination.hasNext,
-                hasPrevious: resPagination.hasPrevious,
-                totalPageSize: resPagination.totalPageSize,
+                    page: resPagination.page as number,
+                    hasNext: resPagination.hasNext,
+                    hasPrevious: resPagination.hasPrevious,
+                    totalPageSize: resPagination.totalPageSize,
                 });
                 setMessages([...history])
                 return history;
@@ -207,6 +207,10 @@ export default function Chat() {
         if(pagination.hasNext === false ) {// 마지막 페이지 
             return;
         }; 
+        
+        if(pagination.totalPageSize -1 <= pagination.page){
+            return;
+        }
 
         const nextPage = pagination.page + 1;
         console.log("무한스크롤 작동", nextPage)

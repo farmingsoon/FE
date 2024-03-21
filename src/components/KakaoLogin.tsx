@@ -11,11 +11,11 @@ declare global {
 
 const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const redirectURI = `${BASER_URL}/oauth2/authorization/kakao`;
-const scope = [
-    "profile_nickname",
-    "profile_image",
-    "account_email",
-].join(",");
+// const scope = [
+//     "profile_nickname",
+//     "profile_image",
+//     "account_email",
+// ].join(",");
 
 const KakaoLogin = () => {
     useEffect(() => {
@@ -33,7 +33,7 @@ const KakaoLogin = () => {
         if (window.Kakao && window.Kakao.Auth) {
             window.Kakao.Auth.authorize({
                 redirectURI,
-                scope,
+                // scope,
             });
             console.log("카카오 로그잉잉 ")
         } else {
