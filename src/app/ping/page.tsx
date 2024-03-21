@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import SendButton from "../../../public/svg/SendButton";
+import ChatListItem from "@/components/chat/ChatListItem";
 
 export default function TestChatPage (){
     const userId = 1;
@@ -55,6 +56,17 @@ export default function TestChatPage (){
         }
     ]
 
+    const chatList = [
+        {
+            chatRoomId: 0,
+            toUserName: "감귤밭",
+            toUserProfileImage: "https://s3.ap-northeast-2.amazonaws.com/farming-bucket/Member/2024_03_16/64938d65-95cb-4aed-9ccc-0e5dd8ed8c9e.png",
+            lastMessage: "안녕하십니까",
+            lastChatTime: "2024-03-19T17:18:38.46959",
+            unReadMessageCount: 3,
+        }
+    ]
+
 
     const handleWholeRead = (e: any) => {
         e.preventDefault();
@@ -67,6 +79,7 @@ export default function TestChatPage (){
     useEffect(() => {
         const scrollState = window.document.querySelector("#chatInside");
         if(scrollState){
+            console.log("스크롤 위치 조정 합니다!!")
             scrollState.scrollTop = scrollState.scrollHeight;
         } 
         
@@ -84,19 +97,25 @@ export default function TestChatPage (){
 
     return (
         <div className="flex h-full">
-            <div className="w-[371px] border-r border-LINE_BORDER whitespace-nowrap bg-white">
+            <div className="min-w-48 border-r border-LINE_BORDER whitespace-nowrap bg-white">
                 <div className="flex flex-row justify-between px-3 items-cneter">
                 <h1 className="font-semibold ">채팅</h1>
                 {/* <NewWrite width={"20px"} height={"20px"} /> */}
                 </div>
-                <div className="overflow-y-auto max-h-full h-fit mt-12 border-t border-LINE_BORDER bg-lime-300 ">
-                    포인트
+                <div className="overflow-y-auto max-h-full h-fit mt-12 border-t border-LINE_BORDER">
+                    {chatList && chatList.length > 0 ? (
+                        chatList.map((list, idx) => <ChatListItem key={idx} list={list} />)
+                    ) : (
+                        <p className="text-sm font-normal mx-auto">
+                        개설된 채팅방이 없습니다.{" "}
+                        </p>
+                    )}
 
                 </div>
             </div>
 
             {/* 채팅 방 섹션 fles-grow*/}
-            <div className="flex flex-col flex-grow ">
+            <div className="flex flex-col flex-grow min-w-[600px] max-w-[800px] ">
 
                 <div className="flex flex-row w-full bg-purple-200 p-3 hover:cursor-pointer" >            
                     <div className="flex-1 ml-3">

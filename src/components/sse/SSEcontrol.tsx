@@ -1,20 +1,22 @@
 "use client";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
 import LocalStorage from "@/util/localstorage";
 import { sseNotiSelectorFamily } from "@/stores/sseNotiState";
 import NotificationItem from "./NotificationItem";
+import { loginSelector } from "@/stores/loginState";
 
 
 
 const SSEcontrol = () => {
     const eventSource = useRef<EventSourcePolyfill | null | undefined>();
     const isLogin = useRecoilValue(tokenState);
+    const recoilLoginState = useRecoilValue(loginSelector);
     const localState = LocalStorage.getItem("loginState");
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const [retryCount, setRetryCount] = useState(-1);
+    // const [retryCount, setRetryCount] = useState(-1);
     const notificationTimeoutId = useRef<NodeJS.Timeout | null>(null);
 
     //알림 관리
@@ -124,13 +126,13 @@ const SSEcontrol = () => {
             eventSource.current.onerror = (err) => {
                 console.log("SSE : ", err);
                 eventSource.current?.close();
-                console.log("SSESSE: 재시도 횟수 - ", retryCount)
-                if(retryCount < 3){
-                    setTimeout(() => {
-                        connectSSE();
-                        setRetryCount((currentRetryCount) => currentRetryCount + 1);
-                    }, 5000);
-                }
+                // console.log("SSE: 재시도 횟수 - ", retryCount)
+                // if(retryCount < 3){
+                //     setTimeout(() => {
+                //         connectSSE();
+                //         setRetryCount((currentRetryCount) => currentRetryCount + 1);
+                //     }, 5000);
+                // }
             }
         };
 
@@ -144,16 +146,16 @@ const SSEcontrol = () => {
             console.log("SSE: 토큰 만료 및 비로그인 상태라 연결 종료")
         }
 
-        if(isLogin.tokenExpired === false && localState === "true"){
-            console.log("SSE: 로그인 상태라 연결 ")
+        if(isLogin.tokenExpired === false && localState === "true" && recoilLoginState.isLogin === true ){
+            console.log("SSE: 로그인 상태라 연결 ", localState, recoilLoginState.isLogin)
             connectSSE();
         }
 
-        if(retryCount >= 3 ) {
-            eventSource.current?.close(); // 연결 종료
-            eventSource.current = null; //참조 제거
-            console.log("SSE: 에러 시도 3회 이상으로 연결 종료")
-        }
+        // if(retryCount >= 3 ) {
+        //     eventSource.current?.close(); // 연결 종료
+        //     eventSource.current = null; //참조 제거
+        //     console.log("SSE: 에러 시도 3회 이상으로 연결 종료")
+        // }
 
         return () => {
             if(eventSource.current){
@@ -171,7 +173,7 @@ const SSEcontrol = () => {
 
         
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isLogin.tokenExpired, retryCount, notificationTimeoutId]);
+    }, [isLogin.tokenExpired, notificationTimeoutId]);
 
 
     // return null;
