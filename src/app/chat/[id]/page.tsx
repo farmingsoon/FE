@@ -314,7 +314,7 @@ export default function Chat() {
 
   return (
     <div className="flex h-full">
-        <div className="w-[371px] border-r border-LINE_BORDER whitespace-nowrap ">
+        <div className="min-w-48 border-r border-LINE_BORDER whitespace-nowrap ">
                 <div className="flex flex-row justify-between px-3 items-cneter">
                     <h1 className="font-semibold ">채팅</h1>
                 </div>
@@ -322,7 +322,7 @@ export default function Chat() {
                     {chatList && chatList.length > 0 ? (
                         chatList.map((list, idx) => <ChatListItem key={idx} list={list} />)
                     ) : (
-                        <p className="text-sm font-normal mx-auto">
+                        <p className="text-sm font-normal mx-auto mt-12">
                         개설된 채팅방이 없습니다.{" "}
                         </p>
                     )}
@@ -330,7 +330,7 @@ export default function Chat() {
         </div>
 
       {/* 채팅 방 섹션 fles-grow*/}
-        <div className="flex flex-col flex-grow ">
+        <div className="flex flex-col flex-grow max-w-[800px]">
             <ChatProductItem curDetailChatInfo={curDetailChatInfo} />
             <p className="text-POINT_RED font-normal text-center pt-1 text-sm">
                 {isConnected

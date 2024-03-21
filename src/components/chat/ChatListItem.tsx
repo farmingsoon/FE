@@ -43,9 +43,9 @@ const ChatListItem = ( {list}:chatListItemTypes ) => {
     };
 
     return(
-        <div className="border mr-1 rounded-lg duration-500 overflow-none hover:shadow-xl my-1.5 h py-3 px-4 flex flex-row hover:bg-[#F4F4F4] " onClick={() => moveToChatRoom(list.chatRoomId)}>
-            <div className="overflow-hidden rounded-full "><Img type={"circle"} src={list.toUserProfileImage} width={40} height={40} /></div>
-            <div className="font-normal flex flex-col ml-3 w-60">
+        <div className=" border mr-1 rounded-lg duration-500 overflow-none hover:shadow-xl my-1.5 h py-3 px-4 flex flex-row hover:bg-[#F4F4F4] " onClick={() => moveToChatRoom(list.chatRoomId)}>
+            <div className="overflow-hidden rounded-full invisible sm:visible "><Img type={"circle"} src={list.toUserProfileImage} width={40} height={40} /></div>
+            <div className="font-normal flex flex-col ml-3 w-60 ">
                 <div className="mb-1">{list.toUserName}</div>
                 <div className="font-light text-xs text-DARK_GRAY flex flex-row items-center">
                     <div>{list.lastMessage.length > 17 ? list.lastMessage + "..." : list.lastMessage}</div>
