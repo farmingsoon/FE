@@ -40,7 +40,7 @@ export default function Chat() {
     const chatSocket = useRef<Stomp.Client | null>(null);
 
     const params = useParams<{ id: string }>();
-    const [websocketCount, setWebsocketCount] = useState(0);
+    const [websocketCount, setWebsocketCount] = useState(0);curDetailChatInfo
     const config = { withCredentials: true}
     const [ wholeRead, setWholeRead ] = useState(false);
 
@@ -159,7 +159,7 @@ export default function Chat() {
                     hasPrevious: resPagination.hasPrevious,
                     totalPageSize: resPagination.totalPageSize,
                 });
-                setMessages([...history])
+                setMessages((prev) => [...prev, ...history])
                 return history;
             }
 
@@ -216,8 +216,8 @@ export default function Chat() {
         }
 
         const nextPage = pagination.page + 1;
-        const historyMSG = await getHistoryChat(nextPage);
-        setMessages(prev => [...prev, ...historyMSG])        
+        await getHistoryChat(nextPage);
+        // setMessages(prev => [...prev, ...historyMSG])        
     };
 
     const observerRef = useChatScroll(loadMoreItems);
@@ -344,34 +344,32 @@ export default function Chat() {
             </p>
             <div id="chatScroll" className="h-full flex flex-col px-2 overflow-y-auto">
                 {messages.length > 0 ? 
-                    <div className="h-full ">
-                        <div ref={observerRef} className="w-fit mx-auto my-1 p-2 bg-zinc-200 rounded-lg text-LINE_BORDER text-sm">L:oading</div>
-                        <div className="flex flex-col-reverse bg-[#e1f8ea] h-full">   
-                            <div ref={chatBottomRef}></div>
-                            {messages.map((message, idx) => (
-                                <div className={`flex flex-row items-center ${message.senderId === userId ? "self-end" : "self-start"}`} key={idx} >
-                                    {message.senderId === userId ? null : (
-                                    <div className="flex flex-col items-center mr-3">
-                                        <p className="text-xs pb-1"> {curDetailChatInfo?.toUsername} </p>
-                                        <div className="">
-                                        <Img
-                                            type={"circle"}
-                                            src={curDetailChatInfo?.toUserProfileImage}
-                                            width={35}
-                                            height={35}
-                                        />
-                                        </div>
+                    <div className="flex flex-col-reverse pb-3 bg-[#e1f8ea] h-full overflow-y-auto">   
+                        <div ref={chatBottomRef}></div>
+                        {messages.map((message, idx) => (
+                            <div className={`flex flex-row items-center ${message.senderId === userId ? "self-end" : "self-start"}`} key={idx} >
+                                {message.senderId === userId ? null : (
+                                <div className="flex flex-col items-center mr-3">
+                                    <p className="text-xs pb-1"> {curDetailChatInfo?.toUsername} </p>
+                                    <div className="">
+                                    <Img
+                                        type={"circle"}
+                                        src={curDetailChatInfo?.toUserProfileImage}
+                                        width={35}
+                                        height={35}
+                                    />
                                     </div>
-                                    )}
-                                    <p className={`text-[10px] font-light text-POINT_RED mr-3 ${wholeRead ? "invisible" : ""}`}>
-                                        { message?.isRead === false && message.senderId === userId || wholeRead === false && message?.senderId === userId && message?.isRead === false ? 1 : null }
-                                    </p>
-                                    <p className={`px-2 my-2 py-3 rounded-lg w-fit ${message.senderId === userId ? "bg-indigo-400 text-white " : "bg-[#87dac2] text-white "}`} >
-                                        {message.message}
-                                    </p>     
                                 </div>
-                            ))}
-                        </div>
+                                )}
+                                <p className={`text-[10px] font-light text-POINT_RED mr-3 ${wholeRead ? "invisible" : ""}`}>
+                                    { message?.isRead === false && message.senderId === userId || wholeRead === false && message?.senderId === userId && message?.isRead === false ? 1 : null }
+                                </p>
+                                <p className={`px-2 my-2 py-3 rounded-lg w-fit ${message.senderId === userId ? "bg-indigo-400 text-white " : "bg-[#87dac2] text-white "}`} >
+                                    {message.message}
+                                </p>     
+                            </div>
+                        ))}
+                        <div ref={observerRef} className="w-fit mx-auto my-1 p-2 bg-zinc-200 rounded-lg text-LINE_BORDER text-sm">L:oading</div>
                     </div>
                 : (
                     <p className="my-3 text-indigo-400 text-center">

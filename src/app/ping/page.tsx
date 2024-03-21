@@ -10,6 +10,36 @@ export default function TestChatPage (){
     const dummyData = [
         {
             senderId: 1,
+            message: "15: 여섯 -끝",
+            isRead: false
+        },
+        {
+            senderId: 1,
+            message: "14: 넷",
+            isRead: false
+        },
+        {
+            senderId: 2,
+            message: "13: 셋",
+            isRead: true
+        },
+        {
+            senderId: 2,
+            message: "12: 둘",
+            isRead: true
+        },
+        {
+            senderId: 1,
+            message: "11: 하나",
+            isRead: true
+        },
+        {
+            senderId: 2,
+            message: "10: 10",
+            isRead: true
+        },
+        {
+            senderId: 1,
             message: "09: 도착 전에 연락 줘",
             isRead: false
         },
@@ -130,11 +160,12 @@ export default function TestChatPage (){
                         채팅방 연결 갯수 
                 </p>
 
-                <div id="chatInside" className="h-full flex flex-col px-2  overflow-y-auto bg-lime-200" >
+                <div id="chatInside" className="h-full flex flex-col px-2 bg-pink-600  overflow-y-auto" >
+                    
                     {dummyData.length > 0 ? 
-                        <div className="bg-blue-300 h-full">
-                            <div className="w-fit mx-auto my-1 p-2 bg-zinc-200 rounded-lg text-LINE_BORDER text-sm">Loading...</div>
-                            <div className="flex flex-col-reverse pb-3 bg-pink-600 h-full"   >
+                        // <div className="bg-black h-full ">
+                            
+                            <div className="flex flex-col-reverse pb-3 bg-indigo-200 h-full overflow-y-auto" >
                                 <div ref={chatBottomRef}></div>
                                 {dummyData.map((el, idx) => (
                                 <div key={idx} className={`flex flex-row items-center ${el?.senderId === userId ? "self-end" : "self-start"}`} >
@@ -144,10 +175,11 @@ export default function TestChatPage (){
                                     </p>    
                                     <p key={idx} className={`my-3 text-white text-center p-1 rounded-md ${el?.senderId === userId ? "bg-indigo-400" : "bg-black"} `} >{el?.message}</p>
                                 </div>
-                            ))}
-
+                                ))}
+                                <div className="w-fit mx-auto my-1 p-2 bg-zinc-200 rounded-lg text-LINE_BORDER text-sm">Loading...</div>
                             </div>
-                        </div>
+                            
+                        // </div>
                         
                     : null }
                 </div>

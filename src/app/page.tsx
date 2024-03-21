@@ -163,10 +163,10 @@ export default function Home() {
                 </Link>              
             ))}
 
-          {!finishFetch && (<div ref={observerRef} className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center p-5 text-lg font-semibold text-gray-500 bg-gray-100 rounded-lg shadow animate-pulse">
-            ...Loading
-          </div>)}
-          {finishFetch && (<div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center text-lg text-gray-500 "> 마지막 페이지입니다. </div>)}
+            {!finishFetch && (<div ref={observerRef} className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center p-5 text-lg font-semibold text-gray-500 bg-gray-100 rounded-lg shadow animate-pulse">
+              ...Loading
+            </div>)}
+            {finishFetch && (<div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center text-lg text-gray-500 "> 마지막 페이지입니다. </div>)}
           </div> :
           <div className="flex justify-center flex-col items-center mt-20">
             <NoData width={"300px"} height={"300px"}/>
