@@ -201,9 +201,10 @@ export default function Chat() {
         }
     },[messages]);
 
-    console.log(pagination);
-
     const loadMoreItems = async () => {
+        console.log("Load 무한 스크롤 함수 실행 ")
+        console.log(pagination);
+        
         if(pagination.hasNext === false ) {// 마지막 페이지 
             return;
         }; 
@@ -213,12 +214,8 @@ export default function Chat() {
         }
 
         const nextPage = pagination.page + 1;
-        console.log("무한스크롤 작동", nextPage)
-        await getHistoryChat(nextPage).then(newMsg => {
-            setMessages(prev => [...prev, ...newMsg])
-        });
-
-        
+        const historyMSG = await getHistoryChat(nextPage);
+        setMessages(prev => [...prev, ...historyMSG])        
     };
 
     const observerRef = useChatScroll(loadMoreItems);
