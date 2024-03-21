@@ -49,7 +49,7 @@ export default function Chat() {
     const userId = Number(LocalStorage.getItem("memberId"));
     const isLogin = LocalStorage.getItem("loginState");
 
-    console.log(messages);
+    // console.log(messages);
     const connect = () => {
         if (chatSocket.current === null) {
             const socket = new SockJS("https://server.farmingsoon.site/ws", null, {
