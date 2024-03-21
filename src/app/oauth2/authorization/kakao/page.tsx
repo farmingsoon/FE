@@ -16,9 +16,11 @@ export default function RedirectKakao ({searchParams}: {searchParams: {code: str
     // const searchParams = useSearchParams ();
     // const tempQuery = searchParams.get("code");
     // console.log("카카오 OAUTH : ", oauthCode); 
-    console.log("카카오 파람 : ", searchParams.code);
+    const code = searchParams.code
+
 
     useEffect(() => {
+        console.log("카카오 파람 : ", code);
         //백엔드 전달 코드 
         //router.push("/");
         // const id = res.data.result.memberId;
@@ -35,6 +37,7 @@ export default function RedirectKakao ({searchParams}: {searchParams: {code: str
         // LocalStorage.setItem("userName", userName);
         // LocalStorage.setItem("userProfileImg", profile);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return(
