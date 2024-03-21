@@ -204,12 +204,14 @@ export default function Chat() {
     const loadMoreItems = async () => {
         console.log("Load 무한 스크롤 함수 실행 ")
         console.log(pagination);
-        
+
         if(pagination.hasNext === false ) {// 마지막 페이지 
+            console.log("무한스크롤 취소 : 마지막 페이지 ")
             return;
         }; 
         
-        if(pagination.totalPageSize -1 <= pagination.page){
+        if(pagination.totalPageSize < pagination.page){
+            console.log("무한 스크롤 취소 : 페이지 오바")
             return;
         }
 
