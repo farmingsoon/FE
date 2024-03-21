@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react';
 export const useChatScroll = (fetchMoreFunc:any ) => {
     const observerRef = useRef<HTMLDivElement | null>(null);
     // const [isFetching, setIsFetching] = useState(false);
-    console.log("채팅 무한 스크롤 발동")
 
     useEffect(() => {
         if(typeof window === "undefined"){
