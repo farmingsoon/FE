@@ -45,6 +45,7 @@ const SSEModal = () => {
             if(res.status === 200){
                 console.log("전체 읽음 처리 ")
                 setAlarmPing((cur) => ({ ...cur, sseState: false }))
+                await getSSEData();
             }
         } catch (err){
             console.log(err);

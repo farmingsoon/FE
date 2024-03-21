@@ -344,7 +344,7 @@ export default function Chat() {
             </p>
             <div id="chatScroll" className="h-full flex flex-col px-2 overflow-y-auto">
                 {messages.length > 0 ? 
-                    <div className="flex flex-col-reverse pb-3 bg-[#e1f8ea] h-full overflow-y-auto">   
+                    <div className="flex flex-col-reverse pb-3 h-full overflow-y-auto ">   
                         <div ref={chatBottomRef}></div>
                         {messages.map((message, idx) => (
                             <div className={`flex flex-row items-center ${message.senderId === userId ? "self-end" : "self-start"}`} key={idx} >
