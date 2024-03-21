@@ -154,7 +154,7 @@ export default function Chat() {
                 const history = res.data.result.chats;
                 const resPagination = res.data.result.pagination;
                 setPagination({
-                    page: resPagination.page as number,
+                    page: resPagination.page -1 as number,
                     hasNext: resPagination.hasNext,
                     hasPrevious: resPagination.hasPrevious,
                     totalPageSize: resPagination.totalPageSize,
