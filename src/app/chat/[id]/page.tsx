@@ -80,7 +80,7 @@ export default function Chat() {
                             const newMSG = JSON.parse(message.body);
                             console.log(message.body);
                             if(newMSG.type === "SEND"){
-                                setMessages((chats) => [...chats, newMSG])
+                                setMessages((chats) => [newMSG, ...chats, ])
                             }
 
                             if(newMSG.type === "CONNECT"){

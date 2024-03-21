@@ -17,11 +17,16 @@ const ChatListItem = ( {list}:chatListItemTypes ) => {
 
             const remainingTime = lastDate.getTime() - currentDate.getTime();
             const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
+            const remainHours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60 ));
 
-            const dayLeft = Math.floor(remainingDays /  (1000 * 60 * 60 * 24));
-            const hourLeft =  Math.floor((remainingDays / (1000 * 60 * 60)) % 24);
-            return (`${dayLeft}일  ${hourLeft}시간`);
+            let result = "";
+            if(remainingDays < 0 || remainHours < 0 ){
+                result = `${Math.abs(remainingDays)}일  ${Math.abs(remainHours)}시간`
+            }
+            
+            return result;
         }
+        return "";
     };
 
     const moveToChatRoom = async (chatRoomId: number) => {
