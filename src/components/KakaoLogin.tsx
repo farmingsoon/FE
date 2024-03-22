@@ -18,6 +18,9 @@ const KakaoLogin = () => {
     const router = useRouter();
     const oauthCode = useParams<{ code: string; }>();
     console.log("카카오 컴포넌트에서 코드: ", oauthCode)
+    const code = new URL(window.location.href).searchParams.get("code");
+    console.log("카카오 컴포넌트에서 2 : ", code)
+
 
     useEffect(() => {
         const initKakao = () => {
