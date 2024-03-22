@@ -16,8 +16,6 @@ export default function RedirectKakao() {
 
     const authCode = useParams<{ id: string; }>()
     console.log("제발 정보좀 페이지 : ", authCode);
-    const code = new URL(window.location.href).searchParams.get("code");
-    console.log("제발 정보좀2 페이지 : ", code)
 
     useEffect(() => {
     //    axios.get("https://server.farmingsoon.site/login/oauth2/code/kakao")
