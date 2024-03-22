@@ -1,6 +1,7 @@
 "use client"
 import KAKAO from "@/../public/img/KAKAO.png";
 import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 declare global {
@@ -11,9 +12,12 @@ declare global {
 
 const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const redirectURI = `${BASER_URL}/oauth2/authorization/kakao`;
-const scope = "profile_nickname,profile_image,account_email";
+// const scope = "profile_nickname,profile_image,account_email";
 
 const KakaoLogin = () => {
+    const router = useRouter();
+    const oauthCode = useParams<{ code: string; }>();
+    console.log("카카오 컴포넌트에서 코드: ", oauthCode)
 
     useEffect(() => {
         const initKakao = () => {
@@ -27,16 +31,9 @@ const KakaoLogin = () => {
     }, []);
 
     const handleoAuth = () => {
-        if (window.Kakao && window.Kakao.Auth) {
-            window.Kakao.Auth.authorize({
-                redirectURI,
-                scope,
-            });
-            console.log("카카오 로그잉잉 ")
-        } else {
-            console.error("Kakao SDK is not initialized.");
-        }
+        router.push(redirectURI);
     };
+
 
     return (
         <div 
