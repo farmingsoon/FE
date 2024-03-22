@@ -1,7 +1,7 @@
 "use client"
 import KAKAO from "@/../public/img/KAKAO.png";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 declare global {
@@ -12,10 +12,10 @@ declare global {
 
 const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const redirectURI = `${BASER_URL}/oauth2/authorization/kakao`;
-const scope = "profile_nickname,profile_image,account_email";
+//const scope = "profile_nickname,profile_image,account_email";
 
 const KakaoLogin = () => {
-    // const router = useRouter();
+    const router = useRouter();
     const oauthCode = useParams<{ code: string; }>();
     console.log("카카오 컴포넌트에서 코드: ", oauthCode)
 
@@ -32,11 +32,11 @@ const KakaoLogin = () => {
     }, []);
 
     const handleoAuth = () => {
-        // router.push(redirectURI);
-        window.Kakao.Auth.authorize({
-            redirectURI,
-            scope,
-        });
+        router.push(redirectURI);
+        // window.Kakao.Auth.authorize({
+        //     redirectURI,
+        //     scope,
+        // });
         console.log("카카오 로그인 버튼 누름 ")
     };
 
