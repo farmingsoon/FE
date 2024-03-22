@@ -1,8 +1,8 @@
 "use client"
 import KAKAO from "@/../public/img/KAKAO.png";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useParams } from "next/navigation";
+import { Dispatch, SetStateAction, useEffect } from "react";
 
 declare global {
     interface Window {
@@ -10,12 +10,16 @@ declare global {
     }
 };
 
-const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
-const redirectURI = `${BASER_URL}/oauth2/authorization/kakao`;
-//const scope = "profile_nickname,profile_image,account_email";
+interface BasicModalTypes {
+    setOpenModal: Dispatch<SetStateAction<boolean>>
+}
 
-const KakaoLogin = () => {
-    const router = useRouter();
+// const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
+// const redirectURI = `${BASER_URL}/oauth2/authorization/kakao`;
+// const scope = "profile_nickname,profile_image,account_email";
+
+const KakaoLogin = ( {setOpenModal}: BasicModalTypes ) => {
+    // const router = useRouter();
     const oauthCode = useParams<{ code: string; }>();
     console.log("카카오 컴포넌트에서 코드: ", oauthCode)
 
@@ -32,11 +36,8 @@ const KakaoLogin = () => {
     }, []);
 
     const handleoAuth = () => {
-        router.push(redirectURI);
-        // window.Kakao.Auth.authorize({
-        //     redirectURI,
-        //     scope,
-        // });
+        // router.push(redirectURI);
+        setOpenModal(true);
         console.log("카카오 로그인 버튼 누름 ")
     };
 

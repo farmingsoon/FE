@@ -1,5 +1,6 @@
 "use client";
 import KakaoLogin from "@/components/KakaoLogin";
+import BasicModal from "@/components/modal/BaiscModal";
 import { loginSelector } from "@/stores/loginState";
 import { tokenState } from "@/stores/tokenModal";
 import { rotateRefresh } from "@/util/axiosCall";
@@ -17,6 +18,7 @@ export default function Login() {
     const [err, setErr] = useState("");
     const router = useRouter();
     const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
+    const [ openModal, setOpenModal ] = useState(false);
 
     const isValidEmail = ( email:string ) => {
         const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -115,7 +117,6 @@ export default function Login() {
 
     return (
         <div className="flex justify-center mt-12">
-            <div></div>
             <div className="flex flex-col w-80">
                 <div className="font-semibold text-2xl text-center mb-3">로그인</div>
                 <span className="border-b-2 border-black mb-3"></span>
@@ -136,12 +137,13 @@ export default function Login() {
                 </div>
 
                 <div className="font-semibold text-2xl text-center mt-5">SNS</div>
-                <KakaoLogin />
+                <KakaoLogin setOpenModal={setOpenModal} />
                 <div className="mt-5 text-center ">
                     <span className="text-xs ">회원가입하고 나에게 필요한 물건을 구해보세요!</span>
                     <Link href="/signup"><button className="border border-LINE_BORDER rounded-lg py-2 mt-3 text-sm w-full h-11 hover:bg-LINE_BORDER">간편 회원가입하기</button></Link>
                 </div>
             </div>
+            {openModal && <BasicModal setOpenModal={setOpenModal} />}
         </div>
     )
 }
