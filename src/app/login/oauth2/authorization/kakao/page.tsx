@@ -1,24 +1,17 @@
 "use client"
-import { loginSelector } from "@/stores/loginState";
-import { tokenState } from "@/stores/tokenModal";
-import LocalStorage from "@/util/localstorage";
-import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect } from "react";
-import { useRecoilState } from "recoil";
+
 
 export default function RedirectKakao() {
-    const [, setLogin] = useRecoilState(loginSelector);
-    const [ , setIsTokenInValid ] = useRecoilState(tokenState);
-    const router = useRouter();
-    // const searchParams = useSearchParams();
-    // const authCode = searchParams.get('code'); // 인가코드가 저장된다.
-
     const authCode = useParams<{ id: string; }>()
-    console.log("제발 정보좀 페이지 : ", authCode);
+
+
 
     useEffect(() => {
-    //    axios.get("https://server.farmingsoon.site/login/oauth2/code/kakao")
+        console.log("제발 정보좀 페이지 : ", authCode);
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // useEffect(() => {
