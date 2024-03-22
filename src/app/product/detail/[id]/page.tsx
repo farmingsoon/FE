@@ -33,6 +33,7 @@ interface DetailPageTypes {
     likeCount: number;
     viewCount: number;
     likeStatus: boolean;
+    awardPrice: number;
 }
 
 
@@ -245,7 +246,7 @@ export default function ProductDetail(  ) {
                 <div className="flex flex-row justify-between text-xl mt-2">
                     <h1>{detailData && detailData.title}</h1>
                     <div className="text-sm ">
-                        {!amIuser && 
+                        {!amIuser || detailData?.itemStatus !== "경매완료"  &&
                             <button className="bg-white rounded-md px-5 py-1.5 border shadow-lg w-36 hover:bg-zinc-200"
                                 onClick={handleChatClick}>채팅하기
                             </button>
@@ -290,6 +291,7 @@ export default function ProductDetail(  ) {
                     handleOpen={ () => handleOpen( detailData?.sellerId as number ) } 
                     itemId={params.id} 
                     itemStatus = {detailData?.itemStatus}
+                    awardPrice = {detailData?.awardPrice}
                     />}
         </div>
     )
