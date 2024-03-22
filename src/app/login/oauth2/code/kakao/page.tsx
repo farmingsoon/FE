@@ -45,13 +45,13 @@ export default function RedirectKakao({ userInfo }:any) {
 export async function getServerSideProps(context:any) {
     const { code } = context.query;
     const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const redirectURI = `${BASER_URL}/oauth2/authorization/kakao`;
+    const getUserInfo = `${BASER_URL}/login/oauth2/code/kakao`;
     
     // 여기서 백엔드에 유저 정보 요청을 보내고 응답을 받습니다.
     let userInfo = {};
     if (code) {
         try {
-            const res = await fetch(`${redirectURI}?code=${code}`);
+            const res = await fetch(`${getUserInfo}?code=${code}`);
             if(res.ok){
                 userInfo = await res.json();
             } else {
