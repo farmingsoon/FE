@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import SendButton from "../../../public/svg/SendButton";
 import ChatListItem from "@/components/chat/ChatListItem";
+import BookmarkSVG from "../../../public/svg/BookmarkSVG";
 
 export default function TestChatPage (){
     const userId = 1;
@@ -112,10 +113,6 @@ export default function TestChatPage (){
             console.log("스크롤 위치 조정 합니다!!")
             scrollState.scrollTop = scrollState.scrollHeight;
         } 
-        
-        // scrollState?.addEventListener("scroll", function () {
-        //     console.log(scrollState.scrollTop)
-        // }) //43.75
 
     }, []);
 
@@ -123,14 +120,27 @@ export default function TestChatPage (){
         if(chatBottomRef.current){
             chatBottomRef.current.scrollIntoView({ behavior: "smooth" })
         }
-    }, [wholeRead])
+    }, [wholeRead]);
+
+
+    const [likeStatus, setLikeStatus]  = useState(false);
+
+    const handleClick = ( ) => {
+
+        setLikeStatus(!likeStatus)
+
+    };
 
     return (
         <div className="flex h-full">
             <div className="min-w-48 border-r border-LINE_BORDER whitespace-nowrap bg-white">
                 <div className="flex flex-row justify-between px-3 items-cneter">
                 <h1 className="font-semibold ">채팅</h1>
-                {/* <NewWrite width={"20px"} height={"20px"} /> */}
+
+                <button onClick={() =>  handleClick()} className=" p-2 hover:bg-purple-300 z-10">
+                    <BookmarkSVG width={"15px"} height={"15px"}  likeStatus={likeStatus}/>
+                </button>
+
                 </div>
                 <div className="overflow-y-auto max-h-full h-fit mt-12 border-t border-LINE_BORDER">
                     {chatList && chatList.length > 0 ? (

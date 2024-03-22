@@ -24,6 +24,7 @@ export interface MypageTypes {
     viewCount: number;
     thumbnailImgUrl: string;
     likeStatus: boolean;
+    awardPrice: number;
 
 }
 
