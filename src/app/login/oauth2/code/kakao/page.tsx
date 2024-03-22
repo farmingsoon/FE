@@ -1,3 +1,4 @@
+"use client"
 import { loginSelector } from "@/stores/loginState";
 import { tokenState } from "@/stores/tokenModal";
 import LocalStorage from "@/util/localstorage";
