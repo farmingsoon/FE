@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { SetStateAction, useEffect, useRef, useState } from "react";
 import SendButton from "../../../public/svg/SendButton";
 import ChatListItem from "@/components/chat/ChatListItem";
 import BookmarkSVG from "../../../public/svg/BookmarkSVG";
+import Pagination from "@/common/Pagination";
 
 export default function TestChatPage (){
     const userId = 1;
@@ -131,9 +132,11 @@ export default function TestChatPage (){
 
     };
 
+    const [activeBtn, setActiveBtn] = useState(0)
+
     return (
         <div className="flex h-full">
-            <div className="min-w-48 border-r border-LINE_BORDER whitespace-nowrap bg-white">
+            {/* <div className="min-w-48 border-r border-LINE_BORDER whitespace-nowrap bg-white">
                 <div className="flex flex-row justify-between px-3 items-cneter">
                 <h1 className="font-semibold ">채팅</h1>
 
@@ -152,10 +155,19 @@ export default function TestChatPage (){
                     )}
 
                 </div>
-            </div>
+            </div> */}
+            <Pagination pageInfo={{
+                totalPageSize: 3,
+                totalElementSize: 15,
+                page: 1,
+                hasNext: true,
+                hasPrevious: false,
+                pagesize: 5,
+                elementSize: 5
+            }} activeBtn={activeBtn} setActiveBtn={setActiveBtn} />
 
             {/* 채팅 방 섹션 fles-grow*/}
-            <div className="flex flex-col flex-grow min-w-[600px] max-w-[800px] ">
+            {/* <div className="flex flex-col flex-grow min-w-[600px] max-w-[800px] ">
 
                 <div className="flex flex-row w-full bg-purple-200 p-3 hover:cursor-pointer" >            
                     <div className="flex-1 ml-3">
@@ -210,7 +222,7 @@ export default function TestChatPage (){
                             <SendButton width={"30px"} height={"30px"} />
                         </button>
                     </form>
-            </div>
+            </div> */}
         </div>
     )
 }
