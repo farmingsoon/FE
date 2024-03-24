@@ -144,13 +144,13 @@ export default function Home() {
 
   //kakao 로그인 유저 정보 
   useEffect(() => {
-    console.log("유저 정보 받기 - 로컬 상태 ", isLogin);
+    // console.log("유저 정보 받기 - 로컬 상태 ", isLogin);
 
     const kakaoUserInfo = async () => {
-      console.log("카카오 로그인 정보 얻는 함수 발동. ")
+      // console.log("카카오 로그인 정보 얻는 함수 발동. ")
       try { 
         const kakaoUserInfo = await axios.get(`${BASE_URL}/api/members/info` , {withCredentials: true});
-        console.log(kakaoUserInfo.data.result);
+        // console.log(kakaoUserInfo.data.result);
         const memberId = kakaoUserInfo.data.result.memberId;
         const nickname = kakaoUserInfo.data.result.nickname;
         const profileImgUrl = kakaoUserInfo.data.result.profileImgUrl;

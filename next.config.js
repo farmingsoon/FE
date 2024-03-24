@@ -2,6 +2,7 @@
 
 const nextConfig = {
     images : {
+        domains: ['k.kakaocdn.net'],        
         remotePatterns: [
             {
                 protocol: "https",
