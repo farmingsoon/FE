@@ -1,7 +1,7 @@
 import { SVG } from "@/types/SVG";
 
 interface clickSVG extends SVG {
-    onClick : () => void;
+    onClick?: () => void;
 }
 
 const ArrowLeft = ({width, height, onClick}: clickSVG) => {

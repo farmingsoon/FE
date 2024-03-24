@@ -9,7 +9,7 @@ interface BookmarkSVG extends SVG {
 
 const BookmarkSVG = ({width, height , likeStatus}: BookmarkSVG) => {
     const likeColor = likeStatus ? "#FF7171" : "#000000" ;
-    console.log(likeColor, likeStatus);
+    // console.log(likeColor, likeStatus);
 
     return(
         <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
