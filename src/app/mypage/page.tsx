@@ -112,7 +112,7 @@ export default function Mypage() {
     return(
         <div className="flex min-h-screen flex-col">
             <div className="p-4 border border-LINE_BORDER rounded-lg flex flex-row items-center max-w-[800px]">
-                <div className="overflow-hidden"><Img src={userProfile} type={"circle"} width={64} height={64}/></div>
+                <div className="overflow-hidden "><Img src={userProfile} type={"circle"} width={64} height={64}/></div>
                 <div className="text-lg font-semibold  ml-2">{userName}</div>
             </div>
             <div className="mt-5">

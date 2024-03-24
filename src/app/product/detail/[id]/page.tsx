@@ -80,7 +80,7 @@ export default function ProductDetail(  ) {
             console.log(res.data.result);
 
             if(userId === res.data.result.sellerId){
-                setAmIuser(res.data.result);
+                setAmIuser(true);
             }
             setDetailData(res.data.result);
 
@@ -171,19 +171,24 @@ export default function ProductDetail(  ) {
         }
     }
 
-    const formatDate = (date: string | undefined) => {
+    const formatTime = (date: string | undefined) => {
         if(date){
-            const expiredAtDate = new Date(date);
-            const curDate = new Date();
-            const timeLeft = expiredAtDate.getTime() - curDate.getTime();
-    
-            const dayLeft = Math.floor(timeLeft /  (1000 * 60 * 60 * 24));
-            const hourLeft =  Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
-    
-            return (`${dayLeft}일  ${hourLeft}시간`);
+            const lastDate = new Date(date);
+            const currentDate = new Date();
+
+            const remainingTime = lastDate.getTime() - currentDate.getTime();
+            const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
+            const remainHours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60 ));
+
+            let result = "";
+            if(remainingDays < 0 || remainHours < 0 ){
+                result = `${Math.abs(remainingDays)}일  ${Math.abs(remainHours)}시간`
+            }
+            
+            return result;
         }
-        return;
-    }
+        return "";
+    };
 
     const handleNextImg = () =>{
         if(detailData && curImg < detailData.itemImgUrl.length - 1){
@@ -262,7 +267,7 @@ export default function ProductDetail(  ) {
                         </button>
                     </div>
                 </div>
-                <div className="text-xs font-light my-1">{formatDate(detailData && detailData?.expiredAt)}남음</div>
+                <div className="text-xs font-light my-1">{formatTime(detailData && detailData?.expiredAt)}남음</div>
                 <div className="text-base  mt-3 mb-8">
                     <StatusPrice bidStatus={detailData && detailData.itemStatus } highestPrice={detailData && detailData.highestPrice} hopePrice={detailData && detailData.hopePrice} />
                 </div>

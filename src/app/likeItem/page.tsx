@@ -47,7 +47,7 @@ export default function LikeItemPage() {
             })
 
             setLikeData(likeRes.data.result.items)
-            console.log(likeRes.data.result.items);
+            //console.log(likeRes.data.result.items);
 
 
         } catch (err){

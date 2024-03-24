@@ -17,12 +17,18 @@ const HomeItem = ({data}: HomeItemTypes) => {
             const curDate = new Date();
             const timeLeft = expiredAtDate.getTime() - curDate.getTime();
     
-            const dayLeft = Math.floor(timeLeft /  (1000 * 60 * 60 * 24));
-            const hourLeft =  Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+            const dayLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
+            const hourLeft =  Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60 ));
     
-            return (`${dayLeft}일  ${hourLeft}시간`);
+            
+            let result = "";
+            if(dayLeft < 0 || hourLeft < 0 ){
+                result = `${Math.abs(dayLeft)}일  ${Math.abs(hourLeft)}시간`
+            }
+            
+            return result;
         }
-        return;
+        return "";
     }
 
     return(

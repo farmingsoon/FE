@@ -22,7 +22,7 @@ const LikeItem = ({bidCount, likeCount, itemId, likeStatus}: LikeItemTypes) => {
     // const [  , setLikeItemColor ] = useRecoilState(likeSelector);
     const isLogin = LocalStorage.getItem("loginState");
 
-    console.log("북마크 - ", itemId," : " , likeStatus)
+    // console.log("북마크 - ", itemId," : " , likeStatus)
     const handleLikeItem = debounce(async () => {
         // const isLikedItem = likeItemColor.includes(String(itemId));
 
