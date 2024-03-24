@@ -46,7 +46,7 @@ export default function Home() {
   });
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
   const [ finishFetch, setFinishFetch ] = useState(false);
-  // console.log(homePage.page);
+  console.log(kakaoLoginInfo);
 
 
   const getHomeData = async (currentPage: number) => {
@@ -143,6 +143,7 @@ export default function Home() {
 
   //kakao 로그인 유저 정보 
   useEffect(() => {
+    console.log("유저 정보 받기 ")
     if(kakaoLoginInfo.kakaoInfo === true){
       const kakaoUserInfo = axios.get(`${BASE_URL}/api/members/info` , {withCredentials: true});
       console.log(kakaoUserInfo)

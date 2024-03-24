@@ -41,7 +41,7 @@ const KakaoLogin = (  ) => {
         initKakao();
     }, []);
 
-    const handleoAuth = async () => {
+    const handleoAuth = () => {
         console.log("카카오 로그인 버튼 누름 ")
         router.push(redirectURI);
         // setOpenModal(true);
