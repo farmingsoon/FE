@@ -74,7 +74,6 @@ export default function Login() {
                 setMenuTab("home"); //메뉴탭 초기화 
                 setIsTokenInValid({tokenExpired: false}); //토큰 유효
                 LocalStorage.setItem("loginState", String(true));
-                // LocalStorage.setItem("accessToken", token);
                 LocalStorage.setItem("memberId", String(id));
                 LocalStorage.setItem("userName", userName);
                 LocalStorage.setItem("userProfileImg", profile);
