@@ -1,16 +1,18 @@
 "use client";
-import KakaoLogin from "@/components/KakaoLogin";
-import BasicModal from "@/components/modal/BaiscModal";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import axios from "axios";
+import Link from "next/link";
+
+import { useRecoilState } from "recoil";
 import { loginSelector } from "@/stores/loginState";
 import { amendMenuSelector } from "@/stores/selectMenu";
 import { tokenState } from "@/stores/tokenModal";
 import { rotateRefresh } from "@/util/axiosCall";
 import LocalStorage from "@/util/localstorage";
-import axios from "axios";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useRecoilState } from "recoil";
+
+import KakaoLogin from "@/components/KakaoLogin";
+// import BasicModal from "@/components/modal/BaiscModal";
 
 export default function Login() {
     const inputStyle = "border rounded-md border-LINE_BORDER px-3 h-11 my-1 w-full font-light text-sm";
@@ -20,7 +22,7 @@ export default function Login() {
     const [err, setErr] = useState("");
     const router = useRouter();
     const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const [ openModal, setOpenModal ] = useState(false);
+    // const [ openModal, setOpenModal ] = useState(false);
 
     const isValidEmail = ( email:string ) => {
         const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -140,13 +142,13 @@ export default function Login() {
                 </div>
 
                 <div className="font-semibold text-2xl text-center mt-5">SNS</div>
-                <KakaoLogin setOpenModal={setOpenModal} />
+                <KakaoLogin />
                 <div className="mt-5 text-center ">
                     <span className="text-xs ">회원가입하고 나에게 필요한 물건을 구해보세요!</span>
                     <Link href="/signup"><button className="border border-LINE_BORDER rounded-lg py-2 mt-3 text-sm w-full h-11 hover:bg-LINE_BORDER">간편 회원가입하기</button></Link>
                 </div>
             </div>
-            {openModal && <BasicModal setOpenModal={setOpenModal} />}
+            {/* {openModal && <BasicModal setOpenModal={setOpenModal} />} */}
         </div>
     )
 }

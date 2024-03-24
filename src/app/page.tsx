@@ -4,13 +4,15 @@ import NoData from "../../public/svg/NoData";
 import HomeItem from "@/components/HomeItem";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { searchState } from "@/stores/searchOptionState";
 import { axiosCall } from "@/util/axiosCall";
 import { useInfiniteScroll } from "@/util/useInfiniteScroll";
 import { sortCodeAtom } from "@/stores/sortCodeState";
 import FilteringCode from "@/components/FilteringCode";
 import { homePageSelector } from "@/stores/homePage";
+import axios from "axios";
+import { kakaoLoginState } from "@/stores/kakaoLoginInfo";
 
 export interface MerchanTypes {
   itemId: number;
@@ -30,6 +32,7 @@ export interface MerchanTypes {
 
 
 export default function Home() {
+  const kakaoLoginInfo = useRecoilValue(kakaoLoginState);
   const [ homeData, setHomeData ] = useState<MerchanTypes[]>([]);
   const [ searchOption,  ] = useRecoilState(searchState)
   const [ sortCodeState,  ] = useRecoilState(sortCodeAtom);
@@ -41,6 +44,7 @@ export default function Home() {
     hasPrevious: true,
     totalPageSize: 0,
   });
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
   const [ finishFetch, setFinishFetch ] = useState(false);
   // console.log(homePage.page);
 
@@ -134,7 +138,19 @@ export default function Home() {
     fetchHomeData();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchOption.keyword, sortCodeState ])
+  }, [searchOption.keyword, sortCodeState ]);
+
+
+  //kakao 로그인 유저 정보 
+  useEffect(() => {
+    if(kakaoLoginInfo.kakaoInfo === true){
+      const kakaoUserInfo = axios.get(`${BASE_URL}/api/members/info` , {withCredentials: true});
+      console.log(kakaoUserInfo)
+    }
+
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [kakaoLoginInfo])
 
 
   return (
