@@ -103,7 +103,7 @@ export default function Mypage() {
         if(type === "buyer"){
             setMineClick((prev) => ({
                 ...prev,
-                sellerBidOpen: !mineClick.buyerBidOpen
+                buyerBidOpen: !mineClick.buyerBidOpen
             }));
         }
     };
