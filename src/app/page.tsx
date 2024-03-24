@@ -4,7 +4,7 @@ import NoData from "../../public/svg/NoData";
 import HomeItem from "@/components/HomeItem";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { searchState } from "@/stores/searchOptionState";
 import { axiosCall } from "@/util/axiosCall";
 import { useInfiniteScroll } from "@/util/useInfiniteScroll";
@@ -12,8 +12,8 @@ import { sortCodeAtom } from "@/stores/sortCodeState";
 import FilteringCode from "@/components/FilteringCode";
 import { homePageSelector } from "@/stores/homePage";
 import axios from "axios";
-import { kakaoLoginState } from "@/stores/kakaoLoginInfo";
 import LocalStorage from "@/util/localstorage";
+import { loginSelector } from "@/stores/loginState";
 
 export interface MerchanTypes {
   itemId: number;
@@ -33,7 +33,6 @@ export interface MerchanTypes {
 
 
 export default function Home() {
-  const kakaoLoginInfo = useRecoilValue(kakaoLoginState);
   const [ homeData, setHomeData ] = useState<MerchanTypes[]>([]);
   const [ searchOption,  ] = useRecoilState(searchState)
   const [ sortCodeState,  ] = useRecoilState(sortCodeAtom);
@@ -48,7 +47,7 @@ export default function Home() {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
   const [ finishFetch, setFinishFetch ] = useState(false);
   const isLogin = LocalStorage.getItem("loginState");
-  console.log(kakaoLoginInfo);
+  const [, setLogin] = useRecoilState(loginSelector);
 
 
   const getHomeData = async (currentPage: number) => {
@@ -155,6 +154,11 @@ export default function Home() {
         const memberId = kakaoUserInfo.data.result.memberId;
         const nickname = kakaoUserInfo.data.result.nickname;
         const profileImgUrl = kakaoUserInfo.data.result.profileImgUrl;
+        setLogin((prev)=> ({
+          ...prev,
+          isLogin: true,
+          memberId: memberId,
+      }));
         LocalStorage.setItem("memberId", String(memberId));
         LocalStorage.setItem("userName", nickname);
         LocalStorage.setItem("userProfileImg", profileImgUrl);
