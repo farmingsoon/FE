@@ -152,9 +152,16 @@ export default function Home() {
       try { 
         const kakaoUserInfo = await axios.get(`${BASE_URL}/api/members/info` , {withCredentials: true});
         console.log(kakaoUserInfo.data.result);
+        const memberId = kakaoUserInfo.data.result.memberId;
+        const nickname = kakaoUserInfo.data.result.nickname;
+        const profileImgUrl = kakaoUserInfo.data.result.profileImgUrl;
+        LocalStorage.setItem("memberId", String(memberId));
+        LocalStorage.setItem("userName", nickname);
+        LocalStorage.setItem("userProfileImg", profileImgUrl);
 
       } catch (err){
         console.log("카카오 로그인 에러 ", err)
+        //403
       }
     }
 
