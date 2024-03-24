@@ -22,7 +22,7 @@ export default function DesignLayout({
   const isToken = useRecoilValue(tokenState);
 
   return (
-    <main className="flex-1 py-8 px-5 min-h-screen overflow-y-auto">
+    <main className="sm:flex-1 overflow-x-hidden px-2 sm:py-8 pt-36 sm:pt-10 sm:px-5 min-h-screen overflow-y-auto">
       {/* {showNotification && <NotificationItem />} */}
       {children}
       {activeMenus.map((el, idx) => {

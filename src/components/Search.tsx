@@ -66,7 +66,7 @@ const Search = () => {
 
 
     return(
-        <div className="w-full absolute ">
+        <div className="w-full sm:absolute ">
             <div className="bg-white border border-LINE_BORDER rounded-lg w-full flex flex-row text-sm h-10 overflow-hidden items-center ">
                 <button className="px-3 whitespace-nowrap flex flex-row items-center" onClick={handleOpen}>
                     {/* <LocationPin width={"15px"} height={"15px"}/>   */}

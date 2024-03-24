@@ -48,7 +48,7 @@ export default function Home() {
   const [ finishFetch, setFinishFetch ] = useState(false);
   const isLogin = LocalStorage.getItem("loginState");
   const [, setLogin] = useRecoilState(loginSelector);
-
+  console.log(homeData);
 
   const getHomeData = async (currentPage: number) => {
     try { 
@@ -177,7 +177,7 @@ export default function Home() {
 
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex flex-col sm:min-h-screen pt-5">
       <div className="flex flex-col text-left ">
         <p className="text-xs pb-2 font-light">다양한 중고 상품들을 
           <span className="font-semibold text-MAIN_COLOR">파밍순</span>에서 겟!
@@ -185,9 +185,8 @@ export default function Home() {
         <h1 className="pb-2">필요한 물건부터</h1>
         <h1 className="pb-2">구하지 못했던 한정 상품까지</h1>
       </div>
-      <div className="flex flex-row items-center justify-between pb-10">
-
-        <div className="w-3/6 relative">
+      <div className="flex flex-col sm:flex-row items-center justify-between pb-2 sm:pb-10">
+        <div className="w-full mt-3 sm:mt-0 sm:w-3/6 relative -top-3">
           <Search />
         </div>
         <FilteringCode />

@@ -41,7 +41,7 @@ const FilteringCode = () => {
     };
 
     return (
-        <div className="ml-5 whitespace-nowrap pt-5">
+        <div className="sm:ml-5 whitespace-nowrap pt-5 ">
             <input type="checkbox" id="bidding" checked={sortCodeState.isCheckBox === "BIDDING"} onChange={handleCheckBox}/>
             <label className="px-2 mr-3 outline-none">경매중인 상품</label>
             <input type="checkbox" id="soldout" checked={sortCodeState.isCheckBox === "SOLDOUT"} onChange={handleCheckBox}/>
@@ -60,7 +60,7 @@ const FilteringCode = () => {
 
 const SelectOptionSoldOut = ({sortCodeState, handleSortCode}:selectionTypes) => (
     <select
-            className="bg-zinc-200 rounded-md w-24 text-sm py-1 ml-5 outline-none"
+            className="bg-zinc-200 rounded-md sm:w-24 w-18 text-sm py-1 ml-5 outline-none"
             value={sortCodeState}
             onChange={handleSortCode}
         >
@@ -73,7 +73,7 @@ const SelectOptionSoldOut = ({sortCodeState, handleSortCode}:selectionTypes) => 
 
 const SelectOptionBidding = ({sortCodeState, handleSortCode}:selectionTypes) => (
     <select
-            className="bg-zinc-200 rounded-md w-24 text-sm py-1 ml-5 outline-none"
+            className="bg-zinc-200 rounded-md sm:w-24 w-18 text-sm py-1 ml-5 outline-none"
             value={sortCodeState}
             onChange={handleSortCode}
         >
@@ -85,7 +85,7 @@ const SelectOptionBidding = ({sortCodeState, handleSortCode}:selectionTypes) => 
 
 const SelectOptionDefault = ({sortCodeState, handleSortCode}:selectionTypes ) => (
     <select
-        className="bg-zinc-200 rounded-md w-24 text-sm py-1 ml-5 outline-none"
+        className="bg-zinc-200 rounded-md sm:w-24 w-18 text-sm py-1 ml-5 outline-none"
         value={sortCodeState}
         onChange={handleSortCode}
     >

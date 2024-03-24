@@ -37,6 +37,10 @@ const config: Config = {
       animation: {
         'slide-in-and-out': 'slideInAndOut 4s ease-in-out forwards',
       },
+      backdropFilter: {
+        'none': 'none',
+        'blur': 'blur(10px)',
+      },
     },
   },
   plugins: [],
