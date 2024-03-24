@@ -19,6 +19,10 @@ export const rotateRefresh = async () => {
                 LocalStorage.setItem("loginState", "false");
                 console.log("RefreshToken 만료");
                 throw new Error("RefreshTokenUnauthorized");
+            } else if (err.response.status === 400){
+                LocalStorage.setItem("loginState", "false");
+                console.log("RefreshToken 만료: 02");
+                throw new Error("RefreshTokenUnauthorized");
             }       
         };
 

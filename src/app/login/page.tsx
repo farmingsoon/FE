@@ -2,6 +2,7 @@
 import KakaoLogin from "@/components/KakaoLogin";
 import BasicModal from "@/components/modal/BaiscModal";
 import { loginSelector } from "@/stores/loginState";
+import { amendMenuSelector } from "@/stores/selectMenu";
 import { tokenState } from "@/stores/tokenModal";
 import { rotateRefresh } from "@/util/axiosCall";
 import LocalStorage from "@/util/localstorage";
@@ -15,6 +16,7 @@ export default function Login() {
     const inputStyle = "border rounded-md border-LINE_BORDER px-3 h-11 my-1 w-full font-light text-sm";
     const [, setLogin] = useRecoilState(loginSelector);
     const [ , setIsTokenInValid ] = useRecoilState(tokenState);
+    const [ , setMenuTab ] = useRecoilState(amendMenuSelector);
     const [err, setErr] = useState("");
     const router = useRouter();
     const BASER_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -67,6 +69,7 @@ export default function Login() {
                     isLogin: true,
                     memberId: res.data.result.memberId,
                 }));
+                setMenuTab("home"); //메뉴탭 초기화 
                 setIsTokenInValid({tokenExpired: false}); //토큰 유효
                 LocalStorage.setItem("loginState", String(true));
                 // LocalStorage.setItem("accessToken", token);
