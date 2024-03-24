@@ -12,23 +12,25 @@ export interface HomeItemTypes {
 const HomeItem = ({data}: HomeItemTypes) => {
     // const [ bidStatus, setBidStatus ] = useState("경매중");
     const formatDate = (date: string | undefined) => {
-        if(date){
+        if (date) {
             const expiredAtDate = new Date(date);
             const curDate = new Date();
             const timeLeft = expiredAtDate.getTime() - curDate.getTime();
     
-            const dayLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
-            const hourLeft =  Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60 ));
+            if (timeLeft <= 0) {
+                return expiredAtDate.toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }) + " 경매 마감";
+            } else {
+                const dayLeft = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hourLeft = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
     
-            
-            let result = "";
-            if(dayLeft < 0 || hourLeft < 0 ){
-                result = `${Math.abs(dayLeft)}일  ${Math.abs(hourLeft)}시간`
+                return (`${dayLeft}일 ${hourLeft}시간 남음`);
             }
-            
-            return result;
         }
-        return "";
+        return;
     }
 
     return(
@@ -62,7 +64,7 @@ const HomeItem = ({data}: HomeItemTypes) => {
             <div className="text-sm">
                 <StatusPrice bidStatus={data.itemStatus} highestPrice={data.highestPrice} hopePrice={data.hopePrice} />
             </div>
-            <div className="text-sm font-light mt-2">{formatDate(data.expiredAt)}남음</div>
+            <div className="text-sm font-light mt-2">{formatDate(data.expiredAt)}</div>
         </div>
     )
 }

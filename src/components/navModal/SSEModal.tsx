@@ -66,7 +66,7 @@ const SSEModal = () => {
 
 
     return(
-        <div className="absolute top-0 left-52 w-[371px] border-r border-LINE_BORDER whitespace-nowrap bg-white shadow-md z-50 py-10 min-h-screen">
+        <div className="absolute top-0 left-0 sm:left-52 w-full sm:w-[371px] border-r border-LINE_BORDER whitespace-nowrap bg-white shadow-md z-50 py-10 min-h-[772px] sm:min-h-screen ">
             <div className="absolute top-0 right-0 p-3 hover:bg-zinc-200 rounded-lg" onClick={handleClose}><Close width={"18px"} height={"18px"} /></div>
             <h1 className="font-semibold mb-8 px-5">알림</h1>
             <div className="mt-5 flex flex-col px-3">

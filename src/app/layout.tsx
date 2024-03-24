@@ -19,7 +19,7 @@ export default function RootLayout({
 
   return (
     <html lang="ko">
-      <body className="flex flex-row">
+      <body className="flex flex-col-reverse sm:flex-row">
         <RecoilRootProvider >
           <Navbar />
           <DesignLayout>
