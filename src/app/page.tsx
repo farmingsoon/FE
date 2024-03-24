@@ -13,6 +13,7 @@ import FilteringCode from "@/components/FilteringCode";
 import { homePageSelector } from "@/stores/homePage";
 import axios from "axios";
 import { kakaoLoginState } from "@/stores/kakaoLoginInfo";
+import LocalStorage from "@/util/localstorage";
 
 export interface MerchanTypes {
   itemId: number;
@@ -143,15 +144,20 @@ export default function Home() {
 
   //kakao 로그인 유저 정보 
   useEffect(() => {
-    console.log("유저 정보 받기 ")
-    if(kakaoLoginInfo.kakaoInfo === true){
+    console.log("유저 정보 받기 ");
+    const isLogin = LocalStorage.getItem("loginState");
+
+    try { 
       const kakaoUserInfo = axios.get(`${BASE_URL}/api/members/info` , {withCredentials: true});
-      console.log(kakaoUserInfo)
+      console.log(kakaoUserInfo);
+      console.log("로컬스토리지 로그인 상태 : ", isLogin);
+
+    } catch (err){
+      console.log("유저 정보 입수 에러 ", err)
     }
 
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [kakaoLoginInfo])
+  }, [])
 
 
   return (
