@@ -54,7 +54,7 @@ const NavDropdown = ( {handleClick}:DropDownTypes ) => {
     };
 
     return(
-        <div className="shadow-lg border-zinc-50 rounded-lg pt-3 pb-1 px-4 w-52 absolute bottom-12 left-8 z-20 bg-white">
+        <div className="shadow-lg border-zinc-50 rounded-lg pt-3 pb-1 px-4 w-52 absolute bottom-14 left-8 z-30 bg-white">
             <ul className=" text-base">
                 <Link href={"/likeItem"}>
                     <li className="py-3 hover:text-MAIN_COLOR"  >
