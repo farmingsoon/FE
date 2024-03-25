@@ -32,10 +32,20 @@ const config: Config = {
         slideInAndOut: {
           '0%, 100%': { opacity: "0", transform: 'translateX(100%)' },
           '10%, 90%': { opacity: "1", transform: 'translateX(0)' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(100%)', opacity: "0" },
+          '100%': { transform: 'translateY(0)', opacity: "1" },
+        },
+        slideDown: {
+          '100%': { transform: 'translateY(0%)', opacity: "1" },
+          '0%': { transform: 'translateY(100%)', opacity: "0" },
         }
       },
       animation: {
         'slide-in-and-out': 'slideInAndOut 4s ease-in-out forwards',
+        'slideUp': 'slideUp 0.5s ease-out forwards',
+        'slideDown': 'slideDown 1s ease-in-out forwards'
       },
       backdropFilter: {
         'none': 'none',
