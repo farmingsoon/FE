@@ -2,6 +2,7 @@ import Img from "@/common/Img";
 import { SSEDatasTypes } from "./SSEModal";
 import notificationSVG from "@/../public/svg/notificationSVG.svg";
 import { axiosCall } from "@/util/axiosCall";
+import { useRouter } from "next/navigation";
 
 interface SSEItemTypes {
     data: SSEDatasTypes
@@ -9,6 +10,7 @@ interface SSEItemTypes {
 
 const SSEItem = ({data}: SSEItemTypes) => {
     const notificationId = data.itemId
+    const router = useRouter();
 
     const handleRead = async () => {
         const url = `/api/notifications/${notificationId}`;
@@ -18,7 +20,8 @@ const SSEItem = ({data}: SSEItemTypes) => {
         try { 
             const res = await axiosCall(url, "PATCH", data, config );
             if(res.status === 200){
-                console.log("읽음 처리 성공")
+                console.log("읽음 처리 성공");
+                router.push(`/product/detail/${notificationId}`)
             }
         }catch (err){
             console.log(err);

@@ -272,7 +272,7 @@ export default function ProductDetail(  ) {
                 </div>
                 <div className="text-xs font-light my-1">{formatDate(detailData && detailData?.expiredAt)}</div>
                 <div className="text-base  mt-3 mb-8">
-                    <StatusPrice bidStatus={detailData && detailData.itemStatus } highestPrice={detailData && detailData.highestPrice} hopePrice={detailData && detailData.hopePrice} />
+                    <StatusPrice bidStatus={detailData && detailData.itemStatus } highestPrice={detailData && detailData.highestPrice} hopePrice={detailData && detailData.hopePrice} type={"detail"} awardPrice={detailData && detailData.awardPrice}/>
                 </div>
                 <div className="font-light text-sm whitespace-pre">{detailData && detailData.description}</div>
             </div>

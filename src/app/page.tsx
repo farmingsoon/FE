@@ -48,7 +48,7 @@ export default function Home() {
   const [ finishFetch, setFinishFetch ] = useState(false);
   const isLogin = LocalStorage.getItem("loginState");
   const [, setLogin] = useRecoilState(loginSelector);
-  // console.log(homeData);
+  console.log(homeData);
 
   const getHomeData = async (currentPage: number) => {
     try { 

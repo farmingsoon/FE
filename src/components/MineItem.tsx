@@ -14,6 +14,7 @@ const MineItem = ({type, data}: MineItemTypes) => {
     const router = useRouter();
     const [ , setMineClick ] = useRecoilState(mineItemSelector);
 
+    //itemStatus에 따라서 
     const formatDate = (date: string) => {
         if (date) {
             const expiredAtDate = new Date(date);
@@ -62,10 +63,22 @@ const MineItem = ({type, data}: MineItemTypes) => {
     return(
         <div className="my-2 flex flex-row whitespace-nowrap" >
             <div className="flex flex-row flex-1" onClick={(e) => {e.preventDefault(); router.push(`/product/detail/${data && data.itemId}`)}} >
-                <div className="overflow-hidden mr-3 "><Img src={data.thumbnailImgUrl} type={"normal"} width={96} height={96}/></div>
+                <div className="overflow-hidden mr-3 ">
+                    <Img src={data.thumbnailImgUrl} type={"normal"} width={96} height={96}/>
+                    { data.itemStatus === "판매완료" && 
+                    <div className="absolute inset-0 w-full h-full bg-gray-500 bg-opacity-75 transition-opacity flex items-center justify-center">
+                        <div className="font-semibold text-2xl text-white">판매 완료</div>
+                    </div>
+                    }
+                    { data.itemStatus === "경매종료" && 
+                        <div className="absolute inset-0 w-full h-full bg-gray-500 bg-opacity-75 transition-opacity flex items-center justify-center">
+                            <div className="font-semibold text-2xl text-white">경매 종료</div>
+                        </div>
+                    }
+                </div>
                 <div className=" flex flex-col text-base  py-3 justify-around min-w-64">
                     <div>{data.title}</div>
-                    <StatusPrice bidStatus={data.itemStatus} highestPrice={data.highestPrice} hopePrice={data.hopePrice} />
+                    <StatusPrice bidStatus={data.itemStatus} highestPrice={data.highestPrice} hopePrice={data.hopePrice} bidCount={data.bidCount} />
                     <div className="text-xs font-light  ">{data && formatDate(data.expiredAt)}</div>
                 </div>
             </div>
