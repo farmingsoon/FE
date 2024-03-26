@@ -63,7 +63,7 @@ const MineItem = ({type, data}: MineItemTypes) => {
     return(
         <div className="my-2 flex flex-row whitespace-nowrap" >
             <div className="flex flex-row flex-1" onClick={(e) => {e.preventDefault(); router.push(`/product/detail/${data && data.itemId}`)}} >
-                <div className="overflow-hidden mr-3 ">
+                <div className="flex items-center overflow-hidden mr-3 relative">
                     <Img src={data.thumbnailImgUrl} type={"normal"} width={96} height={96}/>
                     { data.itemStatus === "판매완료" && 
                     <div className="absolute inset-0 w-full h-full bg-gray-500 bg-opacity-75 transition-opacity flex items-center justify-center">

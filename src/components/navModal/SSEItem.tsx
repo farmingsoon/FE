@@ -1,8 +1,8 @@
 import Img from "@/common/Img";
 import { SSEDatasTypes } from "./SSEModal";
 import notificationSVG from "@/../public/svg/notificationSVG.svg";
-import { axiosCall } from "@/util/axiosCall";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 interface SSEItemTypes {
     data: SSEDatasTypes
@@ -18,7 +18,7 @@ const SSEItem = ({data}: SSEItemTypes) => {
         const config = { withCredentials: true }
 
         try { 
-            const res = await axiosCall(url, "PATCH", data, config );
+            const res = await axios.patch(url, data, config);
             if(res.status === 200){
                 console.log("읽음 처리 성공");
                 router.push(`/product/detail/${notificationId}`)
@@ -29,7 +29,7 @@ const SSEItem = ({data}: SSEItemTypes) => {
     }
 
     return(
-        <div className="flex flex-row justify-between my-1 items-center" onClick={handleRead}>
+        <div className="flex flex-row justify-between py-2 my-1 items-center cursor-pointer duration-500 hover:scale-105 hover:shadow-xl" onClick={handleRead}>
             <div className=""><Img type={"circle"} src={notificationSVG} width={25} height={25} /></div>
             <div className="font-normal text-sm mx-3 whitespace-normal">
                 <span>{data.message} </span>
