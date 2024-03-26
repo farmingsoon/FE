@@ -7,7 +7,6 @@ interface StatusPriceTypes {
 }
 
 const StatusPrice = ( {bidStatus, highestPrice, hopePrice, awardPrice, bidCount}: StatusPriceTypes ) => {
-    console.log(bidStatus, awardPrice)
     const formatPrice = (price: number | null | undefined) => {
         if (price === null) return "0";
         if (price === undefined) return "0";
