@@ -15,14 +15,25 @@ const MineItem = ({type, data}: MineItemTypes) => {
     const [ , setMineClick ] = useRecoilState(mineItemSelector);
 
     const formatDate = (date: string) => {
-        const expiredAtDate = new Date(date);
-        const curDate = new Date();
-        const timeLeft = expiredAtDate.getTime() - curDate.getTime();
-
-        const dayLeft = Math.floor(timeLeft /  (1000 * 60 * 60 * 24));
-        const hourLeft =  Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
-
-        return (`${dayLeft}일  ${hourLeft}시간`);
+        if (date) {
+            const expiredAtDate = new Date(date);
+            const curDate = new Date();
+            const timeLeft = expiredAtDate.getTime() - curDate.getTime();
+    
+            if (timeLeft <= 0) {
+                return expiredAtDate.toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }) + " 경매 마감";
+            } else {
+                const dayLeft = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hourLeft = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+    
+                return (`${dayLeft}일 ${hourLeft}시간 남음`);
+            }
+        }
+        return;
     };
 
 
