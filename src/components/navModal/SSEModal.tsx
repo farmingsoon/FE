@@ -11,6 +11,7 @@ import { menuState } from "@/stores/NavMenuState";
 
 export interface SSEDatasTypes {
     itemId: number;
+    notificationId: number;
     message: string;
 }
 

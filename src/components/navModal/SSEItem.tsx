@@ -9,7 +9,8 @@ interface SSEItemTypes {
 }
 
 const SSEItem = ({data}: SSEItemTypes) => {
-    const notificationId = data.itemId
+    const notificationId = data.notificationId;
+    const itemId = data.itemId;
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
     const router = useRouter();
 
@@ -22,7 +23,7 @@ const SSEItem = ({data}: SSEItemTypes) => {
             const res = await axios.patch(PATCHurl, data, config);
             if(res.status === 200){
                 console.log("읽음 처리 성공");
-                router.push(`/product/detail/${notificationId}`)
+                router.push(`/product/detail/${itemId}`)
             }
         }catch (err){
             console.log(err);
