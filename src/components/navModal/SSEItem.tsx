@@ -14,12 +14,12 @@ const SSEItem = ({data}: SSEItemTypes) => {
     const router = useRouter();
 
     const handleRead = async () => {
-        const url = `${BASE_URL}/api/notifications/${notificationId}`;
+        const PATCHurl = `${BASE_URL}/api/notifications/${notificationId}`;
         const data = {};
         const config = { withCredentials: true }
 
         try { 
-            const res = await axios.patch(url, data, config);
+            const res = await axios.patch(PATCHurl, data, config);
             if(res.status === 200){
                 console.log("읽음 처리 성공");
                 router.push(`/product/detail/${notificationId}`)
