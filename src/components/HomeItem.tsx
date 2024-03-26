@@ -62,7 +62,7 @@ const HomeItem = ({data}: HomeItemTypes) => {
                 </div>
             </div>
             <div className="text-sm">
-                <StatusPrice bidStatus={data.itemStatus} highestPrice={data.highestPrice} hopePrice={data.hopePrice} />
+                <StatusPrice bidStatus={data.itemStatus} highestPrice={data.highestPrice} hopePrice={data.hopePrice} bidCount={data.bidCount}/>
             </div>
             <div className="text-sm font-light mt-2">{formatDate(data.expiredAt)}</div>
         </div>
