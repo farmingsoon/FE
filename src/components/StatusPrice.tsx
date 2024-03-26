@@ -7,7 +7,7 @@ interface StatusPriceTypes {
 }
 
 const StatusPrice = ( {bidStatus, highestPrice, hopePrice, awardPrice, bidCount}: StatusPriceTypes ) => {
-
+    console.log(bidStatus, awardPrice)
     const formatPrice = (price: number | null | undefined) => {
         if (price === null) return "0";
         if (price === undefined) return "0";
@@ -33,7 +33,7 @@ const StatusPrice = ( {bidStatus, highestPrice, hopePrice, awardPrice, bidCount}
         return (
             <div className="text-sm">
                 <span>
-                    낙찰가<span className="text-POINT_BLUE"> ₩ {formatPrice(awardPrice)}</span> 원
+                    낙찰가<span className="text-POINT_BLUE"> ₩ {formatPrice(awardPrice && awardPrice)}</span> 원
                 </span>
             </div>
         )
