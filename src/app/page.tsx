@@ -29,6 +29,7 @@ export interface MerchanTypes {
   viewCount: number;
   likeCount: number;
   likeStatus: boolean;
+  awardPrice: number;
 }
 
 
