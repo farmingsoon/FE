@@ -1,7 +1,6 @@
 import Img from "@/common/Img";
 import { SSEDatasTypes } from "./SSEModal";
 import notificationSVG from "@/../public/svg/notificationSVG.svg";
-import { axiosCall } from "@/util/axiosCall";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
