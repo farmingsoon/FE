@@ -10,15 +10,16 @@ interface SSEItemTypes {
 
 const SSEItem = ({data}: SSEItemTypes) => {
     const notificationId = data.itemId
+    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
     const router = useRouter();
 
     const handleRead = async () => {
-        const url = `/api/notifications/${notificationId}`;
+        const PATCHurl = `${BASE_URL}/api/notifications/${notificationId}`;
         const data = {};
         const config = { withCredentials: true }
 
         try { 
-            const res = await axios.patch(url, data, config);
+            const res = await axios.patch(PATCHurl, data, config);
             if(res.status === 200){
                 console.log("읽음 처리 성공");
                 router.push(`/product/detail/${notificationId}`)
