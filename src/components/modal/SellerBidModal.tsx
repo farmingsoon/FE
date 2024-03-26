@@ -32,8 +32,8 @@ const SellerBidModal = ({handleOpen, itemId, priceData, itemStatus}: SellerBidMo
     //priceData[0] : 최고가 , priceData[1] : 최저가 
     console.log(checkState)
 
-    const formatPrice = (price: number | undefined) => {
-        if(price === undefined){
+    const formatPrice = (price: number | undefined | null ) => {
+        if(price === undefined || price === null ){
             return 0;
         };
 
