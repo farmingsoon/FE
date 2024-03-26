@@ -3,6 +3,8 @@ import { SSEDatasTypes } from "./SSEModal";
 import notificationSVG from "@/../public/svg/notificationSVG.svg";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import { menuState } from "@/stores/NavMenuState";
 
 interface SSEItemTypes {
     data: SSEDatasTypes
@@ -12,6 +14,7 @@ const SSEItem = ({data}: SSEItemTypes) => {
     const notificationId = data.notificationId;
     const itemId = data.itemId;
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+    const [ , setCloseModal] = useRecoilState(menuState);
     const router = useRouter();
 
     const handleRead = async () => {
@@ -23,6 +26,8 @@ const SSEItem = ({data}: SSEItemTypes) => {
             const res = await axios.patch(PATCHurl, data, config);
             if(res.status === 200){
                 console.log("읽음 처리 성공");
+                const newMenu = [{menu: "search", onOff: false }, {menu: "alarm", onOff: false}];
+                setCloseModal(newMenu);
                 router.push(`/product/detail/${itemId}`)
             }
         }catch (err){
