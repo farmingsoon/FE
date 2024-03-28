@@ -82,13 +82,6 @@ const BiddingModal = ({handleOpen, itemId, itemStatus, awardPrice}: BiddingModal
 
         } catch (err) {
             console.log(`입찰내역 ${err}`)
-            // if(axios.isAxiosError(err) && err.response){
-            //     if(err.response.status === 401){
-            //         //token모달 열기 
-            //         setOpenTokenModal({tokenExpired: true});
-            //     }
-                
-            // }
         }
     };
 

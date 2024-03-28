@@ -139,7 +139,7 @@ const SSEcontrol = () => {
             console.log("SSE: 토큰 만료 및 비로그인 상태라 연결 종료")
         }
 
-        if(isTokenInValid.tokenExpired === false && localState === "true" && recoilLoginState.isLogin === true ){
+        if(isTokenInValid.tokenExpired === false && localState === "true" ){
             console.log("SSE: 로그인 상태라 연결 ")
             connectSSE();
         }

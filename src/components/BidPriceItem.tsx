@@ -87,7 +87,7 @@ const BidPriceItem = ( {data, type, itemId, itemStatus}: BidPriceTypes ) => {
             const url = "/api/chat-rooms";
             const body = {
                 buyerId: buyerId,
-                itemId: checkState.awardPrice,
+                itemId: itemId,
             };
             const config = { withCredentials: true }
 

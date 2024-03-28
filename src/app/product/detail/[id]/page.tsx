@@ -254,7 +254,7 @@ export default function ProductDetail(  ) {
                 <div className="flex flex-row justify-between text-xl mt-2">
                     <h1>{detailData && detailData.title}</h1>
                     <div className="text-sm ">
-                        {!amIuser || detailData?.itemStatus !== "경매완료"  &&
+                        {amIuser === false || detailData?.itemStatus !== "경매완료"  &&
                             <button className="bg-white rounded-md px-5 py-1.5 border shadow-lg w-36 hover:bg-zinc-200"
                                 onClick={handleChatClick}>채팅하기
                             </button>
@@ -262,11 +262,8 @@ export default function ProductDetail(  ) {
                         <button 
                             className="bg-MAIN_COLOR rounded-md px-5 py-1.5 shadow-lg ml-3 w-36 hover:bg-DEEP_MAIN"
                             onClick={() => handleOpen( detailData?.sellerId as number)}
-                        >
-                        { Number(userId) === detailData?.sellerId
-                            ? "입찰 내역"
-                            : "입찰 하기"
-                        }
+                        >                        
+                        {detailData?.itemStatus === "판매완료" ? "입찰 목록" : (Number(userId) === detailData?.sellerId) ? "입찰 내역" : "입찰 하기" }
                         </button>
                     </div>
                 </div>
