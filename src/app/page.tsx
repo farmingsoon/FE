@@ -4,7 +4,7 @@ import NoData from "../../public/svg/NoData";
 import HomeItem from "@/components/HomeItem";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { searchState } from "@/stores/searchOptionState";
 import { axiosCall } from "@/util/axiosCall";
 import { useInfiniteScroll } from "@/util/useInfiniteScroll";
@@ -14,6 +14,7 @@ import { homePageSelector } from "@/stores/homePage";
 import axios from "axios";
 import LocalStorage from "@/util/localstorage";
 import { loginSelector } from "@/stores/loginState";
+import { kakaoLoginState } from "@/stores/kakaoLoginInfo";
 
 export interface MerchanTypes {
   itemId: number;
@@ -48,6 +49,7 @@ export default function Home() {
   const [ finishFetch, setFinishFetch ] = useState(false);
   const isLogin = LocalStorage.getItem("loginState");
   const [, setLogin] = useRecoilState(loginSelector);
+  const kakaoLogin = useRecoilValue(kakaoLoginState);
 
 
   const getHomeData = async (currentPage: number) => {
@@ -173,7 +175,7 @@ export default function Home() {
       }
     }
 
-    if(isLogin === "true"){
+    if(isLogin === "true" && kakaoLogin.kakaoInfo === true){
       kakaoUserInfo();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
