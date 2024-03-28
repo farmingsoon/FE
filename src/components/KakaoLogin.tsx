@@ -1,11 +1,9 @@
 "use client"
 import KAKAO from "@/../public/img/KAKAO.png";
-import { kakaoLoginState } from "@/stores/kakaoLoginInfo";
 import LocalStorage from "@/util/localstorage";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useRecoilState } from "recoil";
 
 declare global {
     interface Window {
@@ -19,8 +17,6 @@ const redirectURI = `${BASE_URL}/oauth2/authorization/kakao`;
 
 const KakaoLogin = (  ) => {
     const router = useRouter();
-    const [ , setKakaoLoginState ] = useRecoilState(kakaoLoginState);
-
 
     useEffect(() => {
         const initKakao = () => {
@@ -36,7 +32,7 @@ const KakaoLogin = (  ) => {
     const handleoAuth = () => {
         console.log("카카오 로그인 버튼 누름 ");
         LocalStorage.setItem("loginState", String(true));
-        setKakaoLoginState({kakaoInfo: true})
+        LocalStorage.setItem("kakaoLogin", String(true));
         router.push(redirectURI);
 
     };
