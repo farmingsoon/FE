@@ -9,6 +9,7 @@ import BookmarkSVG from "../../public/svg/BookmarkSVG"
 import PersonSVG from "../../public/svg/PersonSVG"
 import { axiosCall, rotateRefresh } from "@/util/axiosCall";
 import LocalStorage from "@/util/localstorage";
+import { useEffect, useState } from "react";
 
 interface LikeItemTypes {
     itemId: number;
@@ -19,22 +20,27 @@ interface LikeItemTypes {
 
 const LikeItem = ({bidCount, likeCount, itemId, likeStatus}: LikeItemTypes) => {
     const [, setOpenTokenModal] = useRecoilState(tokenState);
-    // const [  , setLikeItemColor ] = useRecoilState(likeSelector);
     const isLogin = LocalStorage.getItem("loginState");
 
-    // console.log("북마크 - ", itemId," : " , likeStatus)
+    //로컬 상태 추가 
+    const [localLikeStatus, setLocalLikeStatus] = useState(likeStatus);
+    const [localLikeCount, setLocalLikeCount] = useState(likeCount || 0);
+
+    useEffect(() => {
+        setLocalLikeStatus(likeStatus);
+        setLocalLikeCount(likeCount as number)
+    }, [likeStatus, likeCount])
+
+
     const handleLikeItem = debounce(async () => {
-        // const isLikedItem = likeItemColor.includes(String(itemId));
 
         const config = { withCredentials: true };
 
         try { 
             if(!likeStatus){
-                // setLikeItemColor((prev) => (
-                //     [...prev, String(itemId) ]
-                // ));
-                
-                const likeRes = await axiosCall( `/api/likeable-items/${itemId}`, "POST", {}, config )
+                setLocalLikeStatus(true); // UI 즉시 업데이트
+                setLocalLikeCount(prevCount => (prevCount || 0) + 1); // 좋아요 수 증가
+                const likeRes = await axiosCall( `/api/likeable-items/${itemId}`, "POST", {}, config );
 
                 //좋아요 클릭 성공
                 if(likeRes.status === 200){
@@ -43,12 +49,8 @@ const LikeItem = ({bidCount, likeCount, itemId, likeStatus}: LikeItemTypes) => {
             };
 
             if(likeStatus){
-                // setLikeItemColor((prev) => (
-                //     prev.filter(item => item !== String(itemId))
-                // ));
-
-                
-                // const cancelRes = await axiosCall( `/api/likeable-items/${itemId}`, "DELETE", config );
+                setLocalLikeStatus(false); // UI 즉시 업데이트
+                setLocalLikeCount(prevCount => Math.max(0, prevCount - 1)); // 좋아요 수 감소
                 const cancelRes = await axios.delete(`https://server.farmingsoon.site/api/likeable-items/${itemId}`, {
                     withCredentials: true
                 })
@@ -100,9 +102,9 @@ const LikeItem = ({bidCount, likeCount, itemId, likeStatus}: LikeItemTypes) => {
             <PersonSVG width={"18px"} height={"18px"}/>
             <span className="ml-3 mr-5">{bidCount}</span>
             <button onClick={() =>  handleClick()} className=" p-2 hover:bg-purple-300 z-10">
-                <BookmarkSVG width={"15px"} height={"15px"} itemId={itemId} likeStatus={likeStatus}/>
+                <BookmarkSVG width={"15px"} height={"15px"} itemId={itemId} likeStatus={localLikeStatus}/>
             </button>
-            <span className="ml-1">{likeCount}</span>
+            <span className="ml-1">{localLikeCount}</span>
         </div>
     )
 }
