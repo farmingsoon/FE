@@ -78,12 +78,11 @@ export default function ProductDetail(  ) {
         try { 
             const res = await axios.get(url, config);
             console.log(res.data.result);
-
-            if(userId === res.data.result.sellerId){
-                setAmIuser(true);
-            }
             setDetailData(res.data.result);
-
+            return userId === res.data.result.sellerId;
+            // if(userId === res.data.result.sellerId){
+            //     setAmIuser(true);
+            // }
 
         } catch (err){
             console.log(`디테일 페이지 ${err}`)   
@@ -212,11 +211,17 @@ export default function ProductDetail(  ) {
     }
 
     useEffect(() => {
-
-        getDetailData(Number(userId));
+        const userId = LocalStorage.getItem("memberId");
+        getDetailData(Number(userId))
+            .then((res) =>{
+                if(res){
+                    setAmIuser(res);
+                }
+            })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+    console.log(amIuser)
 
     return(
         <div className="flex min-h-screen flex-col mb-5 max-w-[900px] min-w-[500px]">
@@ -254,7 +259,7 @@ export default function ProductDetail(  ) {
                 <div className="flex flex-row justify-between text-xl mt-2">
                     <h1>{detailData && detailData.title}</h1>
                     <div className="text-sm ">
-                        {amIuser === false || detailData?.itemStatus !== "경매중"  &&
+                        {!amIuser && detailData?.itemStatus === "경매중"  &&
                             <button className="bg-white rounded-md px-5 py-1.5 border shadow-lg w-36 hover:bg-zinc-200"
                                 onClick={handleChatClick}>채팅하기
                             </button>
