@@ -37,7 +37,6 @@ export default function Home() {
   const [ homeData, setHomeData ] = useState<MerchanTypes[]>([]);
   const [ searchOption,  ] = useRecoilState(searchState)
   const [ sortCodeState,  ] = useRecoilState(sortCodeAtom);
-  // const [ , setSelectOption ] = useRecoilState(searchState);
   const [ homePage, setHomePage ] = useRecoilState(homePageSelector);
   const [ pagination, setPagination ] = useState({
     // page: 0,
@@ -49,10 +48,11 @@ export default function Home() {
   const [ finishFetch, setFinishFetch ] = useState(false);
   const isLogin = LocalStorage.getItem("loginState");
   const [, setLogin] = useRecoilState(loginSelector);
-  // console.log(pagination);
-  // console.log("PAGE : ",homePage.page)
+
 
   const getHomeData = async (currentPage: number) => {
+    // console.log("PAGE : ",homePage.page, "마지막 페이디 : ",finishFetch)
+
     try { 
       const categoryRes = `/api/items?page=${currentPage}&itemStatus=${sortCodeState.isCheckBox}&sortCode=${sortCodeState.sortCode}&category=${searchOption.keyword}`; //ok
       const normalRes = `/api/items?page=${currentPage}&itemStatus=${sortCodeState.isCheckBox}&sortCode=${sortCodeState.sortCode}&keyword=${searchOption.keyword}`;
@@ -113,10 +113,12 @@ export default function Home() {
 
   const loadMoreItems = async () => {
     if(pagination.totalPageSize -1 <= homePage.page ) {// 마지막 페이지 
+      // console.log("마지막페이지")
       setFinishFetch(true);
-      // setShowLoading(false);
       return;
     } 
+
+    setFinishFetch(false);
     const nextPage = homePage.page + 1;
     const moreItems = await getHomeData(nextPage);
     setHomePage({page : nextPage})
@@ -202,11 +204,15 @@ export default function Home() {
                   <HomeItem key={idx} data={item} />
                 </Link>              
             ))}
-
-            {!finishFetch && (<div ref={observerRef} className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center p-5 text-lg font-semibold text-gray-500 bg-gray-100 rounded-lg shadow animate-pulse">
+            {
+              <div ref={observerRef} className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center p-5 text-lg font-semibold text-gray-500 bg-gray-100 rounded-lg shadow animate-pulse">
+                {finishFetch === false ? "..Loading" : "마지막 페이지입니다."}
+              </div>
+            }
+            {/* {finishFetch === false ? (<div ref={observerRef} className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center p-5 text-lg font-semibold text-gray-500 bg-gray-100 rounded-lg shadow animate-pulse">
               ...Loading
-            </div>)}
-            {finishFetch && (<div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center text-lg text-gray-500 "> 마지막 페이지입니다. </div>)}
+            </div>) :(<div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center text-lg text-gray-500 "> 마지막 페이지입니다. </div>) } */}
+            {/* {finishFetch && (<div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center text-lg text-gray-500 "> 마지막 페이지입니다. </div>)} */}
           </div> :
           <div className="flex justify-center flex-col items-center mt-20">
             <NoData width={"300px"} height={"300px"}/>

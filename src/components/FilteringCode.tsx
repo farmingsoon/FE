@@ -12,23 +12,26 @@ const FilteringCode = () => {
 
     const handleCheckBox = (e:any) => {
         const { id, checked } = e.target;
-        // console.log("체크 박스 : ", id, checked);
+
         if(id === "bidding" && checked ){
             setSortCodeState((prev) => ({
                 ...prev,
                 isCheckBox: "BIDDING"
             }));
+
         } else if(id === "soldout" && checked ) {
             setSortCodeState((prev) => ({
                 ...prev,
                 isCheckBox: "SOLDOUT"
             }));
+
         } else {
             setSortCodeState((prev) => ({
                 ...prev,
                 isCheckBox: null
-            }))
-        }
+            }));
+
+        };
 
     };
 
