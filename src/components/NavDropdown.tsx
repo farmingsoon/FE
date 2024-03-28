@@ -34,6 +34,7 @@ const NavDropdown = ( {handleClick}:DropDownTypes ) => {
                 }));
                 LocalStorage.removeItem("memberId");
                 LocalStorage.removeItem("userName");
+                LocalStorage.removeItem("userProfileImg");
                 LocalStorage.setItem("loginState", String(false));
                 LocalStorage.setItem("kakaoLogin", String(false));
                 router.push("/");
