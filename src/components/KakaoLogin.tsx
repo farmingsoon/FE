@@ -30,10 +30,8 @@ const KakaoLogin = (  ) => {
     }, []);
 
     const handleoAuth =  () => {
-        console.log("카카오 로그인 버튼 누름 ");
         LocalStorage.setItem("loginState", String(true));
         LocalStorage.setItem("kakaoLogin", String(true));
-        console.log("=== 여기 다음이 리다이렉트 함수===")
 
         if(LocalStorage.getItem("kakaoLogin") === "true"){
             router.push(redirectURI);

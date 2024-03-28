@@ -150,7 +150,7 @@ export default function Home() {
   //kakao 로그인 유저 정보 
   useEffect(() => {
     const kakaoUserInfo = async () => {
-      console.log("카카오 로그인 정보 얻는 함수 발동. ")
+      // console.log("카카오 로그인 정보 얻는 함수 발동. ")
       try { 
         const kakaoUserInfo = await axios.get(`${BASE_URL}/api/members/info` , {withCredentials: true});
         // console.log(kakaoUserInfo.data.result);
