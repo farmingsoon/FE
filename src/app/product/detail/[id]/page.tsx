@@ -212,7 +212,7 @@ export default function ProductDetail(  ) {
     }
 
     useEffect(() => {
-        const userId = localStorage.getItem("memberId"); //recoil
+
         getDetailData(Number(userId));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -254,7 +254,7 @@ export default function ProductDetail(  ) {
                 <div className="flex flex-row justify-between text-xl mt-2">
                     <h1>{detailData && detailData.title}</h1>
                     <div className="text-sm ">
-                        {amIuser === false || detailData?.itemStatus !== "경매완료"  &&
+                        {amIuser === false || detailData?.itemStatus !== "경매중"  &&
                             <button className="bg-white rounded-md px-5 py-1.5 border shadow-lg w-36 hover:bg-zinc-200"
                                 onClick={handleChatClick}>채팅하기
                             </button>
