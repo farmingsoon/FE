@@ -129,7 +129,7 @@ const SellerBidModal = ({handleOpen, itemId, priceData, itemStatus}: SellerBidMo
                             <button
                                 className="mt-14 bg-MAIN_COLOR hover:bg-DEEP_MAIN text-white px-8 py-2 rounded-md text-sm "
                                 onClick={(e) => {e.preventDefault(); handleSoldOut(Number(itemId), checkState.buyerId)}}
-                            >입찰하기</button>
+                            >낙찰하기</button>
                         </div>     
                 }
             </div>
