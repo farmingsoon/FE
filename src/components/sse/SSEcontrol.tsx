@@ -6,14 +6,12 @@ import { tokenState } from "@/stores/tokenModal";
 import LocalStorage from "@/util/localstorage";
 import { sseNotiSelectorFamily } from "@/stores/sseNotiState";
 import NotificationItem from "./NotificationItem";
-import { loginSelector } from "@/stores/loginState";
 
 
 
 const SSEcontrol = () => {
     const eventSource = useRef<EventSourcePolyfill | null | undefined>();
     const isTokenInValid = useRecoilValue(tokenState);
-    const recoilLoginState = useRecoilValue(loginSelector);
     const localState = LocalStorage.getItem("loginState");
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
     // const [retryCount, setRetryCount] = useState(-1);
@@ -124,7 +122,7 @@ const SSEcontrol = () => {
 
             //연결 오류 헨들러 
             eventSource.current.onerror = (err) => {
-                console.log("SSE : ", err);
+                console.log("SSE : 에러 ", err);
                 eventSource.current?.close();
             }
         };
@@ -161,7 +159,7 @@ const SSEcontrol = () => {
 
         
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isTokenInValid.tokenExpired, recoilLoginState.isLogin, notificationTimeoutId]);
+    }, [isTokenInValid.tokenExpired,  notificationTimeoutId]);
 
 
     // return null;
