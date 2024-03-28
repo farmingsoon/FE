@@ -1,21 +1,22 @@
 "use client";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { tokenState } from "@/stores/tokenModal";
 import LocalStorage from "@/util/localstorage";
 import { sseNotiSelectorFamily } from "@/stores/sseNotiState";
 import NotificationItem from "./NotificationItem";
+import { loginSelector } from "@/stores/loginState";
 
 
 
 const SSEcontrol = () => {
     const eventSource = useRef<EventSourcePolyfill | null | undefined>();
     const isTokenInValid = useRecoilValue(tokenState);
+    const recoilLoginState = useRecoilValue(loginSelector);
     const localState = LocalStorage.getItem("loginState");
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
     const notificationTimeoutId = useRef<NodeJS.Timeout | null>(null);
-    const [count, setCount] = useState(0);
 
     //알림 관리
     const [ , setAlarmPing ] = useRecoilState(sseNotiSelectorFamily("notiPING"));
@@ -27,7 +28,6 @@ const SSEcontrol = () => {
 
     useEffect(() => {
         const pageLocation = window.location.pathname;
-        console.log("COUNT SSE : ", count)
         
         const connectSSE = () => {
             if(!eventSource.current){
@@ -38,7 +38,6 @@ const SSEcontrol = () => {
                 //연결 성공 헨들러 - 접속이 이루어졌을 때 호출 
                 eventSource.current.onopen = async (event) => {
                     console.log("SSE: 성공적인 연결 완료 ", event);
-                    setCount(prev => prev + 1);
                 }
     
                 //기본 메세지 받았을 때 
@@ -139,11 +138,10 @@ const SSEcontrol = () => {
             eventSource.current = null; //참조 제거
             setAlarmPing((cur) => ({ ...cur, sseState: false }));
             setChatPing((cur) => ({ ...cur, sseState: false }));
-            setCount(prev => prev + -1);
             console.log("SSE: 토큰 만료 및 비로그인 상태라 연결 종료")
         }
 
-        if(isTokenInValid.tokenExpired === false && localState === "true" ){
+        if(isTokenInValid.tokenExpired === false && localState === "true" && recoilLoginState.isLogin === true){
             console.log("SSE: 로그인 상태라 연결 ")
             connectSSE();
         }
@@ -165,7 +163,7 @@ const SSEcontrol = () => {
 
         
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isTokenInValid.tokenExpired,  notificationTimeoutId]);
+    }, [isTokenInValid.tokenExpired, recoilLoginState.isLogin, notificationTimeoutId]);
 
 
     // return null;
