@@ -215,7 +215,7 @@ export default function ProductDetail(  ) {
         getDetailData(Number(userId))
             .then((res) =>{
                 if(res){
-                    setAmIuser(true);
+                    setAmIuser(res);
                 }
             })
 
@@ -259,7 +259,7 @@ export default function ProductDetail(  ) {
                 <div className="flex flex-row justify-between text-xl mt-2">
                     <h1>{detailData && detailData.title}</h1>
                     <div className="text-sm ">
-                        {amIuser === false && detailData?.itemStatus === "경매중"  &&
+                        {!amIuser && detailData?.itemStatus === "경매중"  &&
                             <button className="bg-white rounded-md px-5 py-1.5 border shadow-lg w-36 hover:bg-zinc-200"
                                 onClick={handleChatClick}>채팅하기
                             </button>
