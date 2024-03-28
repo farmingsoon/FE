@@ -150,10 +150,8 @@ export default function Home() {
 
   //kakao 로그인 유저 정보 
   useEffect(() => {
-    // console.log("유저 정보 받기 - 로컬 상태 ", isLogin);
-
     const kakaoUserInfo = async () => {
-      // console.log("카카오 로그인 정보 얻는 함수 발동. ")
+      console.log("카카오 로그인 정보 얻는 함수 발동. ")
       try { 
         const kakaoUserInfo = await axios.get(`${BASE_URL}/api/members/info` , {withCredentials: true});
         // console.log(kakaoUserInfo.data.result);
@@ -175,8 +173,12 @@ export default function Home() {
       }
     }
 
-    if(isLogin === "true" && kakaoLogin.kakaoInfo === true){
-      kakaoUserInfo();
+    if(isLogin === "true" ){
+      console.log(kakaoLogin) 
+      if(kakaoLogin.kakaoInfo){
+        kakaoUserInfo();
+      }
+
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLogin])
