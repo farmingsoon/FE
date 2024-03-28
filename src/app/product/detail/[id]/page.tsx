@@ -78,7 +78,7 @@ export default function ProductDetail(  ) {
         try { 
             const res = await axios.get(url, config);
             console.log(res.data.result);
-
+            return userId === res.data.result.sellerId;
             if(userId === res.data.result.sellerId){
                 setAmIuser(true);
             }
@@ -212,11 +212,17 @@ export default function ProductDetail(  ) {
     }
 
     useEffect(() => {
-
-        getDetailData(Number(userId));
+        const userId = LocalStorage.getItem("memberId");
+        getDetailData(Number(userId))
+            .then((res) =>{
+                if(res){
+                    setAmIuser(true);
+                }
+            })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+    console.log(amIuser)
 
     return(
         <div className="flex min-h-screen flex-col mb-5 max-w-[900px] min-w-[500px]">
