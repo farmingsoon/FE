@@ -6,7 +6,7 @@ FarmingSoon.site
 </p>
 중고 물품 옥션 거래 사이트
 
-* 프로젝트 기간 : 2024년 1월 8일 ~ 2월 21일 (약 6주)
+* 프로젝트 기간 : 2024년 1월 8일 ~ 3월 25일 
 * 베포 링크 : 🌐 https://farmingsoon.site/
 
 ## 팀원 
@@ -22,6 +22,12 @@ FarmingSoon.site
 ## 기술 스텍 (FE)
 <img alt="기술 스텍 " src="https://github.com/TRIP-Side-Project/.github/assets/110151638/6e42b237-c03f-445f-81b7-9b930e4887f9">
 
+## 아키텍쳐
+<p>
+    <img src="https://github.com/farmingsoon/FE/assets/110151638/6602d2ce-0d88-45d2-906e-8f33d46aace4">
+</p>
+
+<br>
 
 ## 작업 사항
 
