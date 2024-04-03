@@ -23,6 +23,7 @@ import ArrowDown from "../../public/svg/ArrowDown";
 import ArrowUp from "../../public/svg/\bArrowUp";
 import { homePageSelector } from "@/stores/homePage";
 import smLogo from "@/../public/img/smLogo.png";
+import { tokenState } from "@/stores/tokenModal";
 
 
 const Navbar = () => {
@@ -38,7 +39,8 @@ const Navbar = () => {
     const [gotNewChat , setChatPing ] = useRecoilState(sseNotiSelectorFamily("chatPING"));
     const btnStyle = "flex flex-row items-center w-fit whitespace-nowrap mb-6 cursor-pointer";
     const [ menuTab, setMenuTab ] = useRecoilState(amendMenuSelector);
-    const [ , setHomePage ] = useRecoilState(homePageSelector);
+    const [ , setHomePage ] = useRecoilState(homePageSelector);    
+    const [ , setIsTokenInValid ] = useRecoilState(tokenState);
     const clickStyle = `text-DEEP_MAIN `;
 
 
@@ -97,6 +99,9 @@ const Navbar = () => {
     const handleOffChatPing = () => {
         setMenuTab("chatRoom")
         setChatPing((cur) => ({ ...cur, sseState: false }));
+        if(!isLogin.isLogin){
+            setIsTokenInValid({ tokenExpired: true });
+        }
     }
 
     useEffect(() => {

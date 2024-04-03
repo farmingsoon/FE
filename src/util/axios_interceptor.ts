@@ -20,6 +20,7 @@ instance.interceptors.request.use((config) => {
 instance.interceptors.response.use((response) => {
     return response;
 }, async (error) => {
+    console.log("Instance : ", error)
     if(error.response?.status === 401 && error.response.data.message === "기한이 만료된 AccessToken입니다."){
         //token문제 - 기한이 만료된 accesstoken
         await rotateRefresh();
@@ -29,6 +30,8 @@ instance.interceptors.response.use((response) => {
         return originalResponse;
     }if(error.response?.status === 401 && error.response.data.message === "기한이 만료된 RefreshToken입니다."){
         // recoil 별도의 설정을 위해 코드를 어떻게 수정해야 할까요. 
+        throw new Error("RefreshTokenExpired")
+    }if(error.response?.status === 403 && error.response.data.message === "로그인 후 이용할 수 있습니다."){
         throw new Error("RefreshTokenExpired")
     }
 

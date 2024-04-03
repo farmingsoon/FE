@@ -84,6 +84,7 @@ export default function Chat() {
       }
     } catch (err) {
       const error = err as AxiosError; // 타입 단언 사용
+      console.log("채팅방 목록 에러 : ", error)
       if(error.message === "RefreshTokenExpired"){
         setOpenTokenModal({ tokenExpired: true });
       } else {
