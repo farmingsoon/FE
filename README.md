@@ -4,18 +4,25 @@ FarmingSoon.site
 <p align="center">
 <img src="https://github.com/farmingsoon/FE/assets/110151638/ce336bb4-8ae0-4482-a101-810d7f205a7e" width="50%" style="border-radius: 20px;">
 </p>
-중고 물품 옥션 거래 사이트
+
+#### 중고 물품 옥션 거래 사이트
 
 * 프로젝트 기간 : 2024년 1월 8일 ~ 3월 25일 
 * 베포 링크 : 🌐 https://farmingsoon.site/
 
+<br>
+
+#### 프로젝트 배경 
+중고 물품 거래 시장을 보면 판매자가 제시한 가격이 터무니 없이 높아서 거래가 이루어지지 않거나 혹은 예상치 못하게 낮아서 먼저 거래를 요청하는 사람들이 상품의 진정한 값어치를 인정받지 못하고 판매 되는 경우가 많습니다. 이러한 현상들을 감소하기 위해 실제 다음 사용자들이 중고 물품의 진정한 값어치를 매기는 경매 시스템을 도입하여 판매자와의 소통을 통해 거래가 이루어질 수 있도록 하는 것이 이 사이트의 목표입니다. 
+<br>
+
 ## 팀원 
+
 | 조혜진  | 지승용  |
 | :---: | :---: |
 | <img alt="조혜진" src="https://github.com/TRIP-Side-Project/.github/assets/110151638/a94e8171-daa9-4e76-89f8-e93f9ce5b5ec" height="200" width="180"> | <img alt="지승용" src="https://github.com/TRIP-Side-Project/.github/assets/110151638/9795281d-bd22-41ff-af97-29d6438baf21" height="200" width="180"> |
 | [깃허브 링크](https://github.com/Emma-Hyejin) | [깃허브 링크](https://github.com/gkfktkrh153)  |
 | 프론트 담당 | 백엔드 담당 |
-
 
 
 
@@ -54,7 +61,7 @@ FarmingSoon.site
 #### 03. 경매 시스템
 
 <p >
-<img src="https://github.com/farmingsoon/FE/assets/110151638/9d5b556f-e6b2-4b08-8ca1-6d4a8b0a967e" width="100%">
+<img src="https://github.com/farmingsoon/FE/assets/110151638/98d35355-d5be-45c5-80a1-96c892f0c9c7" width="100%">
 </p>
 
 #### 04. 알림 및 채팅 시스템
